@@ -1,0 +1,282 @@
+Video : Actual Asked Question of Accenture Technical Assessment (MCQ) Solution | Accenture Hiring 2026
+
+1. Basic Trigger Syntax
+
+ 
+
+CREATE TRIGGER trigger_name 
+
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE} 
+
+ON table_name 
+
+FOR EACH ROW
+
+BEGIN 
+
+-- trigger actions
+
+END; 
+
+2. Key Points to Remember
+
+	
+ 
+
+ | Concept
+ | Explanation
+ 
+	
+	
+ 
+
+ | Trigger Timing
+ | Can be BEFORE or AFTER an event.
+ 
+ 
+
+ | Trigger Event
+ | Can be INSERT, UPDATE, or DELETE.
+ 
+ 
+
+ | FOR EACH ROW
+ | Means the trigger executes once for every affected row.
+ 
+ 
+
+ | OLD and NEW
+ | - OLD refers to the record before change (used in UPDATE/DELETE).
+
+ - NEW refers to the record after change (used in INSERT/UPDATE).
+ 
+ 
+
+ | Delimiter
+ | Use DELIMITER // (and reset later) if you’re writing triggers in MySQL CLI to handle the BEGIN...END block.
+ 
+ 
+
+ | Restrictions
+ | - You can’t use COMMIT or ROLLBACK inside triggers.
+
+ - You can’t call triggers manually; they fire automatically.
+ 
+ 
+
+ | Use Case
+ | Commonly used for logging, auditing, validation, and enforcing business rules.
+ 
+	
+
+1. Student Record Backup
+
+A university maintains two tables:
+
+	
+
+	
+students(student_id INT PRIMARY KEY, name VARCHAR(50), department VARCHAR(50))
+	
+	
+
+	
+student_backup(student_id INT, name VARCHAR(50), department VARCHAR(50), deleted_on DATETIME)
+	
+
+The admin wants a backup of every record deleted from students.
+
+Which trigger should be used?
+
+ 
+
+CREATE TRIGGER after_student_delete AFTER DELETE ON students FOR EACH ROW BEGIN INSERT INTO student_backup (student_id, name, department, deleted_on) VALUES (OLD.student_id, OLD.name, OLD.department, NOW()); END; 
+
+Answer: ✅ AFTER DELETE trigger using OLD values.
+
+Explanation: Captures deleted data and stores it in student_backup.
+
+2. Salary Update Log
+
+A company keeps an audit log of salary changes.
+
+	
+
+	
+employees(emp_id INT PRIMARY KEY, salary DECIMAL(10,2))
+	
+	
+
+	
+salary_log(emp_id INT, old_salary DECIMAL(10,2), new_salary DECIMAL(10,2), updated_on DATETIME)
+	
+
+Whenever salary changes, a record should be inserted into salary_log.
+
+ 
+
+CREATE TRIGGER after_salary_update AFTER UPDATE ON employees FOR EACH ROW BEGIN INSERT INTO salary_log (emp_id, old_salary, new_salary, updated_on) VALUES (OLD.emp_id, OLD.salary, NEW.salary, NOW()); END; 
+
+Answer: ✅ AFTER UPDATE trigger using OLD and NEW.
+
+Explanation: Logs every salary change after it happens.
+
+3. New Employee Registration Log
+
+Whenever a new employee joins, log the event.
+
+	
+
+	
+employees(emp_id INT PRIMARY KEY, emp_name VARCHAR(50))
+	
+	
+
+	
+register_log(emp_id INT, joined_on DATETIME)
+	
+
+ 
+
+CREATE TRIGGER after_employee_insert AFTER INSERT ON employees FOR EACH ROW BEGIN INSERT INTO register_log (emp_id, joined_on) VALUES (NEW.emp_id, NOW()); END; 
+
+Answer: ✅ AFTER INSERT trigger with NEW values.
+
+Explanation: Fires after insertion to record join time.
+
+4. Product Deletion Tracker
+
+A store needs to maintain logs of deleted products.
+
+	
+
+	
+products(prod_id INT PRIMARY KEY, prod_name VARCHAR(50))
+	
+	
+
+	
+product_log(prod_id INT, deleted_at DATETIME)
+	
+
+ 
+
+CREATE TRIGGER after_product_delete AFTER DELETE ON products FOR EACH ROW BEGIN INSERT INTO product_log (prod_id, deleted_at) VALUES (OLD.prod_id, NOW()); END; 
+
+Answer: ✅ AFTER DELETE
+
+Explanation: Tracks deleted products automatically.
+
+5. Order Total Validation
+
+Before inserting a new order, ensure that total_amount is not negative.
+
+	
+
+	
+orders(order_id INT PRIMARY KEY, total_amount DECIMAL(10,2))
+	
+
+ 
+
+CREATE TRIGGER before_order_insert BEFORE INSERT ON orders FOR EACH ROW BEGIN IF NEW.total_amount < 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Total amount cannot be negative'; END IF; END; 
+
+Answer: ✅ BEFORE INSERT with validation.
+
+Explanation: Prevents invalid data entry before saving.
+
+6. Attendance Update Monitor
+
+Whenever attendance percentage changes, log it.
+
+	
+
+	
+attendance(stud_id INT, percentage INT)
+	
+	
+
+	
+attendance_log(stud_id INT, old_percent INT, new_percent INT, updated_on DATETIME)
+	
+
+ 
+
+CREATE TRIGGER after_attendance_update AFTER UPDATE ON attendance FOR EACH ROW BEGIN INSERT INTO attendance_log (stud_id, old_percent, new_percent, updated_on) VALUES (OLD.stud_id, OLD.percentage, NEW.percentage, NOW()); END; 
+
+Answer: ✅ AFTER UPDATE
+
+Explanation: Records every attendance update.
+
+7. Delete Prevention on Admin Record
+
+Prevent accidental deletion of admin users.
+
+	
+
+	
+users(user_id INT PRIMARY KEY, role VARCHAR(20))
+	
+
+ 
+
+CREATE TRIGGER before_user_delete BEFORE DELETE ON users FOR EACH ROW BEGIN IF OLD.role = 'Admin' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete Admin users'; END IF; END; 
+
+Answer: ✅ BEFORE DELETE
+
+Explanation: Stops deletion if the role is “Admin”.
+
+8. Update Log on Department Change
+
+Track whenever an employee changes department.
+
+	
+
+	
+employees(emp_id INT, department VARCHAR(50))
+	
+	
+
+	
+dept_change_log(emp_id INT, old_dept VARCHAR(50), new_dept VARCHAR(50), updated_on DATETIME)
+	
+
+ 
+
+CREATE TRIGGER after_dept_update AFTER UPDATE ON employees FOR EACH ROW BEGIN IF OLD.department <> NEW.department THEN INSERT INTO dept_change_log (emp_id, old_dept, new_dept, updated_on) VALUES (OLD.emp_id, OLD.department, NEW.department, NOW()); END IF; END; 
+
+Answer: ✅ AFTER UPDATE
+
+Explanation: Logs department change only when it occurs.
+
+9. Customer Insertion Tracker
+
+A CRM system wants to log all new customers.
+
+	
+
+	
+customers(cust_id INT PRIMARY KEY, cust_name VARCHAR(50))customer_log(cust_id INT, created_on DATETIME)
+	
+
+ 
+
+CREATE TRIGGER after_customer_insert AFTER INSERT ON customers FOR EACH ROW BEGIN INSERT INTO customer_log (cust_id, created_on) VALUES (NEW.cust_id, NOW()); END; 
+
+Answer: ✅ AFTER INSERT
+
+Explanation: Tracks when a new customer joins.
+
+10. Product Price Validation
+
+Before updating product price, ensure it’s not below zero.
+
+products(prod_id INT, price DECIMAL(10,2))
+
+ 
+
+CREATE TRIGGER before_price_update BEFORE UPDATE ON products FOR EACH ROW BEGIN IF NEW.price < 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Price cannot be negative'; END IF; END; 
+
+Answer: ✅ BEFORE UPDATE
+
+Explanation: Prevents invalid negative price updates.

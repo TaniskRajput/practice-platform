@@ -1,0 +1,1134 @@
+{
+  "Accenture Coding Set this year": [
+    {
+      "enabled": true,
+      "id": "68ebc57f8090791acc8a5354",
+      "title": "Accenture 11 October 2025 - Coding Set",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "69465cee5a87fd3ce81ddbbc",
+      "title": "Accenture Coding 20 Dec",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "695fbd9ae1ee1c7661cbb924",
+      "title": "Accenture 8 Jan Solution txt",
+      "type": "article"
+    }
+  ],
+  "Accenture Full Paper (Most Recent)": [
+    {
+      "enabled": true,
+      "id": "6a79f36e9d61beb59c19c74f",
+      "title": "Accenture Full Paper (Exact With Solution)",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e6a30fe80f1b70dcb7c6c3",
+      "title": "Accenture Full Paper",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "693fca734849ab3202405157",
+      "title": "Accenture Paper Solution",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6942d7ad49bebb5a401cece4",
+      "title": "Accenture Code MCQ",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "694663ded993636a17fd61da",
+      "title": "Accenture 20 Dec (Tech Assessment)",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "695bb3fae78fb36d301c4009",
+      "title": "Accenture Pseudocode Solution 20 DEC",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6946d11ff11ee14f4f82d5ea",
+      "title": "Web Based",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "696243a3a80166641643ca5e",
+      "title": "Accenture Technical - All Questions Set",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6a872c33d0bf8456cbebdb6c",
+      "title": "Accenture PYQ (Recent Set)",
+      "type": "pdf"
+    }
+  ],
+  "Accenture Mock Test (Based on Last Year) ": [
+    {
+      "enabled": true,
+      "id": "6822e750bc897d5f172be81e",
+      "title": "Accenture Cognitive Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "682448ccf50d135bc4ece50b",
+      "title": "Accenture Technical Mock-1",
+      "type": "assessment"
+    }
+  ],
+  "Accenture Mock Test 2(Based on Last Year)": [
+    {
+      "enabled": true,
+      "id": "68247da34708d92ceb1c8750",
+      "title": "Accenture Technical Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6823272da6ac4d4c0ebac9bf",
+      "title": "Accenture Cognitive Mock-2",
+      "type": "assessment"
+    }
+  ],
+  "Coding Assessment": [
+    {
+      "enabled": true,
+      "id": "6800d19d9020df779278c439",
+      "title": "Web Compiler Link",
+      "type": "link"
+    },
+    {
+      "enabled": false,
+      "id": "rpcs09vzhs",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "68d7fc7d00ebe6434a0b3da3",
+      "title": "SQL - 1",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "686668e042d13714c260c011",
+      "title": "Coding Mock Test - 14",
+      "type": "code"
+    },
+    {
+      "enabled": true,
+      "id": "680332c6e8530a4fea4afd16",
+      "title": "Web Based",
+      "type": "article"
+    },
+    {
+      "enabled": false,
+      "id": "g9qrat7ydrk",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6800d3021249c30b2cbc16a9",
+      "title": "SQL Query 2",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "686668e77c64af789dcb1f34",
+      "title": "Coding Mock Test - 15",
+      "type": "code"
+    },
+    {
+      "enabled": true,
+      "id": "6803318d672236270d72fa89",
+      "title": "Web Based",
+      "type": "article"
+    },
+    {
+      "enabled": false,
+      "id": "ciz9jk1nh3",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6800d25a1623081ac9e72720",
+      "title": "SQL Query 1",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "686668f033303d7e9a8f395d",
+      "title": "Coding Mock Test - 16",
+      "type": "code"
+    },
+    {
+      "enabled": true,
+      "id": "6800d1574c07ff1c7fa08c06",
+      "title": "Web Based Question",
+      "type": "article"
+    }
+  ],
+  "Coding Questions": [
+    {
+      "enabled": true,
+      "id": "6868c2c3aba5726cfcd4fdab",
+      "title": "Previous Years Coding (Full Questions)",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6811eeff545a1a1838b30a3b",
+      "title": "SQL Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6812017c6d37691b11f42fbf",
+      "title": "SQL Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67dffeb152e0244484dff65c",
+      "title": "Top 60 SQL Queries for interviews PDF",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6826db66b039f170900805c1",
+      "title": "Coding Sheet link",
+      "type": "link"
+    },
+    {
+      "enabled": true,
+      "id": "6a6cc888384e1e354266f79a",
+      "title": "Web Based Questions",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "689c20411cdd0a5822fadbca",
+      "title": "Cognizant + Accenture Web Based",
+      "type": "pdf"
+    }
+  ],
+  "Full Technical Set (Pracitce)": [
+    {
+      "enabled": false,
+      "id": "4a3no6fs99",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6a7ed6f25b5ca10b86d1db1f",
+      "title": "Complete Set - Technical 1",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "6a85d56f6890e10f1c59b47a",
+      "title": "Complete Set - Technical 2",
+      "type": "article"
+    },
+    {
+      "enabled": false,
+      "id": "x9fdeu86kj",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6a88505ac74c5617552376bb",
+      "title": "Accenture Live Test",
+      "type": "livetest"
+    },
+    {
+      "enabled": true,
+      "id": "6a983afdb58798ed84ebd3a8",
+      "title": "Accenture Live Test 2",
+      "type": "livetest"
+    },
+    {
+      "enabled": false,
+      "id": "xu09v9r6sj",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6a97bf2edbcc9ad435fcdcf4",
+      "title": "Coding 1 (Accenture)",
+      "type": "code"
+    },
+    {
+      "enabled": true,
+      "id": "6a9d159963d050d375046351",
+      "title": "Coding Assessment Full",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "6a9e5683e361f97c54aecd06",
+      "title": "Coding Assessment Full 2",
+      "type": "article"
+    }
+  ],
+  "Game Based Assessment (Actual)": [
+    {
+      "enabled": false,
+      "id": "obw3iafsbm",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "69462e39dd069b39585fee09",
+      "title": "Maths Quiz",
+      "type": "link"
+    },
+    {
+      "enabled": true,
+      "id": "6a7c1756f990d97bd309b1b0",
+      "title": "Memory Game",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "6a7c3df4b311dd3e8ec0053d",
+      "title": "Path Game",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "6a9021a4364a1946a7192922",
+      "title": "Maths Game Practice",
+      "type": "article"
+    },
+    {
+      "enabled": false,
+      "id": "r2jnrttagxj",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "693913ab25e88f455256f0f2",
+      "title": "Accenture Actual Questions Type (Recording)",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "693a93daa3a7f84852a85b0e",
+      "title": "Game Based (Path Finder) Type -1",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "695cb9be6cb35b67618a0db3",
+      "title": "Path Game 20 DEC",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "695cb9c74a06b03d41823658",
+      "title": "Path Game Solution",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e0e7f71877cb4ec98e3ad3",
+      "title": "Game Based (Type -2)",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "694513cef46eac60a510565d",
+      "title": "Accenture Type - 3",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "69413ab7c1eb5d6615779cc8",
+      "title": "Accenture Type - 3 Detailed Example",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e0e9a108ff6c34a1820d65",
+      "title": "Game Based (Type -3)",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e25096172fa04f05e13ec0",
+      "title": "Game Based (Type - 3) Example 2",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e250725f7fb87199b4943b",
+      "title": "Game Based (Type -3) Example 3",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "6943e462a9e2ee39bf5c8fb2",
+      "title": "Accenture Path Finder | Accenture Hiring 2025-2026",
+      "type": "video"
+    },
+    {
+      "enabled": false,
+      "id": "zpk3074p4y",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "69391deddaf31333eaa5ff8c",
+      "title": "Path Finder Game",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68e0c2593c781d371dd51919",
+      "title": "The Hidden Path - Game Based Accenture",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68e250ba634d6215be13a417",
+      "title": "Accenture Memory Game (Ex-2)",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68e250c1588b6770c2df6bb0",
+      "title": "Accenture Memory Game (Ex-3)",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "6940d1e9f88ae762ad72f5d5",
+      "title": "Math Based Game Practice",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6945174c7b927d5b0c052964",
+      "title": "Maths Based Game Practice 2",
+      "type": "assessment"
+    }
+  ],
+  "Guide About the series": [
+    {
+      "enabled": true,
+      "id": "68e0dca2f2ba3778bb8e46ce",
+      "title": "Accenture Mock Guide",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e347d78f018c1c17928622",
+      "title": "Actual Accenture Paper",
+      "type": "video"
+    },
+    {
+      "enabled": true,
+      "id": "68e5232eee6a186f97ac4228",
+      "title": "Best Way to prepare for Technical MCQ'S",
+      "type": "video"
+    }
+  ],
+  "MCQ (Complete PDF'S)": [
+    {
+      "enabled": true,
+      "id": "6a89529dc83f0dc68e441f77",
+      "title": "Pseudocodes Complete",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68e0e6a287e3d039e2ce6f51",
+      "title": "CN MCQ Complete",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "67da6da8bd64b56e6fdd1386",
+      "title": "Microsoft Office MCQ",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68d23874bf634e0c9042939d",
+      "title": "Cloud MCQ",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68e0e1d52517dc7e36d4aae8",
+      "title": "Network Security",
+      "type": "pdf"
+    }
+  ],
+  "Practice Mock Test 1": [
+    {
+      "enabled": true,
+      "id": "678232a98a0b67535fdd9dba",
+      "title": "English Ability",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67824c67d0d45d0f956ff8b3",
+      "title": "Critical Reasoning and Problem Solving",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67828272ee1cf74cd89504f9",
+      "title": "Abstract Reasoning",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "678291fdbca5095bf4769457",
+      "title": "Common Application and MS Office",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67829c3fbca5095bf4769804",
+      "title": "Network Security and Cloud",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67838b402bb1e33a4e7102c2",
+      "title": "Pseudo Code",
+      "type": "assessment"
+    }
+  ],
+  "Practice Mock Test 2": [
+    {
+      "enabled": true,
+      "id": "67824303a7b6263bebe707f7",
+      "title": "English Ability",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67824c73a9346911c19100b9",
+      "title": "Critical Reasoning and Problem Solving",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6782827d18a48c1d847e9d77",
+      "title": "Abstract Reasoning",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6782920666e3de5d447e8a8a",
+      "title": "Common Application and MS Office",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67837f000dc7db464e678d08",
+      "title": "Network Security and Cloud",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67838b4a7241546b49f3bef7",
+      "title": "Pseudo Code",
+      "type": "assessment"
+    }
+  ],
+  "Practice Test (Aptitude)": [
+    {
+      "enabled": true,
+      "id": "685563eded73e63b38e4edd5",
+      "title": "Easy Quant-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68557535ca61610d1b406e82",
+      "title": "Easy Quant-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "685588b5a3ad377be443a157",
+      "title": "Easy Quant-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6855922f4bf51d5d51871c09",
+      "title": "Easy Quant-4",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6858d5603c360b4f78d1f55c",
+      "title": "Easy Reasoning-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6858f9569bbf2c08ed424233",
+      "title": "Easy Reasoning-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68590938c5ac5f7649e076a8",
+      "title": "Easy Reasoning-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6859127fdbd1da7047d89355",
+      "title": "Easy Reasoning-4",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "685950b27de4016dba85290a",
+      "title": "Easy Verbal-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "685a69582a8a696a800919e1",
+      "title": "Easy Verbal-4",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "685a56b4cef2e85dbf4e400f",
+      "title": "Easy Verbal-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "685a3fb9c64e833e9f25b0eb",
+      "title": "Easy Verbal-2",
+      "type": "assessment"
+    }
+  ],
+  "Security & MS Office": [
+    {
+      "enabled": true,
+      "id": "68ab10cbb8cfa818afdb7119",
+      "title": "Security and Cloud Mock-4",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68ab10bb0c180e38b4c1dbc5",
+      "title": "Security and Cloud Mock-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6874968e9569f6338d332ef3",
+      "title": "Security and Cloud Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e15334bccee72e76bb1d6d",
+      "title": "Cloud SB Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e1533af3ba0f245bf869ba",
+      "title": "Cloud SB Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "687496701a31be6f8bad504e",
+      "title": "Security and Cloud Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e365dff5305c51ac3334f8",
+      "title": "Situational (Devops) New Pattern Type",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e368525be43929243741cc",
+      "title": "Situational (Story Based) New Pattern",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a9dd929cffee6e0d2e97b3",
+      "title": "PPT Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a9dd9d0217406c48edf848",
+      "title": "PPT Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a87c86dbe22445e6bb7f79",
+      "title": "Word Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a9c805e41dcd394968b4bd",
+      "title": "Word Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a9d4c4e755246a87b8f314",
+      "title": "Word Mock-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a87c37d035ea7f6f278e2d",
+      "title": "Excel Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a87c43dfe25a2b7e8590b8",
+      "title": "Excel Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a87c4df8786f24f4068354",
+      "title": "Excel Mock-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68a87c594584d8199687c052",
+      "title": "Excel Mock-4",
+      "type": "assessment"
+    }
+  ],
+  "Sheets (Formulas & Concepts)": [
+    {
+      "enabled": true,
+      "id": "67adc3268ad5e666eed56694",
+      "title": "Verbal Ability",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "67c6aed4a0c9a6261a2b2929",
+      "title": "Aptitude Cheatsheet",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "67b19b538b2ab343812279da",
+      "title": "Reasoning",
+      "type": "pdf"
+    }
+  ],
+  "Similar Questions SQL , HTML , JS": [
+    {
+      "enabled": true,
+      "id": "68e3d3b720a6f438a73b7730",
+      "title": "SQL Trigger",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3dc73fd30636fb958511f",
+      "title": "JavaScript Function",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3e04f01583c190519edc5",
+      "title": "JavaScript Function 2",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3e37647d3f776cea946e3",
+      "title": "JavaScript Function 3",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3df54bfa27c5d6b032854",
+      "title": "HTML CSS",
+      "type": "article"
+    }
+  ],
+  "Similar Questions to Accenture": [
+    {
+      "enabled": true,
+      "id": "68e38277c8cb7371c4b73b00",
+      "title": "Similar Questions Like Wifi Security",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e36b941153e5493feb2383",
+      "title": "Similar Question Like Accenture Asked (DevOps)",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e36d3c70d3574174821af5",
+      "title": "Similar Questions Like OS",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3839852b40f1d0b2a7c95",
+      "title": "Similar Like NW / Cloud Traffic",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e36e2affc4424e7541dfe6",
+      "title": "Similar Question Like Cloud",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e36f38e7167a094645981f",
+      "title": "Similar Question Like CN",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3701307965a42084bd829",
+      "title": "Similar Like Wifi Encryption",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3706152b40f1d0b2a7481",
+      "title": "Similar Question Like Security",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e371c758f34502c96923c3",
+      "title": "Similar Question Like Design",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e3724a67d3540e8f3ef807",
+      "title": "Similar Question CN Deploy",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e372b970d3574174821d00",
+      "title": "Similar Questions Like VPN",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e373665be4392924374678",
+      "title": "Similar Questions Like Devops Deploy",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e373e452b40f1d0b2a75ce",
+      "title": "Similar Questions Like Cyber Attacks",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e37464cb6bd35f7580f942",
+      "title": "Similar Questions Like CPU OS",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e374ddffc4424e7541e248",
+      "title": "Similar Questions Like Networking BUS",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e375b870d3574174821ebb",
+      "title": "Similar Questions Like Encryption",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e376202968b7369e7608fe",
+      "title": "Similar Questions Like Container - CN",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e52235c6022969f19918dc",
+      "title": "Similar Questions Like Cloud - Shared",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e52498c6022969f1991a36",
+      "title": "Similar Questions Like OS - Management",
+      "type": "article"
+    },
+    {
+      "enabled": true,
+      "id": "68e525624d3e691bd4dc7e21",
+      "title": "Similar Questions Like Cloud Resources",
+      "type": "article"
+    }
+  ],
+  "Updated Exam for On Campus": [
+    {
+      "enabled": true,
+      "id": "68d775ff3828a67203dbae4a",
+      "title": "Pattern Update",
+      "type": "article"
+    }
+  ],
+  "Updated Pattern (Practice Set)": [
+    {
+      "enabled": false,
+      "id": "ebeupmb8o4",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "68133a31ff0c0c39c57ff79b",
+      "title": "Pseudo Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "681366b2306a0512a154676b",
+      "title": "Pseudo Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67665f199bf8ba525fe262b9",
+      "title": "Pseudocode - 1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "676f8e64d7427f2e8c486c69",
+      "title": "Pseudocode - 2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6783e592d4b7eb431b145795",
+      "title": "Pseudocode - 3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6783e5e228a26e77e7a8c635",
+      "title": "Pseudocode - 4",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68d943dd5d50a35f162e73a1",
+      "title": "Recursion (Medium - Hard)",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68d7b551c2b1a63f13fb44aa",
+      "title": "Pseudocode Bit Operators (Medium-Hard)",
+      "type": "assessment"
+    },
+    {
+      "enabled": false,
+      "id": "c5tp8gt4hh",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "681ba91ed1e88728dfd3fc14",
+      "title": "Networking Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "681bb1926b437a3aa1b031ae",
+      "title": "Networking Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e0df85bb50d514e71678a8",
+      "title": "Networking SB Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e0df9c8c80e9370492f109",
+      "title": "Networking SB Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68d94a249029e5344ee57be6",
+      "title": "Networking (Medium - Hard)",
+      "type": "assessment"
+    },
+    {
+      "enabled": false,
+      "id": "25dz6y6w7f",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "68e0df418d6ee942a4d90478",
+      "title": "OS SB Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e0df4d077fcd5bfcd49825",
+      "title": "OS SB Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e0dfca1877cb4ec98e37e1",
+      "title": "Cybersecurity SB Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "68e0dfeef2ba3778bb8e47c3",
+      "title": "Cybersecurity SB Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": false,
+      "id": "igwnici136",
+      "title": null,
+      "type": "label"
+    },
+    {
+      "enabled": true,
+      "id": "6818b9c251bd422e606502e1",
+      "title": "OOPS Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6818c39955d7766ba37930e3",
+      "title": "OOPS Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6818cd8b8db1cc2c51ac09ea",
+      "title": "OOPS Mock-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6818a5a455d7766ba379289b",
+      "title": "Java Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "681897881c57650a42c8ba0d",
+      "title": "Java Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "676159a2ef076767137f38a4",
+      "title": "OOPS Java notes",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "67e0df7ff5ce1d29112e606b",
+      "title": "Python Interview Questions",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "67dba8616b847947b23b515a",
+      "title": "OOPS Python",
+      "type": "pdf"
+    },
+    {
+      "enabled": true,
+      "id": "68313aea273a1427759e2a4d",
+      "title": "Web Mock-1",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6831476f1cc3377cd509f5e1",
+      "title": "Web Mock-2",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "6831725e0b28b1351317ca22",
+      "title": "Web Mock-3",
+      "type": "assessment"
+    },
+    {
+      "enabled": true,
+      "id": "67f4fb420629d118cf0f6f11",
+      "title": "MVC & Rest API",
+      "type": "pdf"
+    }
+  ],
+  "Whatsapp Group": [
+    {
+      "enabled": true,
+      "id": "69330f4ba09545178d2a849f",
+      "title": "Whatsapp Group Link",
+      "type": "article"
+    }
+  ]
+}

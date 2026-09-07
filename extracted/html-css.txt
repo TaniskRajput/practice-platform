@@ -1,0 +1,215 @@
+1.
+
+A developer creates the following snippet to draw a live graph using JavaScript:
+
+ 
+
+<canvas id="graphCanvas"> Browser does not support canvas </canvas> 
+
+What is the purpose of this element?
+
+Options:
+
+A. To create a video player
+
+B. To draw graphics dynamically using JavaScript
+
+C. To embed 3D models directly
+
+D. To display static images
+
+Answer: B
+
+2.
+
+An audio streaming website adds this code:
+
+ 
+
+<audio controls> <source src="song.mp3" type="audio/mpeg"> </audio> 
+
+What will happen if the browser doesn’t support the <audio> tag?
+
+Options:
+
+A. It will show an error message
+
+B. Nothing will appear
+
+C. The text or fallback content inside <audio> will display
+
+D. The browser will play the audio automatically
+
+Answer: C
+
+3.
+
+A developer embeds a video with the following code:
+
+ 
+
+<video width="400" controls> <source src="demo.mp4" type="video/mp4"> </video> 
+
+Which attribute ensures the user can play, pause, or adjust volume?
+
+Options:
+
+A. autoplay
+
+B. loop
+
+C. controls
+
+D. preload
+
+Answer: C
+
+4.
+
+A web designer wants to draw scalable shapes using XML-based markup rather than JavaScript.
+
+Which HTML5 element should they use?
+
+Options:
+
+A. <svg>
+
+B. <canvas>
+
+C. <map>
+
+D. <object>
+
+Answer: A
+
+5.
+
+A developer writes:
+
+ 
+
+<progress value="70" max="100"></progress> 
+
+What does this element represent on the webpage?
+
+Options:
+
+A. A loading animation
+
+B. A progress bar showing 70% completion
+
+C. A percentage label only
+
+D. A disabled input box
+
+Answer: B
+
+6.
+
+A website collects user data using:
+
+ 
+
+<form oninput="result.value=parseInt(a.value)+parseInt(b.value)"> <input type="number" id="a"> + <input type="number" id="b"> = <output name="result"></output> </form> 
+
+What is the function of the <output> tag here?
+
+Options:
+
+A. To take input from user
+
+B. To display calculated results dynamically
+
+C. To submit form data
+
+D. To log data into console
+
+Answer: B
+
+7.
+
+A developer uses:
+
+ 
+
+<details> <summary>Click to read more</summary> This section contains additional details. </details> 
+
+What will happen when the user clicks the summary line?
+
+Options:
+
+A. The page will reload
+
+B. The hidden text will expand or collapse
+
+C. The text will be deleted
+
+D. The summary will turn into a hyperlink
+
+Answer: B
+
+8.
+
+A web developer includes:
+
+ 
+
+<meter value="0.8" min="0" max="1"></meter> 
+
+What does this represent in HTML5?
+
+Options:
+
+A. A circular progress indicator
+
+B. A gauge showing 80% value
+
+C. A numeric input box
+
+D. A bar chart
+
+Answer: B
+
+9.
+
+A news website uses:
+
+ 
+
+<article> <header><h2>Breaking News</h2></header> <p>New updates on the current topic...</p> </article> 
+
+What is the semantic purpose of the <article> tag?
+
+Options:
+
+A. Defines navigation links
+
+B. Marks independent, self-contained content
+
+C. Creates a sidebar
+
+D. Wraps all page elements
+
+Answer: B
+
+10.
+
+A developer structures a webpage as:
+
+ 
+
+<header>Header Section</header> <main>Main Content</main> <footer>Footer Info</footer> 
+
+What is the purpose of the <main> tag?
+
+Options:
+
+A. Defines content repeated on every page
+
+B. Marks the central and unique content of the document
+
+C. Used to hold navigation menus
+
+D. Contains only metadata
+
+Answer: B

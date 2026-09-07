@@ -1,0 +1,263 @@
+Skill Assessment Portal
+
+Home1. Coding (DSA)2. SQL Database3. Web DevSolutions
+
+Assessment Overview
+
+Select any unlocked section below to begin or manage your assessment tests.
+
+View All Solutions
+
+Unlocked
+
+1. Coding (DSA)
+
+Check matrix validity (n x n) containing integers 1 to n. Complete test suite provided.
+
+Timer: 20 Mins
+Start Section
+
+Unlocked
+
+2. SQL Database
+
+Medium complexity SQL query targeting an e-commerce schema across 6 related tables.
+
+Timer: 10 Mins
+Start Section
+
+Unlocked
+
+3. Web Development
+
+Front-end challenge modifying JavaScript and HTML code for dynamic counter bounds.
+
+Timer: 10 Mins
+Start Section
+
+Section 1: Data Structures & Algorithms
+
+20:00
+
+Problem Statement: Check if Matrix Is Valid
+
+An n x n matrix is valid if every row and every column contains all the integers from 1 to n (inclusive).
+
+Given an n x n integer matrix matrix, return true if the matrix is valid. Otherwise, return false.
+
+Constraints:
+
+	
+n == matrix.length == matrix[i].length
+	
+1 <= n <= 100
+	
+1 <= matrix[i][j] <= n
+
+Example Test Cases:
+
+Test Case 1
+
+Input: matrix = [[1,2,3],[3,1,2],[2,3,1]]
+
+Output: true
+
+Explanation: In this case, n = 3. Every row and column contains the numbers 1, 2, and 3. Hence, return true.
+
+Test Case 2
+
+Input: matrix = [[1,1,1],[1,2,3],[1,2,3]]
+
+Output: false
+
+Explanation: In this case, n = 3. The first row [1,1,1] does not contain integers 2 and 3. Hence, return false.
+
+Test Case 3
+
+Input: matrix = [[2,2,2],[2,2,2],[2,2,2]]
+
+Output: false
+
+Explanation: Duplicate values exist in every row and column, missing integers 1 and 3.
+
+Select Language: JavaPythonC# Submit Solution
+
+Section 2: Database Querying (SQL)
+
+10:00
+
+Problem Statement: High-Value E-Commerce Customers
+
+Write an SQL query to retrieve the customer_name, total number of completed orders, and total amount spent for customers who have spent more than $1,000 in the year 2025 across all completed orders shipped to 'USA'. Sort the results by total amount spent in descending order.
+
+Database Schema (6 Tables)
+
+Customers
+
+	
+customer_id (PK)
+	
+customer_name
+	
+country_id (FK)
+
+Orders
+
+	
+order_id (PK)
+	
+customer_id (FK)
+	
+order_date
+	
+status_id (FK)
+
+Order_Items
+
+	
+item_id (PK)
+	
+order_id (FK)
+	
+product_id (FK)
+	
+quantity
+	
+unit_price
+
+Products
+
+	
+product_id (PK)
+	
+product_name
+	
+category_id (FK)
+
+Order_Status
+
+	
+status_id (PK)
+	
+status_name ('Completed', 'Pending')
+
+Countries
+
+	
+country_id (PK)
+	
+country_name ('USA', 'Canada')
+
+Submit Solution
+
+-- Write your SQL Query below:
+SELECT 
+ c.customer_name
+FROM Customers c
+-- Add JOINs and conditions here
+;
+
+Section 3: Web Development (JS & HTML)
+
+10:00
+
+Task: Interactive Counter with Limit
+
+Modify the provided JavaScript code so that:
+
+	
+The Increment button increases the count, but cannot exceed 10.
+	
+The Decrement button decreases the count, but cannot go below 0.
+	
+Update the paragraph with ID status-msg to show "Maximum limit reached!" when count is 10, and "Minimum limit reached!" when count is 0. Otherwise, keep it empty.
+
+Run Code & Update PreviewSubmit Solution
+
+<!DOCTYPE html>
+<html>
+<head>
+ <style>
+ body { font-family: sans-serif; text-align: center; padding-top: 10px; }
+ button { padding: 6px 12px; margin: 4px; cursor: pointer; }
+ #count { font-weight: bold; font-size: 1.2rem; }
+ #status-msg { color: red; font-size: 0.85rem; margin-top: 5px; }
+ </style>
+</head>
+<body>
+ <div>Count: <span id="count">0</span></div>
+ <button id="inc-btn">Increment (+)</button>
+ <button id="dec-btn">Decrement (-)</button>
+ <p id="status-msg"></p>
+
+ <script>
+ let count = 0;
+ const countEl = document.getElementById('count');
+ const msgEl = document.getElementById('status-msg');
+
+ document.getElementById('inc-btn').addEventListener('click', () => {
+ // TODO: Increment count (Max limit: 10) and update UI/status
+ count++;
+ countEl.textContent = count;
+ });
+
+ document.getElementById('dec-btn').addEventListener('click', () => {
+ // TODO: Decrement count (Min limit: 0) and update UI/status
+ count--;
+ countEl.textContent = count;
+ });
+ </script>
+</body>
+</html>
+
+Live Output Preview
+
+Reference Solutions
+
+1. Coding (DSA) Reference Solution
+
+Language: JavaPythonC# 
+
+ 
+
+2. SQL Database Reference Solution
+
+SELECT 
+ c.customer_name,
+ COUNT(DISTINCT o.order_id) AS total_orders,
+ SUM(oi.quantity * oi.unit_price) AS total_spent
+FROM Customers c
+JOIN Countries cnt ON c.country_id = cnt.country_id
+JOIN Orders o ON c.customer_id = o.customer_id
+JOIN Order_Status os ON o.status_id = os.status_id
+JOIN Order_Items oi ON o.order_id = oi.order_id
+WHERE cnt.country_name = 'USA'
+ AND os.status_name = 'Completed'
+ AND o.order_date BETWEEN '2025-01-01' AND '2025-12-31'
+GROUP BY c.customer_id, c.customer_name
+HAVING SUM(oi.quantity * oi.unit_price) > 1000
+ORDER BY total_spent DESC;
+
+3. Web Development Reference Solution
+
+<script>
+ let count = 0;
+ const countEl = document.getElementById('count');
+ const msgEl = document.getElementById('status-msg');
+
+ document.getElementById('inc-btn').addEventListener('click', () => {
+ if (count < 10) {
+ count++;
+ countEl.textContent = count;
+ msgEl.textContent = count === 10 ? "Maximum limit reached!" : "";
+ }
+ });
+
+ document.getElementById('dec-btn').addEventListener('click', () => {
+ if (count > 0) {
+ count--;
+ countEl.textContent = count;
+ msgEl.textContent = count === 0 ? "Minimum limit reached!" : "";
+ }
+ });
+</script>

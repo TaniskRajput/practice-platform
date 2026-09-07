@@ -1,0 +1,275 @@
+Skill Assessment Portal
+
+Home1. Coding (DSA)2. SQL Database3. Web DevSolutions
+
+Assessment Overview
+
+Select any unlocked section below to begin or manage your assessment tests.
+
+View All Solutions
+
+Unlocked
+
+1. Coding (DSA)
+
+Grid-based Encryption algorithm. Construct layout dimensions and read column-wise.
+
+Timer: 20 Mins
+Start Section
+
+Unlocked
+
+2. SQL Database
+
+Calculate 30-day retention rate and active subscriber metrics across SaaS billing schemas.
+
+Timer: 10 Mins
+Start Section
+
+Unlocked
+
+3. Web Development
+
+Implement client-side interactive form validation and dynamic feedback styling.
+
+Timer: 10 Mins
+Start Section
+
+Section 1: Data Structures & Algorithms
+
+20:00
+
+Problem Statement: Text Encryption Grid
+
+An English text needs to be encrypted using a grid encryption scheme.
+
+First, remove all spaces from the text. Let L be the length of this modified string. Then, arrange the characters in a grid with rows and columns satisfying:
+
+floor(√L) ≤ rows ≤ columns ≤ ceil(√L)
+
+Ensure that rows × columns ≥ L. If multiple grids satisfy this condition, select the one with the minimum area (i.e., rows × columns). Write the encoded message by reading column by column, separating each column with a space.
+
+Constraints:
+
+	
+1 <= length(s) <= 81
+	
+s contains Latin characters and spaces.
+
+Example Test Cases:
+
+Test Case 1
+
+Input: s = "if man was meant to stay on the ground god would have given us roots"
+
+Output: "imtha tfaha odmyg erneu gtwru gmsos nneod eveag eerte"
+
+Explanation: After removing spaces, length L = 54. √54 is between 7 and 8. So, grid is 7 rows and 8 columns (area = 56 ≥ 54). Reading columns produces 8 words separated by spaces.
+
+Test Case 2
+
+Input: s = "have a nice day"
+
+Output: "hae and via ecy"
+
+Explanation: Length L = 12 without spaces. √12 is between 3 and 4. Dimensions chosen are 3 rows and 4 columns. Grid:
+
+have
+
+anic
+
+eday
+
+Output column-wise: "hae and via ecy".
+
+Test Case 3
+
+Input: s = "feedthedog"
+
+Output: "fto eeh ddg"
+
+Explanation: L = 10. √10 is between 3 and 4. 3 × 3 = 9 < 10, so grid dimensions must be 3 × 4.
+
+Select Language: JavaPythonC# Submit Solution
+
+Section 2: Database Querying (SQL)
+
+10:00
+
+Problem Statement: Monthly Subscription Retention Analytics
+
+Write an SQL query to find the 30-day user renewal rate per subscription plan for Q1 2026. Calculate total active subscribers, successful renewals, and the renewal percentage formatted as renewal_rate (rounded to 2 decimal places). Filter for plans with more than 50 total subscriptions.
+
+Database Schema (6 Tables)
+
+Users
+
+	
+user_id (PK)
+	
+user_name
+	
+signup_date
+
+Subscriptions
+
+	
+subscription_id (PK)
+	
+user_id (FK)
+	
+plan_id (FK)
+	
+start_date
+	
+end_date
+
+Plans
+
+	
+plan_id (PK)
+	
+plan_name
+	
+monthly_fee
+
+Renewals
+
+	
+renewal_id (PK)
+	
+subscription_id (FK)
+	
+renewal_date
+	
+status_id (FK)
+
+Payment_Status
+
+	
+status_id (PK)
+	
+status_code ('SUCCESS', 'FAILED')
+
+Regions
+
+	
+region_id (PK)
+	
+region_name
+
+Submit Solution
+
+-- Write your SQL Query below:
+SELECT 
+ p.plan_name
+FROM Plans p
+-- Add JOINs and analytics logic here
+;
+
+Section 3: Web Development (JS & HTML)
+
+10:00
+
+Task: Interactive Password Strength & Match Evaluator
+
+Modify the provided JavaScript code so that:
+
+	
+Validate that the Password is at least 8 characters long.
+	
+Check that the Password and Confirm Password fields match in real-time.
+	
+Set `#feedback-msg` text to "Passwords Match" in green if both pass, or "Passwords do not match or too short" in red if validation fails.
+
+Run Code & Update PreviewSubmit Solution
+
+<!DOCTYPE html>
+<html>
+<head>
+ <style>
+ body { font-family: sans-serif; padding: 15px; color: #333; }
+ .form-group { margin-bottom: 10px; }
+ label { display: block; font-size: 0.85rem; margin-bottom: 4px; }
+ input { padding: 6px; width: 100%; max-width: 280px; }
+ #feedback-msg { font-weight: bold; font-size: 0.85rem; margin-top: 8px; }
+ </style>
+</head>
+<body>
+ <div class="form-group">
+ <label for="pass">Password (Min 8 chars):</label>
+ <input type="password" id="pass" placeholder="Enter password">
+ </div>
+ <div class="form-group">
+ <label for="confirm-pass">Confirm Password:</label>
+ <input type="password" id="confirm-pass" placeholder="Confirm password">
+ </div>
+ <p id="feedback-msg"></p>
+
+ <script>
+ const passInput = document.getElementById('pass');
+ const confirmInput = document.getElementById('confirm-pass');
+ const msg = document.getElementById('feedback-msg');
+
+ function validate() {
+ // TODO: Implement password validation logic
+ }
+
+ passInput.addEventListener('input', validate);
+ confirmInput.addEventListener('input', validate);
+ </script>
+</body>
+</html>
+
+Live Output Preview
+
+Reference Solutions
+
+1. Coding (DSA) Reference Solution
+
+Language: JavaPythonC# 
+
+ 
+
+2. SQL Database Reference Solution
+
+SELECT 
+ p.plan_name,
+ COUNT(DISTINCT s.subscription_id) AS total_subscriptions,
+ COUNT(DISTINCT CASE WHEN ps.status_code = 'SUCCESS' THEN r.renewal_id END) AS successful_renewals,
+ ROUND(
+ (COUNT(DISTINCT CASE WHEN ps.status_code = 'SUCCESS' THEN r.renewal_id END) * 100.0) / 
+ COUNT(DISTINCT s.subscription_id), 2
+ ) AS renewal_rate
+FROM Plans p
+JOIN Subscriptions s ON p.plan_id = s.plan_id
+LEFT JOIN Renewals r ON s.subscription_id = r.subscription_id
+LEFT JOIN Payment_Status ps ON r.status_id = ps.status_id
+WHERE s.start_date BETWEEN '2026-01-01' AND '2026-03-31'
+GROUP BY p.plan_id, p.plan_name
+HAVING COUNT(DISTINCT s.subscription_id) > 50
+ORDER BY renewal_rate DESC;
+
+3. Web Development Reference Solution
+
+<script>
+ const passInput = document.getElementById('pass');
+ const confirmInput = document.getElementById('confirm-pass');
+ const msg = document.getElementById('feedback-msg');
+
+ function validate() {
+ const val1 = passInput.value;
+ const val2 = confirmInput.value;
+
+ if (val1.length >= 8 && val1 === val2) {
+ msg.textContent = "Passwords Match";
+ msg.style.color = "green";
+ } else {
+ msg.textContent = "Passwords do not match or too short";
+ msg.style.color = "red";
+ }
+ }
+
+ passInput.addEventListener('input', validate);
+ confirmInput.addEventListener('input', validate);
+</script>

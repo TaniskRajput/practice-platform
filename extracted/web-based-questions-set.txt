@@ -1,0 +1,15 @@
+💻 Cognizant GenC / Digital UI Coding Practice Lab
+Complete HTML + CSS + JS Solutions
+
+Select Problem
+1. Shopping Cart Total2. Grade Calculator & Filter3. Password Validator4. Multi-Step Quiz5. Product Grid Filter6. Modal Dialog & Timer7. Responsive Drawer8. LocalStorage To-Do9. Tab Switcher & Badge10. Char Limit & Progress
+
+Live Component Preview Interactive Execution Area
+
+Evaluation Requirements Checklist:
+
+Solution Source CodeCopy Code
+
+HTMLCSSJavaScript
+
+// Select a module from the sidebar to inspect code...

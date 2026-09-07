@@ -1,0 +1,337 @@
+1.
+
+A developer creates a button:
+
+ 
+
+<button id="btn1" onclick="updateAttr(this)">Click Me</button>
+
+<script>
+
+function updateAttr(el) 
+
+{ el.setAttribute("data-status", "active"); 
+
+document.write(el.getAttribute("data-status"));
+
+} 
+
+</script> 
+
+What is the output when the button is clicked?
+
+Options:
+
+A. active
+
+B. undefined
+
+C. Error
+
+D. Click Me
+
+Answer: A
+
+Explanation: setAttribute sets data-status, and getAttribute fetches it.
+
+2.
+
+Consider this snippet:
+
+ 
+
+<input type="text" id="myInput" value="Hello"> 
+
+<button onclick="changeValue()">Change</button> 
+
+<script> function changeValue()
+
+{ let input = document.getElementById("myInput");
+
+input.value = "World";
+
+document.write(input.value); } 
+
+</script> 
+
+What appears on screen after clicking the button?
+
+Options:
+
+A. Hello
+
+B. World
+
+C. input element disappears
+
+D. undefined
+
+Answer: B
+
+Explanation: The value property is updated and printed.
+
+3.
+
+A developer writes:
+
+ 
+
+<button onclick="toggleAttr(this)">Toggle</button>
+
+<script> 
+
+function toggleAttr(btn) { if(btn.hasAttribute("disabled"))
+
+{ btn.removeAttribute("disabled"); }
+
+else { btn.setAttribute("disabled", "true"); }
+
+document.write(btn.hasAttribute("disabled")); }
+
+</script> 
+
+What happens when the button is clicked once?
+
+Options:
+
+A. true
+
+B. false
+
+C. Error
+
+D. undefined
+
+Answer: A
+
+Explanation: hasAttribute returns true after disabled is set.
+
+4.
+
+ 
+
+<button onclick="modifyStyle(this)">Click</button>
+
+<script> 
+
+function modifyStyle(el) 
+
+{ el.style.backgroundColor = "red"; document.write(el.style.backgroundColor); }
+
+</script> 
+
+What will the page display after the click?
+
+Options:
+
+A. red
+
+B. undefined
+
+C. rgb(255, 0, 0)
+
+D. Error
+
+Answer: A
+
+Explanation: Inline style backgroundColor is set to "red" and retrieved.
+
+5.
+
+ 
+
+<p id="para1">Sample</p>
+
+<button onclick="addClass()">Add Class</button> 
+
+<script>
+
+function addClass() 
+
+{ let p = document.getElementById("para1"); 
+
+p.className = "highlight";
+
+document.write(p.className); } 
+
+</script> 
+
+What will be displayed after clicking the button?
+
+Options:
+
+A. Sample
+
+B. highlight
+
+C. undefined
+
+D. class highlight applied silently
+
+Answer: B
+
+Explanation: className property sets and returns the class.
+
+6.
+
+ 
+
+<button onclick="setData(this)">Set</button> 
+
+<script> 
+
+function setData(btn) 
+
+{ btn.dataset.role = "admin"; 
+
+document.write(btn.dataset.role);
+
+} 
+
+</script> 
+
+What will be printed on the page after clicking the button?
+
+Options:
+
+A. admin
+
+B. role
+
+C. undefined
+
+D. Error
+
+Answer: A
+
+Explanation: dataset.role sets a data attribute and retrieves it.
+
+7.
+
+ 
+
+<input type="checkbox" id="chk1" onclick="checkStatus(this)"> 
+
+<script>
+
+function checkStatus(c) 
+
+{ c.checked = !c.checked;
+
+document.write(c.checked); }
+
+</script> 
+
+If the checkbox was initially unchecked, what is printed on first click?
+
+Options:
+
+A. true
+
+B. false
+
+C. undefined
+
+D. Error
+
+Answer: A
+
+Explanation: The checked property is toggled.
+
+8.
+
+ 
+
+<img id="img1" src="img1.jpg" onclick="changeSrc(this)">
+
+<script> function changeSrc(img) 
+
+{ img.setAttribute("src", "img2.jpg");
+
+document.write(img.getAttribute("src")); 
+
+} 
+
+</script> 
+
+What will appear after the image is clicked?
+
+Options:
+
+A. img1.jpg
+
+B. img2.jpg
+
+C. Error
+
+D. [object HTMLImageElement]
+
+Answer: B
+
+Explanation: setAttribute changes the src attribute; getAttribute returns it.
+
+9.
+
+ 
+
+<button id="btn2" onclick="updateText(this)">Press</button> <script> 
+
+function updateText(btn)
+
+{ btn.innerHTML = "Done"; 
+
+document.write(btn.innerHTML); 
+
+} 
+
+</script> 
+
+What is displayed after the button click?
+
+Options:
+
+A. Press
+
+B. Done
+
+C. undefined
+
+D. innerHTML
+
+Answer: B
+
+Explanation: innerHTML updates button text and prints it.
+
+10.
+
+ 
+
+<button onclick="setMultiple(this)">Click Me</button>
+
+<script> function setMultiple(b) 
+
+{ b.setAttribute("type", "submit");
+
+b.setAttribute("name", "myButton"); 
+
+document.write(b.getAttribute("name"));
+
+} 
+
+</script> 
+
+What is printed after the button is clicked?
+
+Options:
+
+A. submit
+
+B. myButton
+
+C. undefined
+
+D. Error
+
+Answer: B
+
+Explanation: The name attribute is set and retrieved with getAttribute.

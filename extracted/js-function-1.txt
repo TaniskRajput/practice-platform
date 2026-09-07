@@ -1,0 +1,299 @@
+1.
+
+A web developer creates a paragraph element dynamically using JavaScript. The code is as follows:
+
+ 
+
+var para = document.createElement("p"); 
+
+para.innerText = "Dynamic Text"; 
+
+document.body.appendChild(para); 
+
+document.write(document.getElementsByTagName("p").length); 
+
+What will be the output?
+
+Options:
+
+A. 0
+
+B. 1
+
+C. 2
+
+D. Undefined
+
+Answer: B → Only one <p> element is created and appended before document.write() executes.
+
+2.
+
+Consider the following code:
+
+ 
+
+<button onclick="changeText(this)">Click</button>
+
+<script> function changeText(btn)
+
+{ btn.innerHTML = "Clicked";
+
+document.write(btn.innerHTML); 
+
+} </script> 
+
+What will appear on the screen after clicking the button?
+
+Options:
+
+A. Button text changes to “Clicked” and remains visible
+
+B. “Clicked” is written on screen, button disappears
+
+C. Error occurs
+
+D. Button shows no change
+
+Answer: B → document.write() clears the page and shows only “Clicked”.
+
+3.
+
+A form has one text input field and a button. When the button is clicked, the function below executes:
+
+ 
+
+function showValue() 
+
+{ var val = document.getElementById("user").value; 
+
+document.write(typeof val); } 
+
+If the user enters 123 in the input field and clicks the button, what is printed?
+
+Options:
+
+A. number
+
+B. string
+
+C. undefined
+
+D. object
+
+Answer: B → All input values from HTML forms are returned as strings.
+
+4.
+
+A developer creates this HTML and JavaScript snippet:
+
+ 
+
+<div id="demo"></div> 
+
+<script> 
+
+document.getElementById("demo").innerHTML = 10 + 20 + "30"; 
+
+</script> 
+
+What is the output displayed in the div?
+
+Options:
+
+A. 3030
+
+B. 102030
+
+C. 3030
+
+D. 3030 (string type)
+
+Answer: D → 10 + 20 = 30, then 30 + "30" = "3030" (string).
+
+5.
+
+The following code is executed:
+
+ 
+
+<p id="test">Hello</p> 
+
+<script> var element = document.getElementById("test");
+
+element.setAttribute("id", "sample"); 
+
+document.write(document.getElementById("test")); 
+
+</script> 
+
+What is printed on the document?
+
+Options:
+
+A. Hello
+
+B. null
+
+C. undefined
+
+D. object
+
+Answer: B → After renaming id to “sample”, element with id “test” no longer exists, so getElementById("test") returns null.
+
+6.
+
+What will be displayed after executing this code?
+
+ 
+
+<button onclick="check()">Test</button> 
+
+<script> function check() 
+
+{ var btn = document.createElement("button"); 
+
+btn.innerText = "New"; 
+
+document.body.appendChild(btn); 
+
+document.write(document.body.lastChild.innerText);
+
+} </script> 
+
+Options:
+
+A. Test
+
+B. New
+
+C. Undefined
+
+D. Error
+
+Answer: B → The last appended element is the “New” button, and document.write() prints its inner text.
+
+7.
+
+A script contains the following:
+
+ 
+
+var div = document.createElement("div"); 
+
+div.id = "block"; 
+
+div.setAttribute("data-info", "12345"); 
+
+document.write(div.getAttribute("id") + " " + div.getAttribute("data-info")); 
+
+What is the output?
+
+Options:
+
+A. undefined undefined
+
+B. null null
+
+C. block 12345
+
+D. div 12345
+
+Answer: C → Both attributes exist and return correct values.
+
+8.
+
+If a developer executes this:
+
+ 
+
+<script>
+
+var list = document.createElement("ul");
+
+for (let i = 1; i <= 3; i++) 
+
+{ var li = document.createElement("li");
+
+li.innerText = "Item " + i; 
+
+list.appendChild(li); }
+
+document.write(list.childNodes.length);
+
+</script> 
+
+What will be displayed?
+
+Options:
+
+A. 0
+
+B. 1
+
+C. 3
+
+D. Undefined
+
+Answer: C → Three <li> elements were added as children of <ul>.
+
+9.
+
+Consider this snippet:
+
+ 
+
+<p id="p1">Old Text</p>
+
+<script> var p = document.getElementById("p1"); 
+
+p.textContent = "Updated"; 
+
+document.write(p.innerHTML);
+
+</script> 
+
+Output:
+
+A. Old Text
+
+B. Updated
+
+C. undefined
+
+D. null
+
+Answer: B → Both textContent and innerHTML reflect “Updated”.
+
+10.
+
+Suppose this code executes:
+
+ 
+
+<button id="btn">Click</button>
+
+<script> 
+
+document.getElementById("btn").onclick = function()
+
+{ this.setAttribute("data-clicked", "yes"); 
+
+document.write(this.getAttribute("data-clicked")); 
+
+} 
+
+</script> 
+
+What happens after clicking the button?
+
+Options:
+
+A. Button shows “yes”
+
+B. “yes” appears on screen, button disappears
+
+C. Nothing changes
+
+D. Error occurs
+
+Answer: B → Attribute is added, but document.write() replaces everything and displays “yes”.

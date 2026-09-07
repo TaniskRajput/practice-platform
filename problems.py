@@ -1,9 +1,22 @@
 """
 Problem definitions for the practice platform.
 Each problem carries its description (HTML), boilerplates, and test cases.
-Server-side judged problems (java/cpp/sql) include reference solutions;
+Server-side judged problems (java/cpp/sql) include per-database reference solutions;
 browser-judged problems (javascript DOM) define test steps interpreted by the frontend.
+Problems 4-15 (curated from the KN Academy course) live in problems_extra.py.
 """
+
+from problems_extra import NEW_PROBLEMS
+
+def _db(name, hidden, schema, seed, reference_query):
+    return {
+        "name": name,
+        "hidden": hidden,
+        "schema": schema,
+        "seed": seed,
+        "reference_query": reference_query,
+    }
+
 
 PROBLEMS = [
     # ------------------------------------------------------------------ #
@@ -20,19 +33,26 @@ PROBLEMS = [
         "description": """
 <p>An <code>n x n</code> matrix is <b>valid</b> if every row and every column contains all the integers
 from <code>1</code> to <code>n</code> (inclusive).</p>
-<p>Given an <code>n x n</code> integer matrix <code>matrix</code>, return <code>true</code> if the matrix
-is valid. Otherwise, return <code>false</code>.</p>
+<p>Given an <code>n x n</code> integer matrix, print <code>true</code> if the matrix is valid,
+otherwise print <code>false</code>.</p>
+<h3>Input format:</h3>
+<p>First line: <code>n</code>. Then <code>n</code> lines, each with <code>n</code> space-separated integers.</p>
 <h3>Example 1:</h3>
-<pre>Input: matrix = [[1,2,3],[3,1,2],[2,3,1]]
-Output: true
-Explanation: In this case, n = 3. Every row and column contains the numbers 1, 2, and 3.</pre>
+<pre>Input:            Output:
+3                 true
+1 2 3
+3 1 2
+2 3 1</pre>
+<p>Explanation: n = 3. Every row and column contains the numbers 1, 2, and 3.</p>
 <h3>Example 2:</h3>
-<pre>Input: matrix = [[1,1,1],[1,2,3],[1,2,3]]
-Output: false
-Explanation: In this case, n = 3. The first row does not contain the numbers 2 and 3.</pre>
+<pre>Input:            Output:
+3                 false
+1 1 1
+1 2 3
+1 2 3</pre>
+<p>Explanation: The first row does not contain the numbers 2 and 3.</p>
 <h3>Constraints:</h3>
 <ul>
-  <li><code>n == matrix.length == matrix[i].length</code></li>
   <li><code>1 &lt;= n &lt;= 100</code></li>
   <li><code>1 &lt;= matrix[i][j] &lt;= n</code></li>
 </ul>
@@ -41,32 +61,54 @@ Explanation: In this case, n = 3. The first row does not contain the numbers 2 a
                  "in it must have size n, and every value must be within [1, n]. Try using a set per row "
                  "and per column, or a frequency table.",
         "boilerplate": {
-            "java": """class Solution {
-    public boolean checkValid(int[][] matrix) {
+            "java": """import java.util.*;
 
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[][] matrix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = sc.nextInt();
+            }
+        }
+
+        // TODO: check every row and column contains 1..n exactly once
+        boolean valid = true;
+
+        System.out.println(valid);
     }
 }""",
             "cpp": """#include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
-public:
-    bool checkValid(vector<vector<int>>& matrix) {
+int main() {
+    int n;
+    cin >> n;
+    vector<vector<int>> matrix(n, vector<int>(n));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            cin >> matrix[i][j];
 
-    }
-};""",
+    // TODO: check every row and column contains 1..n exactly once
+    bool valid = true;
+
+    cout << (valid ? "true" : "false") << endl;
+    return 0;
+}""",
         },
         "tests": [
-            {"input": "[[1,2,3],[3,1,2],[2,3,1]]", "expected": "true", "hidden": False},
-            {"input": "[[1,1,1],[1,2,3],[1,2,3]]", "expected": "false", "hidden": False},
-            {"input": "[[1]]", "expected": "true", "hidden": True},
-            {"input": "[[1,2],[2,1]]", "expected": "true", "hidden": True},
-            {"input": "[[1,2],[1,2]]", "expected": "false", "hidden": True},
-            {"input": "[[1,2,3],[2,3,1],[1,2,3]]", "expected": "false", "hidden": True},
-            {"input": "[[1,2,3,4],[2,3,4,1],[3,4,1,2],[4,1,2,3]]", "expected": "true", "hidden": True},
+            {"input": "3\n1 2 3\n3 1 2\n2 3 1", "expected": "true", "hidden": False},
+            {"input": "3\n1 1 1\n1 2 3\n1 2 3", "expected": "false", "hidden": False},
+            {"input": "1\n1", "expected": "true", "hidden": True},
+            {"input": "2\n1 2\n2 1", "expected": "true", "hidden": True},
+            {"input": "2\n1 2\n1 2", "expected": "false", "hidden": True},
+            {"input": "3\n1 2 3\n2 3 1\n1 2 3", "expected": "false", "hidden": True},
+            {"input": "4\n1 2 3 4\n2 3 4 1\n3 4 1 2\n4 1 2 3", "expected": "true", "hidden": True},
+            {"input": "4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4", "expected": "false", "hidden": True},
         ],
         "samples": [0, 1],
-        "function_name": "checkValid",
     },
 
     # ------------------------------------------------------------------ #
@@ -180,6 +222,13 @@ ORDER BY""",
             {
                 "name": "Sample database",
                 "hidden": False,
+                "schema": """
+CREATE TABLE Customers (customer_id INTEGER PRIMARY KEY, customer_name TEXT, country_id INTEGER);
+CREATE TABLE Countries (country_id INTEGER PRIMARY KEY, country_name TEXT);
+CREATE TABLE Orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER, status_id INTEGER, order_date TEXT);
+CREATE TABLE Order_Status (status_id INTEGER PRIMARY KEY, status_name TEXT);
+CREATE TABLE Order_Items (order_id INTEGER, quantity INTEGER, unit_price REAL);
+""",
                 "seed": {
                     "Countries": [
                         (1, "USA"), (2, "Canada"), (3, "UK"),
@@ -219,10 +268,33 @@ ORDER BY""",
                         (110, 4, 250.00),   #          -> year 2024, excluded
                     ],
                 },
+                "reference_query": """
+SELECT cu.customer_name AS customer_name,
+       COUNT(DISTINCT o.order_id) AS total_orders,
+       SUM(oi.quantity * oi.unit_price) AS total_spent
+FROM Customers cu
+JOIN Countries co ON cu.country_id = co.country_id
+JOIN Orders o ON o.customer_id = cu.customer_id
+JOIN Order_Status s ON o.status_id = s.status_id
+JOIN Order_Items oi ON oi.order_id = o.order_id
+WHERE co.country_name = 'USA'
+  AND s.status_name = 'Completed'
+  AND CAST(strftime('%Y', o.order_date) AS INTEGER) = 2025
+GROUP BY cu.customer_id, cu.customer_name
+HAVING SUM(oi.quantity * oi.unit_price) > 1000
+ORDER BY total_spent DESC
+""",
             },
             {
                 "name": "Hidden database",
                 "hidden": True,
+                "schema": """
+CREATE TABLE Customers (customer_id INTEGER PRIMARY KEY, customer_name TEXT, country_id INTEGER);
+CREATE TABLE Countries (country_id INTEGER PRIMARY KEY, country_name TEXT);
+CREATE TABLE Orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER, status_id INTEGER, order_date TEXT);
+CREATE TABLE Order_Status (status_id INTEGER PRIMARY KEY, status_name TEXT);
+CREATE TABLE Order_Items (order_id INTEGER, quantity INTEGER, unit_price REAL);
+""",
                 "seed": {
                     "Countries": [
                         (1, "USA"), (2, "Canada"), (3, "UK"),
@@ -261,9 +333,7 @@ ORDER BY""",
                         (209, 2, 1100.00),  # 2200.00 -> Karen total 2200.00
                     ],
                 },
-            },
-        ],
-        "reference_query": """
+                "reference_query": """
 SELECT cu.customer_name AS customer_name,
        COUNT(DISTINCT o.order_id) AS total_orders,
        SUM(oi.quantity * oi.unit_price) AS total_spent
@@ -279,6 +349,8 @@ GROUP BY cu.customer_id, cu.customer_name
 HAVING SUM(oi.quantity * oi.unit_price) > 1000
 ORDER BY total_spent DESC
 """,
+            },
+        ],
     },
 
     # ------------------------------------------------------------------ #
@@ -398,11 +470,6 @@ initializeCounter();
     },
 ]
 
-SCHEMA_SQL = """
-CREATE TABLE Customers (customer_id INTEGER PRIMARY KEY, customer_name TEXT, country_id INTEGER);
-CREATE TABLE Countries (country_id INTEGER PRIMARY KEY, country_name TEXT);
-CREATE TABLE Orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER, status_id INTEGER, order_date TEXT);
-CREATE TABLE Order_Status (status_id INTEGER PRIMARY KEY, status_name TEXT);
-CREATE TABLE Order_Items (order_id INTEGER, quantity INTEGER, unit_price REAL);
-"""
+PROBLEMS.extend(NEW_PROBLEMS)
+
 

@@ -1,0 +1,467 @@
+{
+  "Coding 1 (Accenture)": {
+    "assignment": {
+      "_id": "6a97bf2edbcc9ad435fcdcf4",
+      "from": {
+        "org": [
+          "667e6fa25b01cb513582756a"
+        ],
+        "createdBy": "667e6fa25b01cb513582756c",
+        "courseIds": [
+          "677fe6f13aefc560aacf5a59"
+        ]
+      },
+      "spayee:resource": {
+        "spayee:courseAssetType": "code",
+        "spayee:title": "Coding 1 (Accenture)",
+        "spayee:allowCodeEdit": false,
+        "spayee:availability": "always",
+        "spayee:sendemail": false,
+        "spayee:emailnotify": "",
+        "spayee:testCasesEnabled": true,
+        "spayee:instructions": "<p>Problem statement.<br />\n&nbsp;</p>\n\n<p>Given a string, repeatedly remove two adjacent identical characters until no such pair remains. Return the resulting string.</p>\n\n<p><strong>Example:</strong><br />\nInput: &quot;abbaca&quot;<br />\nProcess: abbaca &rarr; aaca &rarr; ca<br />\nOutput: &quot;ca&quot;</p>\n",
+        "spayee:tags": [
+          ""
+        ],
+        "spayee:testCases": [
+          {
+            "input": "abbaca",
+            "output": "ca",
+            "visible": true
+          },
+          {
+            "input": "aaabcac",
+            "output": "bcac",
+            "visible": false
+          },
+          {
+            "input": "abaab",
+            "output": "a",
+            "visible": false
+          }
+        ],
+        "spayee:testCasesRequired": 1
+      },
+      "createdDate": {
+        "$date": "2026-09-02T06:16:14.207Z"
+      },
+      "modifiedDate": {
+        "$date": "2026-09-02T06:17:56.393Z"
+      },
+      "pendingReviewsCount": -242,
+      "courseTitle": "Accenture Mock Test Series ",
+      "statusCode": 200
+    },
+    "courseTitle": "Accenture Mock Test Series "
+  },
+  "Coding Mock Test - 14": {
+    "assignment": {
+      "_id": "686668e042d13714c260c011",
+      "from": {
+        "org": [
+          "667e6fa25b01cb513582756a"
+        ],
+        "createdBy": "67dcfc86caeaa07b3ceb6953",
+        "courseIds": [
+          "67343bd8c8c5982d55812661",
+          "677fe6f13aefc560aacf5a59"
+        ]
+      },
+      "spayee:resource": {
+        "spayee:courseAssetType": "code",
+        "spayee:title": "Coding Mock Test - 14",
+        "spayee:allowCodeEdit": true,
+        "spayee:availability": "always",
+        "spayee:sendemail": false,
+        "spayee:emailnotify": "",
+        "spayee:testCasesEnabled": true,
+        "spayee:instructions": "<p><strong>Problem statement</strong></p>\n\n<p>Detective Reva is on a high-profile case. The secret hideouts of the suspects are numbered from <code data-end=\"468\" data-start=\"465\">L</code> to <code data-end=\"475\" data-start=\"472\">R</code>. According to a tip, <strong data-end=\"558\" data-start=\"497\">only those at <strong data-end=\"531\" data-start=\"513\">prime-numbered</strong> addresses are suspicious</strong>. To narrow her search, she needs a program that lists <strong data-end=\"683\" data-start=\"613\">all prime numbers between two given limits <code data-end=\"661\" data-start=\"658\">L</code> and <code data-end=\"669\" data-start=\"666\">R</code> (inclusive)</strong>.</p>\n\n<p>If no prime numbers display <strong>No primes found</strong>.&nbsp;</p>\n\n<p style=\"margin:0cm 0cm 8pt\">Sample Test Case:</p>\n\n<p style=\"margin:0cm 0cm 8pt\">Input:</p>\n\n<p style=\"margin:0cm 0cm 8pt\">10</p>\n\n<p style=\"margin:0cm 0cm 8pt\">20</p>\n\n<p style=\"margin:0cm 0cm 8pt\">Output:</p>\n\n<p style=\"margin:0cm 0cm 8pt\">11</p>\n\n<p style=\"margin:0cm 0cm 8pt\">13</p>\n\n<p style=\"margin:0cm 0cm 8pt\">17</p>\n\n<p style=\"margin:0cm 0cm 8pt\">19</p>\n\n<p style=\"margin:0cm 0cm 8pt\">&nbsp;</p>\n",
+        "spayee:tags": [
+          ""
+        ],
+        "spayee:testCases": [
+          {
+            "input": "1\n10",
+            "output": "2\n3\n5\n7",
+            "visible": false
+          },
+          {
+            "input": "22\n29",
+            "output": "23\n29",
+            "visible": false
+          },
+          {
+            "input": "50\n55",
+            "output": "53",
+            "visible": false
+          },
+          {
+            "input": "8\n10",
+            "output": "No primes found",
+            "visible": false
+          },
+          {
+            "input": "97\n100",
+            "output": "97",
+            "visible": false
+          }
+        ],
+        "spayee:testCasesRequired": 1
+      },
+      "createdDate": {
+        "$date": "2025-07-03T11:26:24.988Z"
+      },
+      "modifiedDate": {
+        "$date": "2025-07-03T13:40:10.541Z"
+      },
+      "pendingReviewsCount": -978,
+      "report": {
+        "_id": "6a91d076901eb0ddcec37e05",
+        "createdDate": {
+          "$date": "2026-08-28T18:16:22.877Z"
+        },
+        "modifiedDate": {
+          "$date": "2026-08-28T18:16:22.925Z"
+        },
+        "lastSubmitDate": {
+          "$date": "2026-08-28T18:16:22.877Z"
+        },
+        "courseAssetType": "code",
+        "orgId": "667e6fa25b01cb513582756a",
+        "courseId": "677fe6f13aefc560aacf5a59",
+        "assignmentId": "686668e042d13714c260c011",
+        "userId": "6a85f66b6890e10f1c59c30d",
+        "status": "reviewed",
+        "testCasesEnabled": true,
+        "testCasesPassed": 2,
+        "testCasesRequired": 1,
+        "testCasesResult": [
+          {
+            "valid": false,
+            "message": ""
+          },
+          {
+            "valid": false,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          },
+          {
+            "valid": false,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          }
+        ],
+        "data": [
+          {
+            "date": {
+              "date": 28,
+              "day": 5,
+              "hours": 18,
+              "minutes": 16,
+              "month": 7,
+              "seconds": 22,
+              "time": 1787940982910,
+              "timezoneOffset": 0,
+              "year": 126
+            },
+            "status": "reviewed",
+            "adminId": "6a85f66b6890e10f1c59c30d"
+          },
+          {
+            "date": {
+              "date": 28,
+              "day": 5,
+              "hours": 18,
+              "minutes": 16,
+              "month": 7,
+              "seconds": 22,
+              "time": 1787940982877,
+              "timezoneOffset": 0,
+              "year": 126
+            },
+            "message": "Successfully Submitted",
+            "status": "under review",
+            "source_code": "I2luY2x1ZGUgPGlvc3RyZWFtPgojaW5jbHVkZTx2ZWN0b3I+CmludCBtYWluKCkgewogICAgdXNpbmcgbmFtZXNwYWNlIHN0ZDsKICAgIGludCBuOwogICAgaW50IG07CiAgICBjaW4+Pm4+Pm07CiAgICB2ZWN0b3I8aW50PiB2OwogICAgZm9yKGludCBpID0gbjtpPD1tO2krKyl7CiAgICBpbnQgY291bnQgPSAwOwogICAgICAgIGZvcihpbnQgaj0xO2o8PWk7aisrKXsKICAgICAgICAgICAgaWYoaSVqPT0wKXsKICAgICAgICAgICAgICAgIGNvdW50Kys7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgICAgIGlmKGNvdW50PT0yKXsKICAgICAgICAgICAgICAgIHYucHVzaF9iYWNrKGkpOwogICAgICAgICAgICB9CiAgICB9CiAgICBmb3IoaW50IGkgPSAwO2k8di5zaXplKCk7aSsrKXsKICAgICAgICBjb3V0PDx2W2ldPDwiICI7CiAgICB9CiAgICBjb3V0PDxlbmRsOwogICAgcmV0dXJuIDA7Cn0K",
+            "language_id": 76,
+            "stdin": "",
+            "command_line_arguments": "",
+            "redirect_stderr_to_stdout": true,
+            "testCasesEnabled": true,
+            "testCasesPassed": 2,
+            "testCasesRequired": 1,
+            "testCasesResult": [
+              {
+                "valid": false,
+                "message": ""
+              },
+              {
+                "valid": false,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              },
+              {
+                "valid": false,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              }
+            ]
+          }
+        ],
+        "userName": "Anish Kumar"
+      },
+      "courseTitle": "Accenture Mock Test Series ",
+      "statusCode": 200
+    },
+    "courseTitle": "Accenture Mock Test Series "
+  },
+  "Coding Mock Test - 15": {
+    "assignment": {
+      "_id": "686668e77c64af789dcb1f34",
+      "from": {
+        "org": [
+          "667e6fa25b01cb513582756a"
+        ],
+        "createdBy": "67dcfc86caeaa07b3ceb6953",
+        "courseIds": [
+          "67343bd8c8c5982d55812661",
+          "677fe6f13aefc560aacf5a59"
+        ]
+      },
+      "spayee:resource": {
+        "spayee:courseAssetType": "code",
+        "spayee:title": "Coding Mock Test - 15",
+        "spayee:allowCodeEdit": true,
+        "spayee:availability": "always",
+        "spayee:sendemail": false,
+        "spayee:emailnotify": "",
+        "spayee:testCasesEnabled": true,
+        "spayee:instructions": "<p><strong>Problem statement:</strong></p>\n\n<p>In the year 3025, astronauts aboard the spaceship <em data-end=\"392\" data-start=\"373\">Voyager Armstrong</em> are scanning asteroid belts. Each asteroid has an <strong data-end=\"468\" data-start=\"443\">identification number</strong>. Their onboard AI detects Armstrong numbers&nbsp;to mark them as safe zones.</p>\n\n<p>Write a program for the AI that will <strong data-end=\"835\" data-start=\"775\">identify if a given number is an Armstrong number or not</strong>.</p>\n\n<p>If it is not print&nbsp;Not an Armstrong Number.</p>\n\n<p>Sample Test Case:</p>\n\n<p>Input:</p>\n\n<p>153</p>\n\n<p>Output:</p>\n\n<p>Armstrong Number</p>\n",
+        "spayee:tags": [
+          ""
+        ],
+        "spayee:testCases": [
+          {
+            "input": "370",
+            "output": "Armstrong Number",
+            "visible": false
+          },
+          {
+            "input": "371",
+            "output": "Armstrong Number",
+            "visible": false
+          },
+          {
+            "input": "9474",
+            "output": "Armstrong Number",
+            "visible": false
+          },
+          {
+            "input": "100",
+            "output": "Not an Armstrong Number",
+            "visible": false
+          },
+          {
+            "input": "407",
+            "output": "Armstrong Number",
+            "visible": false
+          }
+        ],
+        "spayee:testCasesRequired": 1
+      },
+      "createdDate": {
+        "$date": "2025-07-03T11:26:31.414Z"
+      },
+      "modifiedDate": {
+        "$date": "2025-07-03T13:57:24.132Z"
+      },
+      "pendingReviewsCount": -620,
+      "report": {
+        "_id": "6a9f18893f11814696ed5b00",
+        "createdDate": {
+          "$date": "2026-09-07T20:03:21.485Z"
+        },
+        "modifiedDate": {
+          "$date": "2026-09-07T20:03:21.529Z"
+        },
+        "lastSubmitDate": {
+          "$date": "2026-09-07T20:03:21.485Z"
+        },
+        "courseAssetType": "code",
+        "orgId": "667e6fa25b01cb513582756a",
+        "courseId": "677fe6f13aefc560aacf5a59",
+        "assignmentId": "686668e77c64af789dcb1f34",
+        "userId": "6a85f66b6890e10f1c59c30d",
+        "status": "reviewed",
+        "testCasesEnabled": true,
+        "testCasesPassed": 5,
+        "testCasesRequired": 1,
+        "testCasesResult": [
+          {
+            "valid": true,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          },
+          {
+            "valid": true,
+            "message": ""
+          }
+        ],
+        "data": [
+          {
+            "date": {
+              "date": 7,
+              "day": 1,
+              "hours": 20,
+              "minutes": 3,
+              "month": 8,
+              "seconds": 21,
+              "time": 1788811401515,
+              "timezoneOffset": 0,
+              "year": 126
+            },
+            "status": "reviewed",
+            "adminId": "6a85f66b6890e10f1c59c30d"
+          },
+          {
+            "date": {
+              "date": 7,
+              "day": 1,
+              "hours": 20,
+              "minutes": 3,
+              "month": 8,
+              "seconds": 21,
+              "time": 1788811401485,
+              "timezoneOffset": 0,
+              "year": 126
+            },
+            "message": "Successfully Submitted",
+            "status": "under review",
+            "source_code": "I2luY2x1ZGUgPGJpdHMvc3RkYysrLmg+CnVzaW5nIG5hbWVzcGFjZSBzdGQ7CnN0cmluZyBhcm1zdHJvbmcoaW50IG4pewogICAgaW50IHRlbXAgPSBuOwogICAgaW50IHRlbXAxID0gbjsKICAgIGludCBmaW5hbCA9IDA7CiAgICBpbnQgY291bnQgPSAwOwogICAgd2hpbGUodGVtcD4wKXsKICAgICAgICBjb3VudCsrOwogICAgICAgIHRlbXA9dGVtcC8xMDsKICAgIH0KICAgIHdoaWxlKHRlbXAxPjApewogICAgICAgIGludCBkaWdpdCA9IHRlbXAxJTEwOwogICAgICAgIGZpbmFsKz1wb3coZGlnaXQsY291bnQpOwogICAgICAgIHRlbXAxPXRlbXAxLzEwOwogICAgfQogICAgaWYoZmluYWwgID09IG4pewogICAgICAgIHJldHVybiAiQXJtc3Ryb25nIE51bWJlciI7CiAgICB9CiAgICByZXR1cm4gIk5vdCBhbiBBcm1zdHJvbmcgTnVtYmVyIjsKfQppbnQgbWFpbigpewogICAgaW50IG47CiAgICBjaW4+Pm47CiAgICBjb3V0PDxhcm1zdHJvbmcobik7Cn0=",
+            "language_id": 76,
+            "stdin": "",
+            "command_line_arguments": "",
+            "redirect_stderr_to_stdout": true,
+            "testCasesEnabled": true,
+            "testCasesPassed": 5,
+            "testCasesRequired": 1,
+            "testCasesResult": [
+              {
+                "valid": true,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              },
+              {
+                "valid": true,
+                "message": ""
+              }
+            ]
+          }
+        ],
+        "userName": "Anish Kumar"
+      },
+      "courseTitle": "Accenture Mock Test Series ",
+      "statusCode": 200
+    },
+    "courseTitle": "Accenture Mock Test Series "
+  },
+  "Coding Mock Test - 16": {
+    "assignment": {
+      "_id": "686668f033303d7e9a8f395d",
+      "from": {
+        "org": [
+          "667e6fa25b01cb513582756a"
+        ],
+        "createdBy": "67dcfc86caeaa07b3ceb6953",
+        "courseIds": [
+          "67343bd8c8c5982d55812661",
+          "677fe6f13aefc560aacf5a59"
+        ]
+      },
+      "spayee:resource": {
+        "spayee:courseAssetType": "code",
+        "spayee:title": "Coding Mock Test - 16",
+        "spayee:allowCodeEdit": true,
+        "spayee:availability": "always",
+        "spayee:sendemail": false,
+        "spayee:emailnotify": "",
+        "spayee:testCasesEnabled": true,
+        "spayee:instructions": "<p><strong>Problem statement</strong></p>\n\n<p data-end=\"603\" data-start=\"356\">In a city-wide <strong data-end=\"397\" data-start=\"371\">Spell Bee Championship</strong>, students are given words and are scored based on the <strong data-end=\"472\" data-start=\"452\">number of vowels</strong> in their word. The teacher wants to automate scoring by writing a program that counts how many vowels are present in a given word.</p>\n\n<p data-end=\"757\" data-start=\"605\">As the school&#39;s coding champ, your task is to write a function that <strong data-end=\"704\" data-start=\"673\">counts the number of vowels</strong> (<code data-end=\"721\" data-start=\"706\">a, e, i, o, u</code>) in a given lowercase English word.</p>\n\n<p data-end=\"757\" data-start=\"605\"><strong>Sample Test Case:</strong></p>\n\n<p data-end=\"757\" data-start=\"605\">Input:</p>\n\n<p data-end=\"757\" data-start=\"605\">education</p>\n\n<p data-end=\"757\" data-start=\"605\">Output:</p>\n\n<p data-end=\"757\" data-start=\"605\">5</p>\n",
+        "spayee:tags": [
+          ""
+        ],
+        "spayee:testCases": [
+          {
+            "input": "apple",
+            "output": "2",
+            "visible": false
+          },
+          {
+            "input": "rhythm",
+            "output": "0",
+            "visible": false
+          },
+          {
+            "input": "umbrella",
+            "output": "3",
+            "visible": false
+          },
+          {
+            "input": "aeiou",
+            "output": "5",
+            "visible": false
+          },
+          {
+            "input": "quizmaster",
+            "output": "4",
+            "visible": false
+          }
+        ],
+        "spayee:testCasesRequired": 1
+      },
+      "createdDate": {
+        "$date": "2025-07-03T11:26:40.799Z"
+      },
+      "modifiedDate": {
+        "$date": "2025-07-03T14:09:31.955Z"
+      },
+      "pendingReviewsCount": -655,
+      "courseTitle": "Accenture Mock Test Series ",
+      "statusCode": 200
+    },
+    "courseTitle": "Accenture Mock Test Series "
+  }
+}

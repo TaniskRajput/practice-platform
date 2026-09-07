@@ -1,0 +1,474 @@
+Accenture Technical Assessment Practice Quiz
+
+Score: 0 / 44
+Reset Quiz
+
+ 
+
+Section 1: Computer Science
+
+Question 1
+
+What will be printed when `myFunction` is triggered by a button click?
+
+<body>
+<button onclick="myFunction(this);">Click Me</button>
+
+<script type="text/javascript">
+function myFunction(btn) {
+ document.write(btn.tagName.toLowerCase());
+}
+</script>
+</body>
+
+A. buttonB. object HTMLButtonElementC. BUTTOND. undefined
+
+Explanation: The 'this' keyword passes the button element reference. `btn.tagName` returns uppercase 'BUTTON', and `.toLowerCase()` evaluates to 'button'.
+
+Question 2
+
+What will be written to the document upon executing the following code?
+
+var numbers = [10, 20, 30];
+
+function divideByTwo(val) {
+ return (val / 2);
+}
+
+document.write(numbers.map(divideByTwo));
+
+A. 10, 20, 30B. 5, 10, 15C. 10, 15, 20D. 2.5, 5, 7.5
+
+Explanation: Array.prototype.map() creates a new array populated with the results of calling `divideByTwo` on every element (10/2=5, 20/2=10, 30/2=15).
+
+Question 3
+
+Which HTML5 element represents introductory content or a group of introductory/navigational aids for a section or page?
+
+A. <head>B. <header>C. <top>D. <heading>
+
+Explanation: The `<header>` element is designed in HTML5 to hold structural headers, logo placements, or navigation links.
+
+Question 4
+
+Which CSS property configuration transforms a square <div> element into a perfect circle?
+
+A. border-radius: 50%;B. border-radius: 100px 0 100px 0;C. border-style: circle;D. clip-shape: circle(50%);
+
+Explanation: Applying `border-radius: 50%` rounds all four corners of a square element by half its width, rendering a circle.
+
+Question 5
+
+Which Java snippet correctly demonstrates inheritance by establishing 'Bike' as a subtype of 'Vehicle'?
+
+A. class Vehicle { void start() {} } class Bike extends Vehicle { void start() { System.out.println("Bike started"); } }B. class Vehicle { void start() {} } class Bike implements Vehicle { }C. class Vehicle { void start() {} } class Bike inherits Vehicle { }D. class Vehicle { void start() {} } class Bike super Vehicle { }
+
+Explanation: In Java, class inheritance is implemented using the `extends` keyword.
+
+Question 6
+
+Which statement best describes an intrinsic operational benefit—rather than a drawback—of an inline reverse-proxy Web Application Firewall (WAF)?
+
+A. It adds processing latency to incoming HTTP requests.B. It demands SSL certificate installation directly on the proxy device.C. It intercepts and filters malicious traffic before payloads reach application servers.D. It introduces a potential point of failure if load balancing is absent.
+
+Explanation: Inspecting and filtering traffic prior to backend execution is the core security advantage of an inline WAF deployment.
+
+Question 7
+
+In object-oriented terms, what is the precise relationship between 'Book' and 'myBook' in the snippet below?
+
+public class Book {
+ private String title;
+ public Book(String title) { this.title = title; }
+ public String getTitle() { return title; }
+}
+
+public class Main {
+ public static void main(String[] args) {
+ Book myBook = new Book("Java Basics");
+ System.out.println(myBook.getTitle());
+ }
+}
+
+A. Book is a class definition; myBook is an instantiated object reference.B. myBook is the parent class; Book is a derived subclass.C. Both are primitive data types allocated on the stack.D. Book is an interface; myBook is a static factory method.
+
+Explanation: 'Book' serves as the blueprint (class), while 'myBook' holds a reference to a newly instantiated object memory space.
+
+Question 8
+
+Which core Object-Oriented Programming (OOP) mechanism allows `calculateArea` to have multiple implementations with distinct parameter lists in the same class?
+
+public class Calculator {
+ public double calculateArea(double radius) {
+ return 3.14 * radius * radius;
+ }
+ public double calculateArea(double length, double width) {
+ return length * width;
+ }
+}
+
+A. Method Overloading (Compile-time Polymorphism)B. Method Overriding (Runtime Polymorphism)C. Dynamic DispatchingD. Data Encapsulation
+
+Explanation: Method Overloading allows multiple methods in the same class to share a name, provided their parameter lists differ.
+
+Question 9
+
+Which HTTP status code is explicitly reserved for requests that fail due to missing or invalid authentication credentials?
+
+A. 401 UnauthorizedB. 403 ForbiddenC. 404 Not FoundD. 500 Internal Server Error
+
+Explanation: HTTP 401 Unauthorized indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.
+
+Question 10
+
+When rolling out breaking changes to a production REST API, which pattern ensures existing integration clients remain functional without forced upgrades?
+
+A. Destructive database schema migrationB. Explicit API endpoint versioning (e.g., /v1/ vs /v2/)C. Deprecating endpoints with immediate HTTP 500 errorsD. Converting payload protocols from JSON to XML dynamically
+
+Explanation: Versioning URI paths or headers allows new API features to coexist with legacy versions without breaking current clients.
+
+Question 11
+
+Which Continuous Integration/Continuous Deployment (CI/CD) component serves as a central storage repository for compiled binaries, container images, and libraries?
+
+A. Source Control SystemB. Artifact RepositoryC. Configuration ManagerD. Monitoring Agent
+
+Explanation: Artifact Repositories (e.g., JFrog Artifactory, Nexus) store and version compiled binaries, Docker images, and package dependencies.
+
+Question 12
+
+Which field in a relational 'Orders' table is the most suitable candidate for a Primary Key?
+
+A. CustomerNameB. OrderDateC. OrderIDD. ShippingAddress
+
+Explanation: A Primary Key must uniquely identify each row. 'OrderID' is guaranteed to be unique and immutable.
+
+Question 13
+
+When Transaction A reads a database row, and Transaction B updates that same row before Transaction A reads it again (yielding different values), which isolation anomaly occurs?
+
+A. Dirty ReadB. Non-repeatable ReadC. Phantom ReadD. Write Skew
+
+Explanation: A Non-repeatable Read occurs when a transaction re-reads data it previously read and finds that another committed transaction has modified that data.
+
+Question 14
+
+What is the recommended initial action when a database cluster experiences CPU saturation and connection queue spikes?
+
+A. Double physical server RAM immediatelyB. Analyze active query executions, slow logs, and APM telemetryC. Drop all non-clustered indexesD. Reboot the database system nodes
+
+Explanation: Diagnostic metrics, process lists, and slow-query logs must be inspected first to identify memory leaks, unindexed queries, or deadlocks before taking action.
+
+Section 2: Fundamentals of Networking
+
+Question 15
+
+What is the primary objective of implementing network micro-segmentation in containerized or hybrid environments?
+
+A. Accelerating network throughput speedsB. Preventing lateral threat movement across workloadsC. Eliminating the need for internal DNS resolutionD. Reducing public IP address usage
+
+Explanation: Micro-segmentation isolates workloads granularly to contain compromises and restrict unauthorized lateral movement inside the network boundary.
+
+Question 16
+
+Which IPsec sub-protocol supplies data confidentiality through encryption alongside payload integrity and authentication?
+
+A. Authentication Header (AH)B. Encapsulating Security Payload (ESP)C. Diffie-Hellman (DH)D. Internet Key Exchange (IKE)
+
+Explanation: ESP provides data encryption (confidentiality) in addition to integrity and authentication, whereas AH does not provide encryption.
+
+Question 17
+
+Which VPN setup is ideal for establishing an uninterrupted, secure bridge between a regional office network and central infrastructure?
+
+A. Site-to-Site VPNB. Remote-Access Client VPNC. SSL Web ProxyD. Host-to-Host Tunnel
+
+Explanation: A Site-to-Site VPN connects whole network subnets permanently across public networks using routers or gateway appliances.
+
+Question 18
+
+Which Transport Layer protocol operates without handshakes or retransmission mechanisms, prioritizing packet transmission speed over delivery guarantees?
+
+A. TCPB. UDPC. SCTPD. QUIC
+
+Explanation: UDP (User Datagram Protocol) is a connectionless transport protocol optimal for real-time traffic like VoIP and video streams.
+
+Question 19
+
+At which layer of the OSI model does packet routing based on logical IP addressing occur?
+
+A. Data Link Layer (Layer 2)B. Network Layer (Layer 3)C. Transport Layer (Layer 4)D. Session Layer (Layer 5)
+
+Explanation: The Network Layer handles host addressing, packet encapsulation, and path determination (routing).
+
+Question 20
+
+Which firewall architecture maintains an internal table tracking TCP handshakes (SYN, SYN-ACK, ACK) to evaluate network traffic state?
+
+A. Stateless Packet FilterB. Stateful Packet Inspection (SPI) FirewallC. Circuit-Level GatewayD. Application-Level Gateway
+
+Explanation: Stateful firewalls track the connection state of active network sessions to validate establishing and ongoing communication flows.
+
+Question 21
+
+An enterprise provisions virtual machines, Virtual Private Clouds (VPCs), and block storage via cloud consoles. Which cloud model is in use?
+
+A. SaaSB. PaaSC. IaaSD. FaaS
+
+Explanation: Infrastructure as a Service (IaaS) delivers raw compute, networking, and storage components as virtualized resources.
+
+Question 22
+
+Which cloud deployment model reserves dedicated physical infrastructure strictly for a single enterprise organization?
+
+A. Public CloudB. Private CloudC. Community CloudD. Hybrid Cloud
+
+Explanation: A Private Cloud is operated solely for one organization, offering isolated environments on-premise or hosted by a third party.
+
+Question 23
+
+What is the primary function of a Hypervisor (Type 1 or Type 2) in cloud infrastructure?
+
+A. Abstracting physical hardware to instantiate and manage multiple virtual machinesB. Encrypting stored SAN volumesC. Load balancing incoming WAN traffic across web hostsD. Automating code deployments to container environments
+
+Explanation: A Hypervisor virtualizes underlying hardware, allowing distinct virtual operating systems to run concurrently on a host.
+
+Question 24
+
+Under the AWS Shared Responsibility Model, which security task is the client's direct responsibility?
+
+A. Physical security of data center facilitiesB. Patching host hypervisorsC. Patching client OS and application softwareD. Replacing failed host hardware
+
+Explanation: The cloud provider manages security 'of' the cloud (hardware, hypervisors, physical facilities), while clients manage security 'in' the cloud (OS, data, application logic).
+
+Question 25
+
+How does resource pooling facilitate rapid elasticity in modern cloud service delivery?
+
+A. By permanently assigning dedicated CPU cores per customerB. By dynamically allocating physical/virtual capacity from a shared pool to meet active user loadC. By removing network latency over public WAN connectionsD. By requiring manual administrative intervention during traffic surges
+
+Explanation: Resource pooling aggregates hardware capacity so provider resources can be dynamically allocated and reallocated across tenant demand.
+
+Question 26
+
+A Caesar cipher shifts alphabet positions by +3 during encryption. What happens if an operator attempts decryption using an invalid shift of +3 instead of -3?
+
+A. The original plaintext is correctly restored.B. The message undergoes double-shift encryption, yielding corrupted text.C. The key automatically resets to 0.D. The cipher engine throws a buffer overflow exception.
+
+Explanation: Decryption requires applying the inverse operation (-3). Applying +3 shifts the characters further away from the plaintext (+6 total shift).
+
+Question 27
+
+Which Wireless EAP authentication variant requires mutual validation using X.509 digital certificates on both server and client endpoints?
+
+A. EAP-TLSB. EAP-TTLSC. PEAPv0D. EAP-FAST
+
+Explanation: EAP-TLS (Transport Layer Security) mandates public key infrastructure certificates on both client and authentication server sides for mutual verification.
+
+Section 3: Pseudo Code
+
+Question 28
+
+Which SQL query calculates the exact count of the letter 'a' inside the 'LastName' column values?
+
+A. SELECT LastName, COUNT(LastName) FROM Employees WHERE LastName LIKE '%a%';B. SELECT LastName, LENGTH(LastName) - LENGTH(REPLACE(LastName, 'a', '')) FROM Employees;C. SELECT COUNT('a') FROM Employees GROUP BY LastName;D. SELECT LENGTH(REPLACE(LastName, 'a', '')) FROM Employees;
+
+Explanation: Subtracting the length of the string without 'a' from the total original length gives the exact frequency of 'a'.
+
+Question 29
+
+To display every record from 'Departments' regardless of whether matching records exist in 'Employees', which join type should be applied?
+
+A. SELECT D.DeptName, E.EmpName FROM Departments D INNER JOIN Employees E ON D.DeptID = E.DeptID;B. SELECT D.DeptName, E.EmpName FROM Departments D LEFT JOIN Employees E ON D.DeptID = E.DeptID;C. SELECT D.DeptName, E.EmpName FROM Departments D RIGHT JOIN Employees E ON D.DeptID = E.DeptID;
+
+Explanation: A LEFT JOIN preserves all rows from the left table ('Departments') regardless of matches in the right table ('Employees').
+
+Question 30
+
+How do you access the 3rd item of a zero-indexed array named 'scores' containing [80, 85, 90, 95]?
+
+A. PRINT scores[3]B. PRINT scores[2]C. PRINT scores[1]D. PRINT scores.get(3)
+
+Explanation: Zero-indexed arrays assign index 0 to item 1, index 1 to item 2, and index 2 to item 3 (90).
+
+Question 31
+
+Which string input matches the regex pattern in the function below to output 'Valid'?
+
+function validateInput(string s):
+ if s matches "[a-zA-Z0-9]{6}"
+ then print "Valid"
+ else
+ then print "Not Valid"
+ endif
+end function
+
+A. pass1B. code12C. a1#b2cD. 1234567
+
+Explanation: The pattern requires exactly 6 alphanumeric characters. 'code12' has 6 alphanumeric characters.
+
+Question 32
+
+What is the final printed value of 'x + y'? (Note: '&' is Bitwise AND)
+
+Integer x, y, z
+Set x = 6, y = 10
+
+for(each z from 1 to 2)
+ y = y + 4
+ y = (y & 12) + x
+End for
+
+Print x + y
+
+A. pass1B. code12C. a1#b2cD. 1234567
+
+Explanation: Iter 1: y=14. 14(1110) & 12(1100) = 12. y = 12 + 6 = 18. Iter 2: y=22. 22(10110) & 12(01100) = 4. y = 4 + 6 = 10. Print x + y => 6 + 10 = 16.
+
+Question 33
+
+What will be the output of the following pseudocode execution? (Note: '&' is Bitwise AND)
+
+Integer arr[2][2] = {{3, 5}, {4, 8}}
+
+arr[0][1] = (arr[1][0] & arr[0][0])
+
+if (arr[0][0] > arr[0][1])
+ arr[0][0] = arr[0][0] + 1
+End if
+
+Print arr[0][1] + arr[0][0]
+
+A. 14B. 16C. 20D. 24
+
+Explanation: arr[1][0]=4 (100 in bin), arr[0][0]=3 (011 in bin). 4 & 3 = 0. arr[0][1]=0. Condition (3 > 0) is true -> arr[0][0] becomes 3 + 1 = 4. Sum = 0 + 4 = 4.0.
+
+Question 34
+
+What value calculation does this recursive function return for input n?
+
+FUNCTION sumSeries(n):
+ IF n is equal to 1
+ RETURN 1
+ ELSE
+ RETURN n + sumSeries(n - 1)
+ END IF
+END FUNCTION
+
+A. Calculates factorial (n!)B. Calculates sum of natural numbers from 1 to nC. Calculates 2^nD. Calculates nth Fibonacci term
+
+Explanation: The function recursively adds n + (n-1) + ... + 1, computing the total sum of integers up to n.
+
+Question 35
+
+What output is produced by executing fun(a=2, b=4, c=5)?
+
+Integer fun(Integer a, Integer b, Integer c)
+ if ((a + b) < c)
+ a = b + c
+ else
+ b = a + c
+ end if
+ c = a + b
+ return a + b + c
+
+A. 11B. 15C. 18D. 21
+
+Explanation: a=2, b=4, c=5. (2+4 < 5) is False. Else branch: b = 2 + 5 = 7. Next, c = 2 + 7 = 9. Return 2 + 7 + 9 = 18.
+
+Question 36
+
+What is the output printed by the following bitwise pseudocode? (Note: '^' is Bitwise XOR)
+
+Integer p, q, r
+Set p = 3, q = 6, r = 4
+
+if ((p ^ q) > r)
+ p = p + r
+else
+ q = q + r
+end if
+
+Print p + q + r
+
+A. 15B. 17C. 21D. 25
+
+Explanation: p=3 (011), q=6 (110). 3 ^ 6 = 5. (5 > 4) is True. p = 3 + 4 = 7. Print 7 + 6 + 4 = 17.
+
+Question 37
+
+What is the return value of process(a=2, b=3, c=4)?
+
+Integer process(Integer a, Integer b, Integer c)
+ if ((a + b + c) < 5)
+ a = a + 2
+ end if
+ return a + b + c
+
+A. 15B. 17C. 21D. 25
+
+Explanation: a=2, b=3, c=4. Sum = 9. (9 < 5) is False. The condition is skipped, returning 2 + 3 + 4 = 9.
+
+Section 4: Common Applications and OS
+
+Question 38
+
+Which motherboard component serves as the core high-speed pathway transferring data between the CPU and memory?
+
+A. System BusB. CMOS BatteryC. Power Supply UnitD. SATA Cable
+
+Explanation: The System Bus connects the CPU with main system memory and control subsystems.
+
+Question 39
+
+Which SSD protocol uses high-speed PCI Express lanes directly to bypass traditional SATA host controller bottlenecks?
+
+A. SATA IIIB. NVMeC. IDED. USB 3.0
+
+Explanation: NVMe (Non-Volatile Memory Express) interfaces over PCIe lanes, maximizing throughput and reducing I/O latency.
+
+Question 40
+
+Which OS subsystem handles directory permissions (Read, Write, Execute) across system user accounts?
+
+A. File System Access ControlB. Virtual Memory ManagerC. CPU SchedulerD. Device Driver Framework
+
+Explanation: Access Control Lists (ACLs) within the file system manage permission enforcement across user contexts.
+
+Question 41
+
+In MS PowerPoint, how do you set multi-line bullet lists to reveal sequentially on click?
+
+A. Set Morph transition on the slideB. Apply an entrance animation and select 'By Paragraph' under Effect OptionsC. Insert internal slide hyperlinks on linesD. Modify the Slide Master layout
+
+Explanation: Configuring animation Effect Options to 'By Paragraph' animates list items incrementally per mouse click.
+
+Question 42
+
+What is the keyboard shortcut to insert the current system time in MS Excel?
+
+A. Ctrl + Shift + ;B. Ctrl + ;C. Alt + Shift + DD. Shift + F3
+
+Explanation: `Ctrl + Shift + Semicolon (;)` inserts the current time into an active cell.
+
+Question 43
+
+In the table below, what value is returned by `=INDEX(A2:A5, MATCH(MAX(B2:B5), B2:B5, 0))`?
+
+Item | Sales
+Laptop | 150
+Smartphone | 450
+Tablet | 200
+Projector | 80
+
+A. ProjectorB. LaptopC. SmartphoneD. Tablet
+
+Explanation: `MAX(B2:B5)` = 450. `MATCH(450, B2:B5, 0)` returns 2. `INDEX(A2:A5, 2)` evaluates to 'Smartphone'.
+
+Question 44
+
+Which security core practice limits account permissions to prevent unauthorized system access upon compromise?
+
+A. Principle of Least PrivilegeB. Maximal Page AllocationC. Disabling Audit LogsD. Overclocking Processing Nodes
+
+Explanation: The Principle of Least Privilege restricts accounts and processes strictly to required permissions.

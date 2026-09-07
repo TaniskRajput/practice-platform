@@ -556,7 +556,7 @@ function setFrameHtml(frame, html) {
 }
 
 function counterPreviewDoc(userCode, tests) {
-  const style = `
+  const style = current.browserStyle || `
     body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justify-content: center; padding-top: 60px; background: #fafafa; }
     .counter-container { text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 14px; padding: 34px 44px; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
     #count { font-size: 56px; margin-bottom: 18px; color: #222; }
@@ -575,15 +575,102 @@ function counterPreviewDoc(userCode, tests) {
       (function () {
         var results = [];
         var tests = ${JSON.stringify(tests)};
+
+        function applyStep(s) {
+          if (s.click) {
+            document.getElementById(s.click).click();
+          } else if (s.type) {
+            var el = document.getElementById(s.type);
+            el.value = s.value;
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+          } else if (s.select) {
+            var sel = document.getElementById(s.select.id);
+            sel.value = s.select.value;
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+          } else if (s.rowBtn) {
+            var rows = document.querySelectorAll('#cartBody tr');
+            var btns = rows[s.rowBtn.row].querySelectorAll('button.btn');
+            btns[s.rowBtn.which].click();
+          }
+        }
+
+        function checkExpect(t, e) {
+          var ok = true;
+          var parts = [];
+          if (e.count !== undefined) {
+            var c = document.getElementById('count').textContent.trim();
+            ok = ok && (c === e.count);
+            parts.push('count = ' + c + ' (expected ' + e.count + ')');
+          }
+          if (e.msg !== undefined) {
+            var m = document.getElementById('status-msg').textContent.trim();
+            ok = ok && (m === e.msg);
+            parts.push('status = "' + m + '" (expected "' + e.msg + '")');
+          }
+          if (e.color !== undefined) {
+            var msgEl = document.getElementById('feedback-msg');
+            var color = (msgEl.style.color || '').toLowerCase();
+            ok = ok && (color === e.color);
+            parts.push('msg = "' + msgEl.textContent.trim() + '" color = ' + color +
+              ' (expected "' + e.msg + '" ' + e.color + ')');
+          }
+          if (e.text !== undefined) {
+            var el = document.getElementById(e.text.id);
+            var v = el.textContent.trim();
+            ok = ok && (v === e.text.value);
+            parts.push('#' + e.text.id + ' = "' + v + '" (expected "' + e.text.value + '")');
+          }
+          if (e.qty !== undefined) {
+            var rows2 = document.querySelectorAll('#cartBody tr');
+            var q = rows2[e.qty.row].querySelector('.qty').textContent.trim();
+            ok = ok && (q === e.qty.value);
+            parts.push('row ' + (e.qty.row + 1) + ' qty = ' + q + ' (expected ' + e.qty.value + ')');
+          }
+          if (e.subtotal !== undefined) {
+            var rows3 = document.querySelectorAll('#cartBody tr');
+            var st = rows3[e.subtotal.row].querySelector('.subtotal').textContent.trim();
+            ok = ok && (st === e.subtotal.value);
+            parts.push('row ' + (e.subtotal.row + 1) + ' subtotal = "' + st + '" (expected "' + e.subtotal.value + '")');
+          }
+          if (e.style !== undefined) {
+            var target = document.querySelector(e.style.selector);
+            var actual = target ? (target.style[e.style.property] || '').toLowerCase() : '(missing)';
+            ok = ok && (actual === e.style.value);
+            parts.push(e.style.selector + ' ' + e.style.property + ' = ' + actual +
+              ' (expected ' + e.style.value + ')');
+          }
+          if (e.visible !== undefined) {
+            var vis = [];
+            var hid = [];
+            document.querySelectorAll('.product li').forEach(function (li) {
+              (li.style.display === 'none' ? hid : vis).push(li.textContent.trim());
+            });
+            var same = vis.length === e.visible.length &&
+              e.visible.every(function (x) { return vis.indexOf(x) !== -1; }) &&
+              hid.length === e.hidden.length &&
+              e.hidden.every(function (x) { return hid.indexOf(x) !== -1; });
+            ok = ok && same;
+            parts.push('visible = [' + vis.join(', ') + '] (expected [' + e.visible.join(', ') + '])');
+          }
+          return { ok: ok, actual: parts.join('; ') };
+        }
+
         tests.forEach(function (t) {
           try {
-            t.steps.forEach(function (s) { document.getElementById(s.click).click(); });
-            var c = document.getElementById('count').textContent.trim();
-            var m = document.getElementById('status-msg').textContent.trim();
-            var pass = c === t.expect.count && m === t.expect.msg;
-            results.push({ name: t.name, hidden: t.hidden, pass: pass,
-              expected: 'count = ' + t.expect.count + ', status = "' + t.expect.msg + '"',
-              actual: 'count = ' + c + ', status = "' + m + '"' });
+            t.steps.forEach(applyStep);
+            var r = checkExpect(t, t.expect);
+            var expectedParts = [];
+            if (t.expect.count !== undefined) expectedParts.push('count = ' + t.expect.count);
+            if (t.expect.msg !== undefined) expectedParts.push('status = "' + t.expect.msg + '"');
+            if (t.expect.color !== undefined) expectedParts.push('msg = "' + t.expect.msg + '" color = ' + t.expect.color);
+            if (t.expect.text !== undefined) expectedParts.push('#' + t.expect.text.id + ' = "' + t.expect.text.value + '"');
+            if (t.expect.qty !== undefined) expectedParts.push('row ' + (t.expect.qty.row + 1) + ' qty = ' + t.expect.qty.value);
+            if (t.expect.subtotal !== undefined) expectedParts.push('row ' + (t.expect.subtotal.row + 1) + ' subtotal = "' + t.expect.subtotal.value + '"');
+            if (t.expect.style !== undefined) expectedParts.push(t.expect.style.selector + ' ' + t.expect.style.property + ' = ' + t.expect.style.value);
+            if (t.expect.visible !== undefined) expectedParts.push('visible = [' + t.expect.visible.join(', ') + ']');
+            results.push({ name: t.name, hidden: t.hidden, pass: r.ok,
+              expected: expectedParts.join('; '),
+              actual: r.actual });
           } catch (e) {
             results.push({ name: t.name, hidden: t.hidden, pass: false,
               expected: 'no error', actual: 'Error: ' + e.message });
@@ -606,7 +693,7 @@ function browserJudge(submit) {
       judgePending = null;
       resolve(tests.map((t) => ({
         name: t.name, hidden: t.hidden, pass: false,
-        expected: `count = ${t.expect.count}, status = "${t.expect.msg}"`,
+        expected: t.name,
         actual: "Timed out — check your code for errors (e.g. a runtime error during initialization)",
       })));
     }, 5000);
@@ -617,7 +704,7 @@ function browserJudge(submit) {
       if (msg.type === "judge-runtime-error") {
         resolve(tests.map((t) => ({
           name: t.name, hidden: t.hidden, pass: false,
-          expected: `count = ${t.expect.count}, status = "${t.expect.msg}"`,
+          expected: t.name,
           actual: `Runtime error: ${msg.error}`,
         })));
       } else {
@@ -668,17 +755,20 @@ function renderPreview() {
 /* ---------------- SQL dataset tab ---------------- */
 function renderDataset() {
   const db = current.databases.find((d) => !d.hidden);
+  // parse column names out of the CREATE TABLE statements in the schema
+  const headersFor = (table) => {
+    const m = (db.schema || "").match(
+      new RegExp(`CREATE TABLE ${table}\\s*\\(([^;]+)\\)`, "i")
+    );
+    if (!m) return [];
+    return m[1]
+      .split(",")
+      .map((col) => col.trim().split(/\s+/)[0].replace(/"/g, ""))
+      .filter((c) => !/^(PRIMARY|FOREIGN|UNIQUE|CHECK|CONSTRAINT)$/i.test(c));
+  };
   const tables = Object.entries(db.seed)
     .map(([name, rows]) => {
-      const cols = Object.keys(rows[0] ? {} : {});
-      // infer headers from known schema
-      const headers = {
-        Countries: ["country_id", "country_name"],
-        Customers: ["customer_id", "customer_name", "country_id"],
-        Orders: ["order_id", "customer_id", "status_id", "order_date"],
-        Order_Status: ["status_id", "status_name"],
-        Order_Items: ["order_id", "quantity", "unit_price"],
-      }[name];
+      const headers = headersFor(name);
       return `<h3>${name}</h3>
         <table class="schema-table">
           <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>

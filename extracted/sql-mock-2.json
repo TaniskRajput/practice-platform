@@ -1,0 +1,62 @@
+[
+ {
+  "n": "1",
+  "text": "Question No. 1\n\nDisplay the details of students who have received scholarships,\n\nincluding their names, scholarship amounts, and scholarship dates.\n\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\n    Scholarship.SCHOLARSHIP_DATE\nFROM \n    Student\nINNER JOIN \n    Student ON\n Student.STUDENT_ID \n= \nScholarship.STUDENT_REF_ID;\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\n    Scholarship.SCHOLARSHIP_DATE\nFROM \n    Student\nINNER JOIN \n    Scholarship ON \nStudent.STUDENT_ID\n =\n Scholarship.STUDENT_REF_ID;\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\nFROM \n    Student\nINNER JOIN \n    Scholarship ON\n Student.STUDENT_ID\n =\n Scholarship.STUDENT_REF_ID;\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "2",
+  "text": "Question No. 2\n\nList all students and their scholarship amounts if they have received any.\n\nIf a student has not received a scholarship, display NULL for the scholarship details.\n\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\n    Scholarship.SCHOLARSHIP_DATE\nFROM \n    Student\nJOIN \n    Scholarship \nON Student.STUDENT_ID\n= \nScholarship.STUDENT_REF_ID;\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\n    Scholarship.SCHOLARSHIP_DATE\nFROM \n    Student\nLEFT JOIN \n    Scholarship ON\nStudent.STUDENT_ID \n= \nScholarship.STUDENT_ID;\n \nSELECT \n    Student.FIRST_NAME,\n    Student.LAST_NAME,\n    Scholarship.SCHOLARSHIP_AMOUNT,\n    Scholarship.SCHOLARSHIP_DATE\nFROM \n    Student\nLEFT JOIN \n    Scholarship ON\nStudent.STUDENT_ID\n = \nScholarship.STUDENT_REF_ID;\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "3",
+  "text": "Question No. 3\n\nWrite an SQL query to show the top n (say 5) records of Student table order by descending GPA.\n\n \nSELECT * from Student ORDER BY GPA DESC;\n \nSELECT * from Student ORDER BY GPA DESC LIMIT 5;\n \nSELECT * from Student GROUP BY GPA DESC LIMIT 5;\n \nNone of the above\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "4",
+  "text": "Question No. 4\n\nWrite an SQL query to fetch the first 50% records from a table.\n\n \nSELECT * \nFROM Student \nLIMIT (SELECT COUNT(*) FROM Student) / 2;\n \nSELECT * \nFROM Student \nLIMIT (SELECT COUNT(*) FROM Student) % 2;\n \nSELECT * \nFROM Student \nLIMIT ((SELECT COUNT(*) FROM Student) / 2);\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "5",
+  "text": "Question No. 5\n\nWrite an SQL query to show the current date and time.\n\n \nSELECT CURDATE();\n \nSELECT NOW();\n \n\nSELECT DATETIME();\n\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "6",
+  "text": "Question No. 6\n\nWrite a query to create a new table which consists of data and structure copied from the other table (say Student) or clone the table named Student.\n\n \nCREATE CloneTable \nAS SELECT * FROM Student;\n \nCREATE TABLE CloneTable\nSELECT * FROM Student;\n \nCREATE TABLE CloneTable\nAS SELECT * FROM Student;\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "7",
+  "text": "Question No. 7\n\nRetrieve the full details of students along with their program names.\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA,\n\ns.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p\nON s.STUDENT_ID = p.STUDENT_REF_ID;\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME,\n\ns.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR,\nFROM Student s\nJOIN Program p\nON s.STUDENT_ID = p.STUDENT_REF_ID;\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME,\n\ns.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p\ns.STUDENT_ID = p.STUDENT_REF_ID;\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME,\n\ns.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p\nON s.STUDENT_ID = p.STUDENT_ID;\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "8",
+  "text": "Question No. 8\n\nList all students who received a scholarship along with the scholarship amount.\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME,\nFROM Student s\nJOIN Scholarship sc\nON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME,\n\nsc.SCHOLARSHIP_AMOUNT\nFROM\nJOIN Scholarship sc\nON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME\n\n, s.LAST_NAME, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Scholarship sc\nON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "9",
+  "text": "Question No. 9\n\nGet the names of students, their program names, and scholarship amounts (only for students who have a program and a scholarship).\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID\nJOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID\n\n\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "10",
+  "text": "Question No. 10\n\nList students who are enrolled in a program but haven’t received any scholarship.\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID\nLEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID\n\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p ON s.STUDENT_ID = p.STUDENT_ID\nLEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID\nWHERE sc.STUDENT_REF_ID IS NULL;\n\n\n \n\nSELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME\nFROM Student s\nJOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID\nLEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID\nWHERE sc.STUDENT_REF_ID IS NULL;\n\n\n \n\nNone\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "11",
+  "text": "Question No. 11\n\nShow the GPA and scholarship amount for all students who have received a scholarship.\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Scholarship sc ON s.STUDENT_ID ;\n\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;\n\n\n \n\nSELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT\nFROM Student s\nJOIN Scholarship sc ON sc.STUDENT_REF_ID;\n\n\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "12",
+  "text": "Question No. 12\n\nCorrect the syntax error in \"SELECT CEILING(Price) AS RoundedPrice FROM Products WHERE Price > 0;\"\n\n \n\nChange 'CEILING' to 'FLOOR'\n\n \n\nReplace 'AS RoundedPrice' with 'AS PriceCeiling'\n\n \n\nRemove 'WHERE Price > 0'\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "13",
+  "text": "Question No. 13\n\nHow does the SQUARE function differ from the POWER function in SQL?\n\n \n\nSQUARE calculates the square, POWER calculates any exponent\n\n \n\nSQUARE and POWER are the same\n\n \n\nSQUARE calculates the square root, POWER calculates the square\n\n \n\nSQUARE calculates any exponent, POWER calculates the square\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "14",
+  "text": "Question No. 14\n\nWhat does the CEILING function do in SQL?\n\n \n\nReturns the smallest integer greater than or equal to a given number\n\n \n\nReturns the largest integer less than or equal to a given number\n\n \n\nCalculates the square of a number\n\n \n\nCalculates the square root of a number\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "15",
+  "text": "Question No. 15\n\nWhat is wrong in \"SELECT * FROM Employees FULL OUTER JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID WHERE Departments.DepartmentName IS NULL;\"?\n\n \n\nReplace 'FULL OUTER JOIN' with 'LEFT JOIN'\n\n \n\nChange 'WHERE' to 'AND'\n\n \n\nRemove 'WHERE Departments.DepartmentName IS NULL'\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ }
+]

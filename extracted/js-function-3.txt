@@ -1,0 +1,545 @@
+1.
+
+ 
+
+let nums = [1, 2, 3]; 
+
+function addTwo(n)
+
+{ return n + 2; }
+
+document.write(nums.map(addTwo)); 
+
+What is printed?
+
+Options:
+
+A. 1,2,3
+
+B. 3,4,5
+
+C. 2,3,4
+
+D. NaN
+
+Answer: B
+
+2.
+
+ 
+
+let numbers = [5, 10, 15];
+
+function double(x)
+
+{ return x * 2; } 
+
+document.write(numbers.map(double)); 
+
+Output?
+
+Options:
+
+A. 10,20,30
+
+B. 5,10,15
+
+C. 2,4,6
+
+D. undefined
+
+Answer: A
+
+3.
+
+ 
+
+let values = [1, 4, 9]; 
+
+function squareRoot(v)
+
+{ return Math.sqrt(v); }
+
+document.write(values.map(squareRoot)); 
+
+Output?
+
+Options:
+
+A. 1,2,3
+
+B. 1,4,9
+
+C. 2,4,6
+
+D. Error
+
+Answer: A
+
+4.
+
+ 
+
+let arr = [2, 4, 6]; 
+
+function minusOne(n) { return n - 1; } 
+
+document.write(arr.map(minusOne)); 
+
+Output?
+
+Options:
+
+A. 1,3,5
+
+B. 2,4,6
+
+C. -1,0,1
+
+D. Error
+
+Answer: A
+
+5.
+
+ 
+
+let data = [10, 20, 30];
+
+document.write(data.map(function(e){ return e / 2; })); 
+
+Output?
+
+Options:
+
+A. 5,10,15
+
+B. 10,20,30
+
+C. 20,40,60
+
+D. NaN
+
+Answer: A
+
+6.
+
+ 
+
+let numbers = [1,2,3,4]; 
+
+function isEven(n){ return n % 2 === 0; } 
+
+document.write(numbers.map(isEven)); 
+
+Output?
+
+Options:
+
+A. true,false,true,false
+
+B. false,true,false,true
+
+C. 0,1,0,1
+
+D. undefined
+
+Answer: B
+
+7.
+
+ 
+
+let arr = ["a","b","c"];
+
+function upper(s){ return s.toUpperCase(); }
+
+document.write(arr.map(upper)); 
+
+Output?
+
+Options:
+
+A. A,B,C
+
+B. a,b,c
+
+C. undefined
+
+D. Error
+
+Answer: A
+
+8.
+
+ 
+
+let nums = [1,2,3,4]; 
+
+document.write(nums.map(n => n * n)); 
+
+Output?
+
+Options:
+
+A. 1,4,9,16
+
+B. 2,4,6,8
+
+C. 1,2,3,4
+
+D. undefined
+
+Answer: A
+
+9.
+
+ 
+
+let arr = [5,10,15];
+
+function check(x){ return x > 10; } 
+
+document.write(arr.map(check)); 
+
+Output?
+
+Options:
+
+A. false,false,true
+
+B. true,false,false
+
+C. 5,10,15
+
+D. undefined
+
+Answer: A
+
+10.
+
+ 
+
+let numbers = [3,6,9]; 
+
+function addFive(n){ return n + 5; }
+
+document.write(numbers.map(addFive)); 
+
+Output?
+
+Options:
+
+A. 8,11,14
+
+B. 5,10,15
+
+C. 3,6,9
+
+D. Error
+
+Answer: A
+
+1.
+
+ 
+
+<button id="btn1" onclick="processArray()">Click</button> 
+
+<script> 
+
+let myArray = [2,4,6]; 
+
+function addTen(n){ return n + 10; } 
+
+function processArray(){ document.write(myArray.map(addTen)); 
+
+} </script> 
+
+What will appear after clicking the button?
+
+Options:
+
+A. 12,14,16
+
+B. 2,4,6
+
+C. 10,20,30
+
+D. undefined
+
+Answer: A
+
+2.
+
+ 
+
+<input type="text" value="5,10,15" id="input1"> 
+
+<button onclick="sumValues()">Sum</button> <
+
+script> 
+
+function sumValues(){ 
+
+let arr = document.getElementById("input1").value.split(",");
+
+document.write(arr.reduce((a,b)=>parseInt(a)+parseInt(b))); 
+
+}
+
+</script> 
+
+Output when button is clicked?
+
+Options:
+
+A. 30
+
+B. 51015
+
+C. undefined
+
+D. Error
+
+Answer: A
+
+3.
+
+ 
+
+<button onclick="checkEven()">Check</button>
+
+<script> let arr = [1,2,3,4,5];
+
+function checkEven()
+
+{ document.write(arr.filter(n => n%2 === 0)); 
+
+} 
+
+</script> 
+
+What is displayed when clicked?
+
+Options:
+
+A. 2,4
+
+B. 1,3,5
+
+C. true,false
+
+D. undefined
+
+Answer: A
+
+4.
+
+ 
+
+<button onclick="showFirst()">Show</button>
+
+<script> let arr = [5,10,15];
+
+function showFirst()
+
+{ document.write(arr.find(n => n > 7)); 
+
+} 
+
+</script> 
+
+Output on click?
+
+Options:
+
+A. 5
+
+B. 10
+
+C. 15
+
+D. undefined
+
+Answer: B
+
+5.
+
+ 
+
+<button onclick="allAboveZero()">Test</button>
+
+<script> 
+
+let arr = [2,4,6];
+
+function allAboveZero()
+
+{ document.write(arr.every(n => n > 0)); 
+
+}
+
+</script> 
+
+What is printed?
+
+Options:
+
+A. true
+
+B. false
+
+C. 0
+
+D. undefined
+
+Answer: A
+
+6.
+
+ 
+
+<button onclick="someCheck()">Click</button>
+
+<script> 
+
+let arr = [1,2,3,4]; function someCheck()
+
+{ document.write(arr.some(n => n > 3)); 
+
+} 
+
+</script> 
+
+Output?
+
+Options:
+
+A. true
+
+B. false
+
+C. 4
+
+D. undefined
+
+Answer: A
+
+7.
+
+ 
+
+<button onclick="doubleValues()">Double</button>
+
+<script> let arr = [1,2,3]; 
+
+function doubleValues()
+
+{ arr.forEach((n,i,a)=>a[i]=n*2); 
+
+document.write(arr); }
+
+</script> 
+
+What is printed?
+
+Options:
+
+A. 1,2,3
+
+B. 2,4,6
+
+C. 0,2,4
+
+D. undefined
+
+Answer: B
+
+8.
+
+ 
+
+<button onclick="concatArrays()">Concat</button>
+
+<script> 
+
+let arr1 = [1,2]; let arr2 = [3,4];
+
+function concatArrays()
+
+{ document.write(arr1.concat(arr2)); } 
+
+</script> 
+
+Output?
+
+Options:
+
+A. 1,2,3,4
+
+B. 1,2
+
+C. 3,4
+
+D. 1,2,[3,4]
+
+Answer: A
+
+9.
+
+ 
+
+<button onclick="stringify()">Show</button> 
+
+<script> let arr = [1,2,3]; 
+
+function stringify()
+
+{ document.write(JSON.stringify(arr)); }
+
+</script> 
+
+What will be printed?
+
+Options:
+
+A. [1,2,3]
+
+B. 1,2,3
+
+C. undefined
+
+D. Error
+
+Answer: A
+
+10.
+
+ 
+
+<button onclick="reverseArray()">Reverse</button>
+
+<script> 
+
+let arr = [5,10,15];
+
+function reverseArray(){ arr.reverse();
+
+document.write(arr); } 
+
+</script> 
+
+Output after clicking the button?
+
+Options:
+
+A. 15,10,5
+
+B. 5,10,15
+
+C. 10,5,15
+
+D. undefined
+
+Answer: A

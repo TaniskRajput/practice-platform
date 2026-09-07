@@ -1,0 +1,507 @@
+Problem Restatement
+
+You are given a string s of lowercase English letters.
+
+	
+The length of s is a perfect square
+	
+Let n = √len(s)
+	
+Fill an n × n grid row-wise (left to right, top to bottom)
+	
+Count:
+	
+ 
+Rows where all characters are the same
+ 
+Columns where all characters are the same
+	
+	
+	
+Return the total count (rows + columns)
+
+Approach
+
+Step 1: Compute grid size
+
+n = int(sqrt(len(s)))
+
+Step 2: Build the grid
+
+Fill the grid row by row:
+
+grid[i][j] = s[i*n + j]
+
+Step 3: Count uniform rows
+
+A row is valid if:
+
+row[0] == row[1] == ... == row[n-1]
+
+Step 4: Count uniform columns
+
+A column is valid if:
+
+grid[0][j] == grid[1][j] == ... == grid[n-1][j]
+
+Python Implementation
+
+import math
+
+ 
+
+def count_uniform_rows_and_columns(s):
+
+ n = int(math.sqrt(len(s)))
+
+ 
+
+ # Build the grid
+
+ grid = []
+
+ idx = 0
+
+ for i in range(n):
+
+ grid.append(s[idx:idx+n])
+
+ idx += n
+
+ 
+
+ count = 0
+
+ 
+
+ # Count uniform rows
+
+ for row in grid:
+
+ if all(ch == row[0] for ch in row):
+
+ count += 1
+
+ 
+
+ # Count uniform columns
+
+ for col in range(n):
+
+ first_char = grid[0][col]
+
+ if all(grid[row][col] == first_char for row in range(n)):
+
+ count += 1
+
+ 
+
+ return count
+
+Given
+
+S = "aaaabbbcc"
+
+Step 1: Grid size
+
+Length of S = 9
+
+Since 9=32,
+
+n = 3
+
+Step 2: Build the 3 × 3 grid (row-major order)
+
+a a a
+
+a b b
+
+b c c
+
+Step 3: Check uniform rows
+
+A row is counted if all characters are the same.
+
+	
+ 
+
+ | 
+ 
+Row
+ 
+ | 
+ 
+Characters
+ 
+ | 
+ 
+Uniform?
+ 
+ 
+	
+	
+ 
+
+ | 
+ 
+1
+ 
+ | 
+ 
+a a a
+ 
+ | 
+ 
+Yes
+ 
+ 
+ 
+
+ | 
+ 
+2
+ 
+ | 
+ 
+a b b
+ 
+ | 
+ 
+No
+ 
+ 
+ 
+
+ | 
+ 
+3
+ 
+ | 
+ 
+b c c
+ 
+ | 
+ 
+No
+ 
+ 
+	
+
+Uniform rows = 1
+
+Step 4: Check uniform columns
+
+	
+ 
+
+ | 
+ 
+Column
+ 
+ | 
+ 
+Characters
+ 
+ | 
+ 
+Uniform?
+ 
+ 
+	
+	
+ 
+
+ | 
+ 
+1
+ 
+ | 
+ 
+a a b
+ 
+ | 
+ 
+No
+ 
+ 
+ 
+
+ | 
+ 
+2
+ 
+ | 
+ 
+a b c
+ 
+ | 
+ 
+No
+ 
+ 
+ 
+
+ | 
+ 
+3
+ 
+ | 
+ 
+a b c
+ 
+ | 
+ 
+No
+ 
+ 
+	
+
+Uniform columns = 0
+
+Final Answer
+
+Total uniform rows and columns = 1
+
+Java Solution
+
+public class UniformGridCount {
+
+ 
+
+ public static int countUniformRowsAndColumns(String s) {
+
+ int len = s.length();
+
+ int n = (int) Math.sqrt(len);
+
+ 
+
+ // Build the grid
+
+ char[][] grid = new char[n][n];
+
+ int index = 0;
+
+ 
+
+ for (int i = 0; i < n; i++) {
+
+ for (int j = 0; j < n; j++) {
+
+ grid[i][j] = s.charAt(index++);
+
+ }
+
+ }
+
+ 
+
+ int count = 0;
+
+ 
+
+ // Check uniform rows
+
+ for (int i = 0; i < n; i++) {
+
+ boolean isUniform = true;
+
+ for (int j = 1; j < n; j++) {
+
+ if (grid[i][j] != grid[i][0]) {
+
+ isUniform = false;
+
+ break;
+
+ }
+
+ }
+
+ if (isUniform) {
+
+ count++;
+
+ }
+
+ }
+
+ 
+
+ // Check uniform columns
+
+ for (int j = 0; j < n; j++) {
+
+ boolean isUniform = true;
+
+ for (int i = 1; i < n; i++) {
+
+ if (grid[i][j] != grid[0][j]) {
+
+ isUniform = false;
+
+ break;
+
+ }
+
+ }
+
+ if (isUniform) {
+
+ count++;
+
+ }
+
+ }
+
+ 
+
+ return count;
+
+ }
+
+ 
+
+ public static void main(String[] args) {
+
+ String s = "aaaabbbcc";
+
+ System.out.println(countUniformRowsAndColumns(s));
+
+ }
+
+}
+
+Output for
+
+S = "aaaabbbcc"
+
+1
+
+ 
+
+SELECT
+
+ T1.course_id AS "Course ID",
+
+ T1.course_name AS "Course Name",
+
+ T3.day AS "Day",
+
+ T3.starttime AS "Start Time"
+
+FROM
+
+ course T1
+
+JOIN
+
+ section T2 ON T1.course_id = T2.course_id
+
+JOIN
+
+ schedule T3 ON T2.schedule_id = T3.schedule_id
+
+WHERE
+
+ T3.day = 'wed';
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Assumed HTML Template (Unchanged Structure)
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+ <title>Dropdown Example</title>
+
+ 
+
+ <!-- jQuery CDN (must not be removed) -->
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+ 
+
+<body>
+
+ <div class="dropdown container">
+
+ <select id="fruitDropdown">
+
+ <option value="">Select a fruit</option>
+
+ <option value="Apple">Apple</option>
+
+ <option value="Banana">Banana</option>
+
+ <option value="Mango">Mango</option>
+
+ <option value="Orange">Orange</option>
+
+ </select>
+
+ 
+
+ <button id="showBtn">Show Selected</button>
+
+ 
+
+ <!-- Required paragraph -->
+
+ <p id="selectedFruit"></p>
+
+ </div>
+
+ 
+
+ <script src="script.js"></script>
+
+</body>
+
+</html>
+
+JavaScript / jQuery Implementation (script.js)
+
+$(document).ready(function () {
+
+ 
+
+ // Center-align text inside the dropdown container
+
+ $(".dropdown.container").css("text-align", "center");
+
+ 
+
+ // Button click event
+
+ $("#showBtn").click(function () {
+
+ var selectedValue = $("#fruitDropdown").val();
+
+ $("#selectedFruit").text(selectedValue);
+
+ });
+
+ 
+
+});

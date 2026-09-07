@@ -1,0 +1,62 @@
+[
+ {
+  "n": "1",
+  "text": "Question No. 1\n\nRetrieve all products priced above the average price.\n\n \n\nSELECT * FROM Products WHERE Price >= (SELECT AVG(Price) FROM Products);\n\n \n\nSELECT * FROM Products WHERE Price > (SELECT AVG(Price) FROM Products);\n\n \n\nSELECT * FROM Products WHERE Price > (SELECT AVERAGE(Price) FROM Products);\n\n \n\nSELECT * FROM Products WHERE Price > SELECT AVG(Price);\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "2",
+  "text": "Question No. 2\n\nDisplay products in the Furniture category, ordered by price descending.\n\n \n\nSELECT * FROM Products WHERE Category = 'Furniture' ORDER BY Price;\n\n \n\nSELECT * FROM Products WHERE Category == 'Furniture' ORDER BY Price DESC;\n\n \n\nSELECT * FROM Products WHERE Category = 'Furniture' ORDER BY Price DESC;\n\n \n\nSELECT * FROM Products WHERE Category = 'Furniture' ORDER BY DESC;\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "3",
+  "text": "Question No. 3\n\nShow products whose names contain the word \"Table.\"\n\n \n\nSELECT * FROM Products WHERE Product_Name LIKE '%Table%';\n\n \n\nSELECT * FROM Products WHERE Product_Name LIKE 'Table%';\n\n \n\nSELECT * FROM Products WHERE Product_Name LIKE '%Table_';\n\n \n\nSELECT * FROM Products WHERE Product_Name = '%Table%';\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "4",
+  "text": "Question No. 4\n\nShow products with prices within 20% of the maximum price.\n\n \n\nSELECT * FROM Products WHERE Price >= 0.2 * (SELECT MAX(Price) FROM Products);\n\n \n\nSELECT * FROM Products WHERE Price >= 0.8 * SELECT MAX(Price);\n\n \n\nSELECT * FROM Products WHERE Price > 0.8 * (SELECT MAX(Price) FROM Products);\n\n \n\nSELECT * FROM Products WHERE Price >= 0.8 * (SELECT MAX(Price) FROM Products);\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "5",
+  "text": "Question No. 5\n\nFind products priced as a multiple of 5000.\n\n \n\nSELECT * FROM Products WHERE Price / 5000 = 0;\n\n \n\nSELECT * FROM Products WHERE Price % 5000 = 0;\n\n \n\nSELECT * FROM Products WHERE Price % 5000 == 0;\n\n \n\nSELECT * FROM Products WHERE Price % 5000 equal to 0;\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "6",
+  "text": "Question No. 6\n\nWrite a SQL query to fetch \"FIRST_NAME\" from the Student table in upper case and use ALIAS name as STUDENT_NAME.\n\n \nSELECT upper(FIRST_NAME) as STUDENT_NAME from Student;\n \nSELECT FIRST_NAME as STUDENT_NAME from Student;\n \nSELECT upper(FIRST_NAME)from Student;\n \nSELECT upper(FIRSTNAME) as STUDENT_NAME from Student;\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "7",
+  "text": "Question No. 7\n\nWrite a SQL query to fetch unique values of MAJOR Subjects from Student table.\n\n \nSELECT MAJOR from STUDENT; \n\n \nSELECT DISTINCT MAJOR from STUDENT ORDER BY MAJOR; \n\n \nSELECT DISTINCT MAJOR from STUDENT; \n\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "8",
+  "text": "Question No. 8\n\nWrite a SQL query that fetches the unique values of MAJOR Subjects from Student table and print its length.\n\n \nSELECT MAJOR,LENGTH(MAJOR) FROM Student GROUP BY(MAJOR); \n \nSELECT MAJOR,LENGTH(MAJOR) FROM Student ORDER BY(MAJOR); \n \nSELECT MAJOR,LENGTH(MAJOR) FROM Student; \n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "9",
+  "text": "Question No. 9\n\nWrite a SQL query to print FIRST_NAME from the Student table after replacing 'a' with 'A'.\n\n \nSELECT REPLACE('a', 'A') FROM Student;\n \nSELECT REPLACE(FIRST_NAME, 'A', 'a') FROM Student;\n \nSELECT REPLACE(FIRST_NAME, 'a', 'A') FROM Student;\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "10",
+  "text": "Question No. 10\n\nWrite an SQL query to fetch the count of Students having Major Subject ‘Computer Science’\n\n \nSELECT Major, COUNT(*) as TOTAL_COUNT FROM Student WHERE MAJOR = 'Computer Science';\n \nSELECT Major, COUNT(*) as TOTAL_COUNT FROM Student WHERE MAJOR =='Computer Science';\n \nSELECT Major FROM Student WHERE MAJOR = 'Computer Science';\n \n\nNone of the above\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "11",
+  "text": "Question No. 11\n\nIdentify the error in \"SELECT Name, NULLIF(Age, 30) FROM Employees WHERE Age IS NOT NULL;\"\n\n \n\nChange 'NULLIF' to 'ISNULL'\n\n \n\nReplace 'Age, 30' with 'Age, 0'\n\n \n\nRemove 'WHERE Age IS NOT NULL'\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "12",
+  "text": "Question No. 12\n\nWhat is the main use of the CASE statement in SQL?\n\n \n\nTo execute a sequence of commands\n\n \n\nTo handle errors\n\n \n\nTo perform if-then-else type logic\n\n \n\nTo loop through records\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "13",
+  "text": "Question No. 13\n\nWhat needs to be corrected in \"SELECT CURRENT_DATE FROM Employees;\"?\n\n \n\nReplace 'CURRENT_DATE' with 'GETDATE()'\n\n \n\nRemove 'FROM Employees'\n\n \n\nAdd 'AS Today'\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "14",
+  "text": "Question No. 14\n\nIn \"SELECT Name, AGE(BirthDate) AS Age FROM Customers;\",\nwhat needs correction?\n\n \n\nAGE\n\n \n\nAS Age\n\n \n\nBirthDate\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ },
+ {
+  "n": "15",
+  "text": "Question No. 15\n\nWhat needs to be corrected in \"SELECT CONCAT(FirstName, ' ', LastName) FROM Employees;\"?\n\n \n\nChange 'CONCAT' to 'CONCATENATE'\n\n \n\nReplace ',' with '+'\n\n \n\nAdd 'AS FullName' for clarity\n\n \n\nNo error\n\n<\n0\nAnswered\n0\nNot Answered\n0"
+ }
+]

@@ -8,7 +8,7 @@ import tempfile
 
 from flask import Flask, jsonify, render_template, request
 
-from problems import PROBLEMS, SCHEMA_SQL
+from problems import PROBLEMS
 
 app = Flask(__name__)
 
@@ -50,58 +50,46 @@ def serialize_problem_full(p):
     )
     if p["judge"] == "browser":
         data["browserHtml"] = p["browser_html"]
+        data["browserStyle"] = p.get("browser_style", "")
         data["browserTests"] = [
             {"name": t["name"], "hidden": t["hidden"], "steps": t["steps"], "expect": t["expect"]}
             for t in p["browser_tests"]
         ]
     if p["languages"] == ["sql"]:
         data["databases"] = [
-            {"name": db["name"], "hidden": db["hidden"], "seed": db["seed"]}
+            {"name": db["name"], "hidden": db["hidden"], "schema": db["schema"], "seed": db["seed"]}
             for db in p["databases"]
         ]
     return data
 
 
 # ------------------------------------------------------------------ #
-# Java judge
+# Java judge — user submits a complete program whose public class may
+# have any name; the file is renamed to match so javac accepts it, and
+# each test case is fed to stdin and stdout is compared.
 # ------------------------------------------------------------------ #
 
-JAVA_HARNESS_TEMPLATE = """import java.util.*;
-
-public class Main {
-    static int[][][] TESTS = %s;
-
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        StringBuilder sb = new StringBuilder();
-        for (int[][] m : TESTS) {
-            sb.append(sol.checkValid(m)).append('\\n');
-        }
-        System.out.print(sb);
-    }
-}
-"""
+PUBLIC_CLASS_RE = re.compile(r"\bpublic\s+(?:final\s+|abstract\s+)*class\s+(\w+)")
 
 
 def judge_java(code, tests, workdir):
-    java_file = os.path.join(workdir, "Solution.java")
-    with open(java_file, "w") as f:
+    m = PUBLIC_CLASS_RE.search(code)
+    class_name = m.group(1) if m else "Main"
+    src_file = os.path.join(workdir, f"{class_name}.java")
+    with open(src_file, "w") as f:
         f.write(code)
-    matrices = [json.loads(t["input"]) for t in tests]
-    java_literal = json.dumps(matrices).replace("[", "{").replace("]", "}")
-    with open(os.path.join(workdir, "Main.java"), "w") as f:
-        f.write(JAVA_HARNESS_TEMPLATE % java_literal)
+    stdin = "\n".join(t["input"] for t in tests) + "\n"
 
     compile_res = subprocess.run(
-        ["javac", "-d", workdir, "Solution.java", "Main.java"],
+        ["javac", "-d", workdir, src_file],
         cwd=workdir, capture_output=True, text=True, timeout=COMPILE_TIMEOUT,
     )
     if compile_res.returncode != 0:
         return {"compile_error": compile_res.stderr.strip()}
 
     run_res = subprocess.run(
-        ["java", "-cp", workdir, "Main"],
-        cwd=workdir, capture_output=True, text=True, timeout=RUN_TIMEOUT,
+        ["java", "-cp", workdir, class_name],
+        cwd=workdir, input=stdin, capture_output=True, text=True, timeout=RUN_TIMEOUT,
     )
     if run_res.returncode != 0:
         return {"runtime_error": (run_res.stderr or "Unknown runtime error").strip()[-2000:]}
@@ -110,29 +98,15 @@ def judge_java(code, tests, workdir):
 
 
 # ------------------------------------------------------------------ #
-# C++ judge
+# C++ judge — user submits a complete program; each test case is fed
+# to its stdin and stdout is compared.
 # ------------------------------------------------------------------ #
 
-CPP_HARNESS_TEMPLATE = """
-int main() {
-    Solution sol;
-    std::vector<std::vector<std::vector<int>>> tests = %s;
-    for (const auto& m : tests) {
-        auto copy = m;
-        std::cout << (sol.checkValid(copy) ? "true" : "false") << "\\n";
-    }
-    return 0;
-}
-"""
-
-
 def judge_cpp(code, tests, workdir):
-    matrices = [json.loads(t["input"]) for t in tests]
-    cpp_literal = json.dumps(matrices).replace("[", "{").replace("]", "}")
-    src = code.rstrip() + "\n" + CPP_HARNESS_TEMPLATE % cpp_literal
+    stdin = "\n".join(t["input"] for t in tests) + "\n"
     src_file = os.path.join(workdir, "solution.cpp")
     with open(src_file, "w") as f:
-        f.write(src)
+        f.write(code)
 
     compile_res = subprocess.run(
         ["g++", "-std=c++17", "-O2", "-o", os.path.join(workdir, "solution"), src_file],
@@ -143,7 +117,7 @@ def judge_cpp(code, tests, workdir):
 
     run_res = subprocess.run(
         [os.path.join(workdir, "solution")],
-        cwd=workdir, capture_output=True, text=True, timeout=RUN_TIMEOUT,
+        cwd=workdir, input=stdin, capture_output=True, text=True, timeout=RUN_TIMEOUT,
     )
     if run_res.returncode != 0:
         return {"runtime_error": (run_res.stderr or "Unknown runtime error").strip()[-2000:]}
@@ -151,19 +125,30 @@ def judge_cpp(code, tests, workdir):
     return {"outputs": outputs}
 
 
+def format_input(input_str):
+    """Human-readable rendering of a test input: JSON matrices are shown as
+    bracketed rows, stdin-style inputs are shown verbatim."""
+    try:
+        return format_matrix(input_str)
+    except (ValueError, TypeError):
+        return input_str
+
+
 def format_matrix(json_str):
     rows = json.loads(json_str)
-    return "\n".join("[" + ", ".join(str(x) for x in row) + "]" for row in rows)
+    if rows and isinstance(rows[0], list):
+        return "\n".join("[" + ", ".join(str(x) for x in row) + "]" for row in rows)
+    return "\n".join(str(x) for x in rows)
 
 
 # ------------------------------------------------------------------ #
 # SQL judge
 # ------------------------------------------------------------------ #
 
-def build_sql_db(seed):
+def build_sql_db(seed, schema_sql):
     conn = sqlite3.connect(":memory:")
     cur = conn.cursor()
-    cur.executescript(SCHEMA_SQL)
+    cur.executescript(schema_sql)
     for table, rows in seed.items():
         placeholders = ", ".join("?" for _ in rows[0])
         cur.executemany(f"INSERT INTO {table} VALUES ({placeholders})", rows)
@@ -171,10 +156,10 @@ def build_sql_db(seed):
     return conn
 
 
-def run_sql_query(query, seed):
+def run_sql_query(query, seed, schema_sql):
     """Returns (ok, headers, rows) or (False, error_message, None)."""
     try:
-        conn = build_sql_db(seed)
+        conn = build_sql_db(seed, schema_sql)
     except Exception as e:
         return False, f"Database setup error: {e}", None
     try:
@@ -222,7 +207,7 @@ def judge_sql(query, databases, include_hidden):
     for db in databases:
         if db["hidden"] and not include_hidden:
             continue
-        ok, headers, rows = run_sql_query(query, db["seed"])
+        ok, headers, rows = run_sql_query(query, db["seed"], db["schema"])
         if not ok:
             results.append({
                 "database": db["name"], "hidden": db["hidden"], "passed": False,
@@ -230,7 +215,7 @@ def judge_sql(query, databases, include_hidden):
             })
             all_pass = False
             continue
-        expected = run_sql_query(PROBLEMS_BY_ID[2]["reference_query"], db["seed"])
+        expected = run_sql_query(db["reference_query"], db["seed"], db["schema"])
         exp_ok, exp_headers, exp_rows = expected
         passed = rows_equal(rows, exp_rows)
         if not passed:
@@ -319,32 +304,42 @@ def do_judge(payload, submit):
     if not submit:
         tests = [t for i, t in enumerate(tests) if i in problem["samples"]]
 
-    workdir = tempfile.mkdtemp(prefix="judge_")
-    try:
-        if language == "java":
-            outcome = judge_java(code, tests, workdir)
-        else:
-            outcome = judge_cpp(code, tests, workdir)
-    except subprocess.TimeoutExpired:
-        outcome = {"timeout": True}
-    finally:
-        shutil.rmtree(workdir, ignore_errors=True)
-
-    if "compile_error" in outcome:
-        return jsonify({"judge": "compile", "compile_error": outcome["compile_error"]})
-    if "runtime_error" in outcome:
-        return jsonify({"judge": "runtime", "runtime_error": outcome["runtime_error"]})
-    if "timeout" in outcome:
-        return jsonify({"judge": "timeout", "error": "Time Limit Exceeded"})
-
-    outputs = outcome["outputs"]
+    # each test case gets its own process so a crash mid-way can't
+    # corrupt later cases' outputs
+    outputs = []
+    for t in tests:
+        workdir = tempfile.mkdtemp(prefix="judge_")
+        try:
+            if language == "java":
+                outcome = judge_java(code, [t], workdir)
+            else:
+                outcome = judge_cpp(code, [t], workdir)
+        except subprocess.TimeoutExpired:
+            outcome = {"timeout": True}
+        finally:
+            shutil.rmtree(workdir, ignore_errors=True)
+        if "compile_error" in outcome:
+            return jsonify({"judge": "compile", "compile_error": outcome["compile_error"]})
+        if "runtime_error" in outcome:
+            return jsonify({"judge": "runtime", "runtime_error": outcome["runtime_error"]})
+        if "timeout" in outcome:
+            return jsonify({"judge": "timeout", "error": "Time Limit Exceeded"})
+        # a program may print multiple lines per test (e.g. one prime per
+        # line); the whole stdout of the run is the test's output
+        outputs.append("\n".join(outcome["outputs"]))
     results = []
     for i, t in enumerate(tests):
         actual = outputs[i].strip() if i < len(outputs) else "(no output)"
-        passed = actual == t["expected"]
+        expected = t["expected"]
+        if problem.get("io_style") == "lines":
+            # multi-line outputs (e.g. one prime per line): compare
+            # token-by-token so trailing whitespace is never fatal
+            passed = actual.split() == expected.split()
+        else:
+            passed = actual == expected
         results.append({
             "index": i, "hidden": t["hidden"], "passed": passed,
-            "input": format_matrix(t["input"]), "expected": t["expected"], "actual": actual,
+            "input": format_input(t["input"]), "expected": expected, "actual": actual,
         })
     return jsonify({
         "judge": "code",
