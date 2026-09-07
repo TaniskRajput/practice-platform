@@ -921,10 +921,10 @@ initializeSearchFilter();
                 "expect": {"visible": ["Banana", "Orange", "Pineapple", "Pomegranate", "Mango"], "hidden": []},
             },
             {
-                "name": "Substring 'an' matches Banana, Orange, Pomegranate",
+                "name": "Substring 'an' matches Banana, Orange, Mango, Pomegranate",
                 "hidden": True,
                 "steps": [{"type": "search-input", "value": "an"}],
-                "expect": {"visible": ["Banana", "Orange", "Pomegranate"], "hidden": ["Pineapple", "Mango"]},
+                "expect": {"visible": ["Banana", "Orange", "Mango", "Pomegranate"], "hidden": ["Pineapple"]},
             },
             {
                 "name": "Prefix 'pom' matches only Pomegranate",
