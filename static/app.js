@@ -169,6 +169,256 @@ function resetCode() {
   store.setCode(current.id, currentLang, editor.getValue());
 }
 
+/* ---------------- Auto-structure (formatting) ---------------- */
+
+/* Brace-based re-indenter for Java / C++ / JavaScript.
+   Aware of string literals, char literals, and // and block comments. */
+function formatBraces(code) {
+  const IND = "    ";
+  let out = "";
+  let depth = 0;
+  let paren = 0;      // parens on the current statement — `for (…;…;…)` must not split
+  let buf = "";
+  let lastKind = "nl"; // what caused the last flush: "stmt" or "nl"
+  const blocks = [];   // per open block: saved paren depth + whether opener was `do`
+  const n = code.length;
+  let i = 0;
+
+  const flush = (kind) => {
+    const t = buf.trim();
+    if (!t) {
+      buf = "";
+      lastKind = kind;
+      return;
+    }
+    if (t.startsWith("//") && lastKind === "stmt" && out.length) {
+      // trailing comment after a statement — keep it on the same line
+      out = out.replace(/\n$/, " " + t + "\n");
+    } else {
+      out += IND.repeat(Math.max(depth, 0)) + t + "\n";
+    }
+    buf = "";
+    lastKind = kind;
+  };
+
+  while (i < n) {
+    const c = code[i];
+
+    // string / char / template literals — copied verbatim, braces inside ignored
+    if (c === '"' || c === "'" || c === "`") {
+      const q = c;
+      buf += c;
+      i++;
+      while (i < n) {
+        buf += code[i];
+        if (code[i] === "\\") {
+          buf += code[i + 1] ?? "";
+          i += 2;
+          continue;
+        }
+        i++;
+        if (code[i - 1] === q) break;
+      }
+      continue;
+    }
+
+    // line comments
+    if (c === "/" && code[i + 1] === "/") {
+      const j = code.indexOf("\n", i);
+      buf += j === -1 ? code.slice(i) : code.slice(i, j);
+      i = j === -1 ? n : j;
+      continue;
+    }
+
+    // block comments — re-indented on their own lines
+    if (c === "/" && code[i + 1] === "*") {
+      const j = code.indexOf("*/", i);
+      const seg = code.slice(i, j === -1 ? n : j + 2);
+      flush("stmt");
+      for (const l of seg.split("\n")) {
+        const t = l.trim();
+        if (t) out += IND.repeat(Math.max(depth, 0)) + t + "\n";
+      }
+      lastKind = "stmt";
+      i = j === -1 ? n : j + 2;
+      continue;
+    }
+
+    if (c === "(") {
+      paren++;
+      buf += c;
+      i++;
+      continue;
+    }
+    if (c === ")") {
+      paren = Math.max(paren - 1, 0);
+      buf += c;
+      i++;
+      continue;
+    }
+
+    if (c === "{") {
+      const isDo = buf.trim() === "do";
+      buf = buf.replace(/\s+$/, "") + " {";
+      flush("stmt");
+      blocks.push({ paren, isDo });
+      paren = 0;
+      depth++;
+      i++;
+      continue;
+    }
+
+    if (c === "}") {
+      const frame = blocks.pop() ?? { paren: 0, isDo: false };
+      flush("stmt");
+      depth = Math.max(depth - 1, 0);
+      paren = frame.paren;
+      // "} else {", "} catch (...) {", "} finally {" always join;
+      // "} while (...);" joins only when closing a `do` block
+      let j = i + 1;
+      while (j < n && /[ \t]/.test(code[j])) j++;
+      const m = code.slice(j, j + 8).match(/^(else|catch|finally|while)\b/);
+      if (m && (m[1] !== "while" || frame.isDo)) {
+        let k = j + m[1].length;
+        let cond = "";
+        while (k < n && code[k] !== "{" && code[k] !== ";") {
+          cond += code[k];
+          k++;
+        }
+        if (code[k] === "{") {
+          buf = ("} " + m[1] + cond).replace(/\s+/g, " ").replace(/\s+$/, "") + " {";
+          flush("stmt");
+          depth++;
+          i = k + 1;
+          continue;
+        }
+        buf = ("} " + m[1] + cond).replace(/\s+/g, " ") + ";";
+        flush("stmt");
+        i = k + 1;
+        continue;
+      }
+      // `});` / `}))` — closers after a nested block (arrow fn in a call, etc.)
+      let k2 = j;
+      while (k2 < n && /[ \t\n]/.test(code[k2])) k2++;
+      if (code[k2] === ")") {
+        let suffix = "";
+        while (k2 < n && code[k2] === ")") {
+          suffix += ")";
+          k2++;
+        }
+        if (code[k2] === ";") {
+          suffix += ";";
+          k2++;
+        }
+        buf = "}" + suffix;
+        flush("stmt");
+        i = k2;
+        continue;
+      }
+      buf = "}";
+      flush("stmt");
+      i++;
+      continue;
+    }
+
+    if (c === ";") {
+      buf += paren > 0 ? "; " : ";";
+      if (paren === 0) flush("stmt");
+      i++;
+      continue;
+    }
+
+    if (c === "\n") {
+      flush("nl");
+      i++;
+      continue;
+    }
+
+    buf += c;
+    i++;
+  }
+  flush("nl");
+  return out.replace(/\n{3,}/g, "\n\n").trim() + "\n";
+}
+
+/* SQL formatter: uppercases keywords, puts each major clause on its own line,
+   breaks top-level commas (SELECT/ORDER BY lists) one per line, and indents
+   subqueries by parenthesis depth. String literals and comments are preserved. */
+function formatSql(code) {
+  const IND = "    ";
+  const CLAUSE =
+    /^(SELECT|FROM|WHERE|GROUP BY|HAVING|ORDER BY|LIMIT|LEFT JOIN|RIGHT JOIN|INNER JOIN|FULL JOIN|CROSS JOIN|JOIN|UNION ALL|UNION)\b/;
+
+  // protect literals and comments from rewriting
+  const store = [];
+  const protect = (re) =>
+    code.replace(re, (m) => {
+      store.push(m);
+      return `\u0000${store.length - 1}\u0000`;
+    });
+  let s = protect(/'(?:[^']|'')*'/g);
+  s = protect(/--[^\n]*/g);
+  s = protect(/\/\*[\s\S]*?\*\//g);
+
+  // collapse whitespace, uppercase keywords
+  s = s.replace(/\s+/g, " ");
+  s = s.replace(
+    /\b(select|from|where|group\s+by|having|order\s+by|limit|inner\s+join|left\s+join|right\s+join|full\s+join|cross\s+join|join|on|as|and|or|not|in|is|null|like|between|distinct|case|when|then|else|end|asc|desc|union\s+all|union|count|sum|avg|min|max|cast|coalesce|strftime|substring|round|abs)\b/gi,
+    (m) => m.toUpperCase()
+  );
+
+  // newline before major clauses
+  s = s.replace(
+    /\b(SELECT|FROM|WHERE|GROUP BY|HAVING|ORDER BY|LIMIT|LEFT JOIN|RIGHT JOIN|INNER JOIN|FULL JOIN|CROSS JOIN|JOIN|UNION ALL|UNION)\b/g,
+    "\n$1"
+  );
+  // newline after top-level commas (column / order-by lists)
+  let tmp = "";
+  let d = 0;
+  for (const ch of s) {
+    if (ch === "(") d++;
+    if (ch === ")") d = Math.max(d - 1, 0);
+    if (ch === "," && d === 0) {
+      tmp += ",\n";
+      continue;
+    }
+    tmp += ch;
+  }
+  s = tmp;
+
+  // indent: clause lines at paren depth, continuations one level deeper
+  const outLines = [];
+  let depth = 0;
+  for (let line of s.split("\n")) {
+    line = line.trim();
+    if (!line) continue;
+    const base = Math.max(depth + (CLAUSE.test(line) ? 0 : 1), 0);
+    outLines.push(IND.repeat(base) + line);
+    for (const ch of line) {
+      if (ch === "(") depth++;
+      else if (ch === ")") depth = Math.max(depth - 1, 0);
+    }
+  }
+
+  let out = outLines.join("\n");
+  out = out.replace(/\u0000(\d+)\u0000/g, (_, idx) => store[+idx]);
+  return out.trim() + "\n";
+}
+
+function formatCode() {
+  if (!editor || !current) return;
+  const code = editor.getValue();
+  let formatted;
+  try {
+    formatted = currentLang === "sql" ? formatSql(code) : formatBraces(code);
+  } catch (e) {
+    return; // never destroy user code on a formatter bug
+  }
+  if (formatted !== code) {
+    editor.setValue(formatted); // change event persists code + refreshes preview
+  }
+}
+
 /* ---------------- Run / Submit ---------------- */
 async function runCode() { await judge(false); }
 async function submitCode() { await judge(true); }
@@ -471,6 +721,7 @@ $("lang-select").addEventListener("change", (e) => {
 $("btn-run").addEventListener("click", runCode);
 $("btn-submit").addEventListener("click", submitCode);
 $("btn-reset").addEventListener("click", resetCode);
+$("btn-format").addEventListener("click", formatCode);
 $("preview-reload").addEventListener("click", renderPreview);
 
 loadProblems();

@@ -31,6 +31,11 @@ for problem 1).
   submission history (Submissions tab), persisting solved state and code per
   problem/language in `localStorage`
 - Compile errors, runtime errors, and timeouts are surfaced verbatim
+- **Auto-Structure** button: one-click code formatting for every language —
+  brace-aware re-indentation for Java/C++/JavaScript (for-loops, `} else {`,
+  arrow callbacks, do-while, comments, and string literals are handled) and a
+  keyword formatter for SQL (clauses on their own lines, one column per line,
+  subquery indentation, literals preserved)
 - Problem 2 has a Schema & Data tab showing the exact rows your query runs against
 - Problem 3 has a Live Preview tab where the counter is fully clickable, plus
   automated click-simulation tests on Submit

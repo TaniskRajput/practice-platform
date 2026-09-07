@@ -248,6 +248,14 @@ def judge_sql(query, databases, include_hidden):
 # Routes
 # ------------------------------------------------------------------ #
 
+@app.after_request
+def no_cache(response):
+    # always revalidate HTML so new deploys (buttons, layout) show up instantly
+    if response.content_type and "text/html" in response.content_type:
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
