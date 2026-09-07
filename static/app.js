@@ -1,0 +1,476 @@
+/* PracticeCode frontend */
+
+const CM_MODES = {
+  java: "text/x-java",
+  cpp: "text/x-c++src",
+  sql: "text/x-sql",
+  javascript: "javascript",
+};
+const LANG_LABELS = { java: "Java", cpp: "C++", sql: "MySQL-ish (SQLite)", javascript: "JavaScript" };
+
+let problems = [];
+let current = null;          // full problem payload
+let editor = null;
+let currentLang = null;
+let previewTimer = null;
+let judgePending = null;     // {resolve} for browser judge
+
+const $ = (id) => document.getElementById(id);
+
+/* ---------------- localStorage helpers ---------------- */
+const store = {
+  getSolved() { try { return JSON.parse(localStorage.getItem("pc_solved") || "{}"); } catch { return {}; } },
+  setSolved(pid) {
+    const s = this.getSolved(); s[pid] = true;
+    localStorage.setItem("pc_solved", JSON.stringify(s));
+  },
+  solvedCount() { return Object.keys(this.getSolved()).length; },
+  getCode(pid, lang) { return localStorage.getItem(`pc_code_${pid}_${lang}`) || null; },
+  setCode(pid, lang, code) { localStorage.setItem(`pc_code_${pid}_${lang}`, code); },
+  getLang(pid) { return localStorage.getItem(`pc_lang_${pid}`) || null; },
+  setLang(pid, lang) { localStorage.setItem(`pc_lang_${pid}`, lang); },
+  getSubs(pid) { try { return JSON.parse(localStorage.getItem(`pc_subs_${pid}`) || "[]"); } catch { return []; } },
+  addSub(pid, sub) {
+    const subs = this.getSubs(pid);
+    subs.unshift(sub);
+    localStorage.setItem(`pc_subs_${pid}`, JSON.stringify(subs.slice(0, 30)));
+  },
+};
+
+/* ---------------- Problem list ---------------- */
+async function loadProblems() {
+  const res = await fetch("/api/problems");
+  problems = await res.json();
+  renderList();
+}
+
+function renderList() {
+  const solved = store.getSolved();
+  $("problem-rows").innerHTML = problems
+    .map((p) => {
+      const diffClass = p.difficulty.toLowerCase();
+      const topics = p.topics.map((t) => `<span class="topic-chip">${t}</span>`).join("");
+      return `<tr data-id="${p.id}">
+        <td>${solved[p.id] ? '<span class="check">&#10003;</span>' : '<span class="check" style="color:var(--text-dim)">&mdash;</span>'}</td>
+        <td style="color:var(--text-dim)">${p.id}</td>
+        <td><b>${p.title}</b></td>
+        <td><span class="diff ${diffClass}">${p.difficulty}</span></td>
+        <td>${topics}</td>
+      </tr>`;
+    })
+    .join("");
+  document.querySelectorAll("#problem-rows tr").forEach((tr) => {
+    tr.addEventListener("click", () => openProblem(+tr.dataset.id));
+  });
+  $("solved-counter").innerHTML = `Solved <b>${store.solvedCount()}</b>/${problems.length}`;
+}
+
+/* ---------------- Problem view ---------------- */
+async function openProblem(pid) {
+  const res = await fetch(`/api/problems/${pid}`);
+  current = await res.json();
+
+  $("list-view").classList.add("hidden");
+  $("problem-view").classList.remove("hidden");
+  $("ph-number").textContent = current.id + ".";
+  $("ph-title").textContent = current.title;
+  $("ph-difficulty").textContent = current.difficulty;
+  $("ph-difficulty").className = "diff " + current.difficulty.toLowerCase();
+  $("ph-topics").textContent = current.topics.join(" · ");
+  $("results").innerHTML = "";
+
+  // language selector
+  const sel = $("lang-select");
+  sel.innerHTML = current.languages
+    .map((l) => `<option value="${l}">${LANG_LABELS[l] || l}</option>`)
+    .join("");
+  currentLang = store.getLang(current.id) || current.languages[0];
+  sel.value = currentLang;
+
+  // description tab
+  $("tab-desc").innerHTML = current.description;
+  // hint tab
+  $("tab-hint").innerHTML = `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
+
+  buildTabs();
+  initEditor();
+
+  if (current.judge === "browser") renderPreview();
+  if (current.languages[0] === "sql") renderDataset();
+  switchTab(current.judge === "browser" ? "preview" : "desc");
+}
+
+function buildTabs() {
+  const tabs = [
+    { id: "desc", label: "Description" },
+    ...(current.languages[0] === "sql" ? [{ id: "dataset", label: "Schema & Data" }] : []),
+    ...(current.judge === "browser" ? [{ id: "preview", label: "Live Preview" }] : []),
+    { id: "hint", label: "Hint" },
+    { id: "subs", label: "Submissions" },
+  ];
+  $("desc-tabs").innerHTML = tabs
+    .map((t, i) => `<div class="tab${i === 0 ? " active" : ""}" data-tab="${t.id}">${t.label}</div>`)
+    .join("");
+  document.querySelectorAll("#desc-tabs .tab").forEach((el) => {
+    el.addEventListener("click", () => switchTab(el.dataset.tab));
+  });
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll("#desc-tabs .tab").forEach((el) => {
+    el.classList.toggle("active", el.dataset.tab === tabId);
+  });
+  ["desc", "hint", "subs", "preview", "dataset"].forEach((t) => {
+    $("tab-" + t).classList.toggle("hidden", t !== tabId);
+  });
+  if (tabId === "subs") renderSubmissions();
+  if (tabId === "preview" && current && current.judge === "browser") renderPreview();
+}
+
+function renderSubmissions() {
+  const subs = store.getSubs(current.id);
+  if (!subs.length) {
+    $("tab-subs").innerHTML = `<p style="color:var(--text-dim)">No submissions yet. Hit <b>Run</b> to test samples or <b>Submit</b> for the full judge.</p>`;
+    return;
+  }
+  $("tab-subs").innerHTML = subs
+    .map((s) => `<div class="sub-item">
+      <span class="sub-verdict ${s.passed ? "ac" : "wa"}">${s.passed ? "Accepted" : "Wrong Answer"}</span>
+      <span>${s.detail}</span>
+      <span class="sub-meta">${LANG_LABELS[s.lang] || s.lang} · ${new Date(s.time).toLocaleString()}</span>
+    </div>`)
+    .join("");
+}
+
+/* ---------------- Editor ---------------- */
+function initEditor() {
+  const saved = store.getCode(current.id, currentLang);
+  const boiler = current.boilerplate[currentLang] || "";
+  if (!editor) {
+    editor = CodeMirror($("editor"), {
+      lineNumbers: true,
+      theme: "material-darker",
+      indentUnit: 4,
+      tabSize: 4,
+      extraKeys: { "Ctrl-Enter": () => runCode(), "Cmd-Enter": () => runCode() },
+    });
+    editor.on("change", () => {
+      store.setCode(current.id, currentLang, editor.getValue());
+      if (current.judge === "browser") schedulePreview();
+    });
+  }
+  editor.setOption("mode", CM_MODES[currentLang]);
+  editor.setValue(saved !== null ? saved : boiler);
+}
+
+function resetCode() {
+  if (!confirm("Reset code to the original boilerplate?")) return;
+  editor.setValue(current.boilerplate[currentLang] || "");
+  store.setCode(current.id, currentLang, editor.getValue());
+}
+
+/* ---------------- Run / Submit ---------------- */
+async function runCode() { await judge(false); }
+async function submitCode() { await judge(true); }
+
+async function judge(submit) {
+  if (!current) return;
+  setButtonsBusy(true);
+  $("results").innerHTML = `<div class="results-header"><span class="verdict pending">${submit ? "Judging…" : "Running…"}</span></div>`;
+  $("results").classList.remove("hidden");
+  $("results").style.display = "block";
+
+  try {
+    if (current.judge === "browser") {
+      const results = await browserJudge(submit);
+      renderBrowserResults(results, submit);
+    } else {
+      const payload = { problem_id: current.id, language: currentLang, code: editor.getValue() };
+      const res = await fetch(submit ? "/api/submit" : "/api/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      renderServerResults(data, submit);
+    }
+  } catch (e) {
+    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
+  } finally {
+    setButtonsBusy(false);
+  }
+}
+
+function setButtonsBusy(busy) {
+  $("btn-run").disabled = busy;
+  $("btn-submit").disabled = busy;
+}
+
+/* ---------------- Server results rendering ---------------- */
+function renderServerResults(data, submit) {
+  const box = $("results");
+
+  if (data.error) {
+    box.innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(data.error)}</pre>`;
+    return;
+  }
+  if (data.judge === "compile") {
+    box.innerHTML = `<div class="results-header"><span class="verdict ce">Compilation Error</span></div><pre class="error-pre">${escapeHtml(data.compile_error)}</pre>`;
+    recordSubmission(false, "Compilation Error", submit);
+    return;
+  }
+  if (data.judge === "runtime") {
+    box.innerHTML = `<div class="results-header"><span class="verdict rte">Runtime Error</span></div><pre class="error-pre">${escapeHtml(data.runtime_error)}</pre>`;
+    recordSubmission(false, "Runtime Error", submit);
+    return;
+  }
+  if (data.judge === "timeout") {
+    box.innerHTML = `<div class="results-header"><span class="verdict tle">Time Limit Exceeded</span></div>`;
+    recordSubmission(false, "Time Limit Exceeded", submit);
+    return;
+  }
+
+  // SQL results
+  if (data.judge === "sql") {
+    const cases = data.results
+      .map((r) => {
+        if (r.error) {
+          return `<div class="test-case">
+            <div class="test-head"><span class="tc-badge fail">ERROR</span> ${escapeHtml(r.database)}</div>
+            <pre class="error-pre">${escapeHtml(r.error)}</pre>
+          </div>`;
+        }
+        return `<div class="test-case">
+          <div class="test-head"><span class="tc-badge ${r.passed ? "pass" : "fail"}">${r.passed ? "PASSED" : "WRONG"}</span>
+            ${escapeHtml(r.database)} ${r.hidden ? '<span class="tc-badge hidden-tag">hidden</span>' : ""}</div>
+          <div class="sql-tables">
+            <div><h4>Your output</h4><pre class="${r.passed ? "" : "wrong"}">${escapeHtml(r.actual)}</pre></div>
+            <div><h4>Expected</h4><pre>${escapeHtml(r.expected)}</pre></div>
+          </div>
+        </div>`;
+      })
+      .join("");
+    box.innerHTML = `<div class="results-header">
+        <span class="verdict ${data.passed ? "ac" : "wa"}">${data.passed ? "Accepted" : "Wrong Answer"}</span>
+        <span style="color:var(--text-dim);font-weight:400">${data.passed_count}/${data.total} datasets passed</span>
+      </div>${cases}`;
+    recordSubmission(data.passed, `${data.passed_count}/${data.total} datasets`, submit);
+    return;
+  }
+
+  // Code results (java/cpp)
+  const cases = data.results
+    .map((r) => {
+      if (r.hidden) {
+        return `<div class="test-case hidden-case">
+          <div class="test-head"><span class="tc-badge ${r.passed ? "pass" : "fail"}">${r.passed ? "PASSED" : "FAILED"}</span>
+            Hidden test case</div>
+        </div>`;
+      }
+      return `<div class="test-case">
+        <div class="test-head"><span class="tc-badge ${r.passed ? "pass" : "fail"}">${r.passed ? "PASSED" : "WRONG"}</span>
+          Test case ${r.index + 1}</div>
+        <div class="tc-io">
+          <div><div class="io-label">Input (matrix)</div><pre>${escapeHtml(r.input)}</pre></div>
+          <div>
+            <div class="io-label">Expected</div><pre>${escapeHtml(r.expected)}</pre>
+            <div class="io-label" style="margin-top:8px">Your output</div><pre class="${r.passed ? "" : "wrong"}">${escapeHtml(r.actual)}</pre>
+          </div>
+        </div>
+      </div>`;
+    })
+    .join("");
+  box.innerHTML = `<div class="results-header">
+      <span class="verdict ${data.passed ? "ac" : "wa"}">${data.passed ? "Accepted" : "Wrong Answer"}</span>
+      <span style="color:var(--text-dim);font-weight:400">${data.passed_count}/${data.total} test cases passed</span>
+    </div>${cases}`;
+  recordSubmission(data.passed, `${data.passed_count}/${data.total} test cases`, submit);
+}
+
+function recordSubmission(passed, detail, submit) {
+  if (!submit) return;
+  if (passed) store.setSolved(current.id);
+  store.addSub(current.id, {
+    time: Date.now(), passed, detail, lang: currentLang,
+  });
+  renderList();
+}
+
+/* ---------------- Browser judge (JS/DOM) ---------------- */
+function setFrameHtml(frame, html) {
+  if (frame.dataset.blobUrl) URL.revokeObjectURL(frame.dataset.blobUrl);
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  frame.dataset.blobUrl = url;
+  frame.src = url;
+}
+
+function counterPreviewDoc(userCode, tests) {
+  const style = `
+    body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justify-content: center; padding-top: 60px; background: #fafafa; }
+    .counter-container { text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 14px; padding: 34px 44px; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+    #count { font-size: 56px; margin-bottom: 18px; color: #222; }
+    .btn-group { display: flex; gap: 12px; justify-content: center; }
+    button { width: 52px; height: 52px; font-size: 24px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; background: #f3f3f3; }
+    button:hover { background: #e8e8e8; }
+    #status-msg { margin-top: 18px; font-size: 14px; color: #c0392b; min-height: 20px; }
+  `;
+  const safeCode = userCode.replace(/<\/script/gi, "<\\/script");
+  let html = `<!DOCTYPE html><html><head><style>${style}</style></head><body>`;
+  html += current.browserHtml;
+  html += `<script>window.onerror = function(msg){ parent.postMessage({type:'judge-runtime-error', error:String(msg)}, '*'); };<\/script>`;
+  html += `<script>${safeCode}<\/script>`;
+  if (tests) {
+    const runner = `
+      (function () {
+        var results = [];
+        var tests = ${JSON.stringify(tests)};
+        tests.forEach(function (t) {
+          try {
+            t.steps.forEach(function (s) { document.getElementById(s.click).click(); });
+            var c = document.getElementById('count').textContent.trim();
+            var m = document.getElementById('status-msg').textContent.trim();
+            var pass = c === t.expect.count && m === t.expect.msg;
+            results.push({ name: t.name, hidden: t.hidden, pass: pass,
+              expected: 'count = ' + t.expect.count + ', status = "' + t.expect.msg + '"',
+              actual: 'count = ' + c + ', status = "' + m + '"' });
+          } catch (e) {
+            results.push({ name: t.name, hidden: t.hidden, pass: false,
+              expected: 'no error', actual: 'Error: ' + e.message });
+          }
+        });
+        parent.postMessage({ type: 'judge-result', results: results }, '*');
+      })();
+    `;
+    html += `<script>${runner}<\/script>`;
+  }
+  html += `</body></html>`;
+  return html;
+}
+
+function browserJudge(submit) {
+  const tests = current.browserTests.filter((t) => submit || !t.hidden);
+  return new Promise((resolve) => {
+    const frame = $("judge-frame");
+    const timer = setTimeout(() => {
+      judgePending = null;
+      resolve(tests.map((t) => ({
+        name: t.name, hidden: t.hidden, pass: false,
+        expected: `count = ${t.expect.count}, status = "${t.expect.msg}"`,
+        actual: "Timed out — check your code for errors (e.g. a runtime error during initialization)",
+      })));
+    }, 5000);
+
+    judgePending = (msg) => {
+      clearTimeout(timer);
+      judgePending = null;
+      if (msg.type === "judge-runtime-error") {
+        resolve(tests.map((t) => ({
+          name: t.name, hidden: t.hidden, pass: false,
+          expected: `count = ${t.expect.count}, status = "${t.expect.msg}"`,
+          actual: `Runtime error: ${msg.error}`,
+        })));
+      } else {
+        resolve(msg.results);
+      }
+    };
+    setFrameHtml(frame, counterPreviewDoc(editor.getValue(), tests));
+  });
+}
+
+window.addEventListener("message", (e) => {
+  if (e.data && (e.data.type === "judge-result" || e.data.type === "judge-runtime-error")) {
+    if (judgePending) judgePending(e.data);
+  }
+});
+
+function renderBrowserResults(results, submit) {
+  const passedCount = results.filter((r) => r.pass).length;
+  const passed = passedCount === results.length;
+  const cases = results
+    .map((r) => `<div class="test-case">
+      <div class="test-head"><span class="tc-badge ${r.pass ? "pass" : "fail"}">${r.pass ? "PASSED" : "FAILED"}</span>
+        ${escapeHtml(r.name)} ${r.hidden ? '<span class="tc-badge hidden-tag">hidden</span>' : ""}</div>
+      ${r.pass ? "" : `<div class="tc-io">
+        <div><div class="io-label">Expected</div><pre>${escapeHtml(r.expected)}</pre></div>
+        <div><div class="io-label">Your output</div><pre class="wrong">${escapeHtml(r.actual)}</pre></div>
+      </div>`}
+    </div>`)
+    .join("");
+  $("results").innerHTML = `<div class="results-header">
+      <span class="verdict ${passed ? "ac" : "wa"}">${passed ? "Accepted" : "Wrong Answer"}</span>
+      <span style="color:var(--text-dim);font-weight:400">${passedCount}/${results.length} test cases passed</span>
+    </div>${cases}`;
+  recordSubmission(passed, `${passedCount}/${results.length} test cases`, submit);
+}
+
+/* ---------------- Live preview ---------------- */
+function schedulePreview() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(renderPreview, 600);
+}
+
+function renderPreview() {
+  if (!current || current.judge !== "browser") return;
+  setFrameHtml($("preview-frame"), counterPreviewDoc(editor.getValue(), null));
+}
+
+/* ---------------- SQL dataset tab ---------------- */
+function renderDataset() {
+  const db = current.databases.find((d) => !d.hidden);
+  const tables = Object.entries(db.seed)
+    .map(([name, rows]) => {
+      const cols = Object.keys(rows[0] ? {} : {});
+      // infer headers from known schema
+      const headers = {
+        Countries: ["country_id", "country_name"],
+        Customers: ["customer_id", "customer_name", "country_id"],
+        Orders: ["order_id", "customer_id", "status_id", "order_date"],
+        Order_Status: ["status_id", "status_name"],
+        Order_Items: ["order_id", "quantity", "unit_price"],
+      }[name];
+      return `<h3>${name}</h3>
+        <table class="schema-table">
+          <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>${rows
+            .map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`)
+            .join("")}</tbody>
+        </table>`;
+    })
+    .join("");
+  $("tab-dataset").innerHTML = `<h3>${db.name} (SQLite)</h3>
+    <p style="color:var(--text-dim)">Your query runs against this dataset when you press <b>Run</b>, and against this plus a hidden dataset when you press <b>Submit</b>.</p>
+    ${tables}`;
+}
+
+/* ---------------- Utils ---------------- */
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* ---------------- Wiring ---------------- */
+$("nav-home").addEventListener("click", showList);
+$("nav-problems").addEventListener("click", (e) => { e.preventDefault(); showList(); });
+$("back-to-list").addEventListener("click", (e) => { e.preventDefault(); showList(); });
+
+function showList() {
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.remove("hidden");
+  current = null;
+  renderList();
+}
+
+$("lang-select").addEventListener("change", (e) => {
+  currentLang = e.target.value;
+  store.setLang(current.id, currentLang);
+  $("results").innerHTML = "";
+  initEditor();
+  if (current.judge === "browser") renderPreview();
+});
+
+$("btn-run").addEventListener("click", runCode);
+$("btn-submit").addEventListener("click", submitCode);
+$("btn-reset").addEventListener("click", resetCode);
+$("preview-reload").addEventListener("click", renderPreview);
+
+loadProblems();
