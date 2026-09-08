@@ -1,0 +1,1002 @@
+{
+ "sql-mock-1": [
+  {
+   "q": "Retrieve all products priced above the average price.",
+   "options": [
+    "SELECT * FROM Products WHERE Price >= (SELECT AVG(Price) FROM Products);",
+    "SELECT * FROM Products WHERE Price > (SELECT AVG(Price) FROM Products);",
+    "SELECT * FROM Products WHERE Price > (SELECT AVERAGE(Price) FROM Products);",
+    "SELECT * FROM Products WHERE Price > SELECT AVG(Price);"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT * FROM Products WHERE Price > (SELECT AVG(Price) FROM Products);"
+  },
+  {
+   "q": "Display products in the Furniture category, ordered by price descending.",
+   "options": [
+    "SELECT * FROM Products WHERE Category = 'Furniture' ORDER BY Price;",
+    "SELECT * FROM Products WHERE Category == 'Furniture' ORDER BY Price DESC;",
+    "SELECT * FROM Products WHERE Category = 'Furniture' ORDER BY Price DESC;",
+    "SELECT * FROM Products WHERE Category = 'Furniture' ORDER BY DESC;"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT * FROM Products WHERE Category = 'Furniture' ORDER BY Price DESC;"
+  },
+  {
+   "q": "Show products whose names contain the word \"Table.\"",
+   "options": [
+    "SELECT * FROM Products WHERE Product_Name LIKE '%Table%';",
+    "SELECT * FROM Products WHERE Product_Name LIKE 'Table%';",
+    "SELECT * FROM Products WHERE Product_Name LIKE '%Table_';",
+    "SELECT * FROM Products WHERE Product_Name = '%Table%';"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT * FROM Products WHERE Product_Name LIKE '%Table%';"
+  },
+  {
+   "q": "Show products with prices within 20% of the maximum price.",
+   "options": [
+    "SELECT * FROM Products WHERE Price >= 0.2 * (SELECT MAX(Price) FROM Products);",
+    "SELECT * FROM Products WHERE Price >= 0.8 * SELECT MAX(Price);",
+    "SELECT * FROM Products WHERE Price > 0.8 * (SELECT MAX(Price) FROM Products);",
+    "SELECT * FROM Products WHERE Price >= 0.8 * (SELECT MAX(Price) FROM Products);"
+   ],
+   "answerIndex": 3,
+   "answer": "SELECT * FROM Products WHERE Price >= 0.8 * (SELECT MAX(Price) FROM Products);"
+  },
+  {
+   "q": "Find products priced as a multiple of 5000.",
+   "options": [
+    "SELECT * FROM Products WHERE Price / 5000 = 0;",
+    "SELECT * FROM Products WHERE Price % 5000 = 0;",
+    "SELECT * FROM Products WHERE Price % 5000 == 0;",
+    "SELECT * FROM Products WHERE Price % 5000 equal to 0;"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT * FROM Products WHERE Price % 5000 = 0;"
+  },
+  {
+   "q": "Write a SQL query to fetch \"FIRST_NAME\" from the Student table in upper case and use ALIAS name as STUDENT_NAME.",
+   "options": [
+    "SELECT upper(FIRST_NAME) as STUDENT_NAME from Student;",
+    "SELECT FIRST_NAME as STUDENT_NAME from Student;",
+    "SELECT upper(FIRST_NAME)from Student;",
+    "SELECT upper(FIRSTNAME) as STUDENT_NAME from Student;"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT upper(FIRST_NAME) as STUDENT_NAME from Student;"
+  },
+  {
+   "q": "Write a SQL query to fetch unique values of MAJOR Subjects from Student table.",
+   "options": [
+    "SELECT MAJOR from STUDENT;",
+    "SELECT DISTINCT MAJOR from STUDENT ORDER BY MAJOR;",
+    "SELECT DISTINCT MAJOR from STUDENT;",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT DISTINCT MAJOR from STUDENT;"
+  },
+  {
+   "q": "Write a SQL query that fetches the unique values of MAJOR Subjects from Student table and print its length.",
+   "options": [
+    "SELECT MAJOR,LENGTH(MAJOR) FROM Student GROUP BY(MAJOR);",
+    "SELECT MAJOR,LENGTH(MAJOR) FROM Student ORDER BY(MAJOR);",
+    "SELECT MAJOR,LENGTH(MAJOR) FROM Student;",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT MAJOR,LENGTH(MAJOR) FROM Student GROUP BY(MAJOR);"
+  },
+  {
+   "q": "Write a SQL query to print FIRST_NAME from the Student table after replacing 'a' with 'A'.",
+   "options": [
+    "SELECT REPLACE('a', 'A') FROM Student;",
+    "SELECT REPLACE(FIRST_NAME, 'A', 'a') FROM Student;",
+    "SELECT REPLACE(FIRST_NAME, 'a', 'A') FROM Student;",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT REPLACE(FIRST_NAME, 'a', 'A') FROM Student;"
+  },
+  {
+   "q": "Write an SQL query to fetch the count of Students having Major Subject ‘Computer Science’",
+   "options": [
+    "SELECT Major, COUNT(*) as TOTAL_COUNT FROM Student WHERE MAJOR = 'Computer Science';",
+    "SELECT Major, COUNT(*) as TOTAL_COUNT FROM Student WHERE MAJOR =='Computer Science';",
+    "SELECT Major FROM Student WHERE MAJOR = 'Computer Science';",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT Major, COUNT(*) as TOTAL_COUNT FROM Student WHERE MAJOR = 'Computer Science';"
+  },
+  {
+   "q": "Identify the error in \"SELECT Name, NULLIF(Age, 30) FROM Employees WHERE Age IS NOT NULL;\"",
+   "options": [
+    "Change 'NULLIF' to 'ISNULL'",
+    "Replace 'Age, 30' with 'Age, 0'",
+    "Remove 'WHERE Age IS NOT NULL'",
+    "No error"
+   ],
+   "answerIndex": 2,
+   "answer": "Remove 'WHERE Age IS NOT NULL'"
+  },
+  {
+   "q": "What is the main use of the CASE statement in SQL?",
+   "options": [
+    "To execute a sequence of commands",
+    "To handle errors",
+    "To perform if-then-else type logic",
+    "To loop through records"
+   ],
+   "answerIndex": 2,
+   "answer": "To perform if-then-else type logic"
+  },
+  {
+   "q": "What needs to be corrected in \"SELECT CURRENT_DATE FROM Employees;\"?",
+   "options": [
+    "Replace 'CURRENT_DATE' with 'GETDATE()'",
+    "Remove 'FROM Employees'",
+    "Add 'AS Today'",
+    "No error"
+   ],
+   "answerIndex": 1,
+   "answer": "Remove 'FROM Employees'"
+  },
+  {
+   "q": "In \"SELECT Name, AGE(BirthDate) AS Age FROM Customers;\", what needs correction?",
+   "options": [
+    "AGE",
+    "AS Age",
+    "BirthDate",
+    "No error"
+   ],
+   "answerIndex": 0,
+   "answer": "AGE"
+  },
+  {
+   "q": "What needs to be corrected in \"SELECT CONCAT(FirstName, ' ', LastName) FROM Employees;\"?",
+   "options": [
+    "Change 'CONCAT' to 'CONCATENATE'",
+    "Replace ',' with '+'",
+    "Add 'AS FullName' for clarity",
+    "No error"
+   ],
+   "answerIndex": 2,
+   "answer": "Add 'AS FullName' for clarity"
+  }
+ ],
+ "sql-mock-2": [
+  {
+   "q": "Display the details of students who have received scholarships, including their names, scholarship amounts, and scholarship dates.",
+   "options": [
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student INNER JOIN Student ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;",
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student INNER JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;",
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, FROM Student INNER JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student INNER JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;"
+  },
+  {
+   "q": "List all students and their scholarship amounts if they have received any. If a student has not received a scholarship, display NULL for the scholarship details.",
+   "options": [
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;",
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student LEFT JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_ID;",
+    "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student LEFT JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT Student.FIRST_NAME, Student.LAST_NAME, Scholarship.SCHOLARSHIP_AMOUNT, Scholarship.SCHOLARSHIP_DATE FROM Student LEFT JOIN Scholarship ON Student.STUDENT_ID = Scholarship.STUDENT_REF_ID;"
+  },
+  {
+   "q": "Write an SQL query to show the top n (say 5) records of Student table order by descending GPA.",
+   "options": [
+    "SELECT * from Student ORDER BY GPA DESC;",
+    "SELECT * from Student ORDER BY GPA DESC LIMIT 5;",
+    "SELECT * from Student GROUP BY GPA DESC LIMIT 5;",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT * from Student ORDER BY GPA DESC LIMIT 5;"
+  },
+  {
+   "q": "Write an SQL query to fetch the first 50% records from a table.",
+   "options": [
+    "SELECT * FROM Student LIMIT (SELECT COUNT(*) FROM Student) / 2;",
+    "SELECT * FROM Student LIMIT (SELECT COUNT(*) FROM Student) % 2;",
+    "SELECT * FROM Student LIMIT ((SELECT COUNT(*) FROM Student) / 2);",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT * FROM Student LIMIT (SELECT COUNT(*) FROM Student) / 2;"
+  },
+  {
+   "q": "Write an SQL query to show the current date and time.",
+   "options": [
+    "SELECT CURDATE();",
+    "SELECT NOW();",
+    "SELECT DATETIME();",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT NOW();"
+  },
+  {
+   "q": "Write a query to create a new table which consists of data and structure copied from the other table (say Student) or clone the table named Student.",
+   "options": [
+    "CREATE CloneTable AS SELECT * FROM Student;",
+    "CREATE TABLE CloneTable SELECT * FROM Student;",
+    "CREATE TABLE CloneTable AS SELECT * FROM Student;",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "CREATE TABLE CloneTable AS SELECT * FROM Student;"
+  },
+  {
+   "q": "Retrieve the full details of students along with their program names.",
+   "options": [
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME FROM Student s JOIN Program p s.STUDENT_ID = p.STUDENT_REF_ID;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_ID;"
+   ],
+   "answerIndex": 0,
+   "answer": "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, s.GPA, s.ENROLLMENT_DATE, s.MAJOR, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID;"
+  },
+  {
+   "q": "List all students who received a scholarship along with the scholarship amount.",
+   "options": [
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, sc.SCHOLARSHIP_AMOUNT FROM JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME , s.LAST_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT s.STUDENT_ID, s.FIRST_NAME , s.LAST_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;"
+  },
+  {
+   "q": "Get the names of students, their program names, and scholarship amounts (only for students who have a program and a scholarship).",
+   "options": [
+    "SELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "SELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "SELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;"
+  },
+  {
+   "q": "List students who are enrolled in a program but haven’t received any scholarship.",
+   "options": [
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID LEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_ID LEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID WHERE sc.STUDENT_REF_ID IS NULL;",
+    "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID LEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID WHERE sc.STUDENT_REF_ID IS NULL;",
+    "None"
+   ],
+   "answerIndex": 2,
+   "answer": "SELECT s.STUDENT_ID, s.FIRST_NAME, s.LAST_NAME, p.PROGRAM_NAME FROM Student s JOIN Program p ON s.STUDENT_ID = p.STUDENT_REF_ID LEFT JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID WHERE sc.STUDENT_REF_ID IS NULL;"
+  },
+  {
+   "q": "Show the GPA and scholarship amount for all students who have received a scholarship.",
+   "options": [
+    "SELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID ;",
+    "SELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;",
+    "SELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON sc.STUDENT_REF_ID;",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "SELECT s.FIRST_NAME, s.LAST_NAME, s.GPA, sc.SCHOLARSHIP_AMOUNT FROM Student s JOIN Scholarship sc ON s.STUDENT_ID = sc.STUDENT_REF_ID;"
+  },
+  {
+   "q": "Correct the syntax error in \"SELECT CEILING(Price) AS RoundedPrice FROM Products WHERE Price > 0;\"",
+   "options": [
+    "Change 'CEILING' to 'FLOOR'",
+    "Replace 'AS RoundedPrice' with 'AS PriceCeiling'",
+    "Remove 'WHERE Price > 0'",
+    "No error"
+   ],
+   "answerIndex": 2,
+   "answer": "Remove 'WHERE Price > 0'"
+  },
+  {
+   "q": "How does the SQUARE function differ from the POWER function in SQL?",
+   "options": [
+    "SQUARE calculates the square, POWER calculates any exponent",
+    "SQUARE and POWER are the same",
+    "SQUARE calculates the square root, POWER calculates the square",
+    "SQUARE calculates any exponent, POWER calculates the square"
+   ],
+   "answerIndex": 0,
+   "answer": "SQUARE calculates the square, POWER calculates any exponent"
+  },
+  {
+   "q": "What does the CEILING function do in SQL?",
+   "options": [
+    "Returns the smallest integer greater than or equal to a given number",
+    "Returns the largest integer less than or equal to a given number",
+    "Calculates the square of a number",
+    "Calculates the square root of a number"
+   ],
+   "answerIndex": 0,
+   "answer": "Returns the smallest integer greater than or equal to a given number"
+  },
+  {
+   "q": "What is wrong in \"SELECT * FROM Employees FULL OUTER JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID WHERE Departments.DepartmentName IS NULL;\"?",
+   "options": [
+    "Replace 'FULL OUTER JOIN' with 'LEFT JOIN'",
+    "Change 'WHERE' to 'AND'",
+    "Remove 'WHERE Departments.DepartmentName IS NULL'",
+    "No error"
+   ],
+   "answerIndex": 2,
+   "answer": "Remove 'WHERE Departments.DepartmentName IS NULL'"
+  }
+ ],
+ "web-mock-1": [
+  {
+   "q": "Which of the following colors contain equal amounts of RBG?",
+   "options": [
+    "White",
+    "Gray",
+    "Black",
+    "All of the above"
+   ],
+   "answerIndex": 3,
+   "answer": "All of the above"
+  },
+  {
+   "q": "Which of the following is a valid way to integrate CSS into a webpage?",
+   "options": [
+    "Inline",
+    "External",
+    "Internal",
+    "All of the above"
+   ],
+   "answerIndex": 3,
+   "answer": "All of the above"
+  },
+  {
+   "q": "Which CSS property is used to change the text color of an element?",
+   "options": [
+    "text-color",
+    "color",
+    "font-color",
+    "background-color"
+   ],
+   "answerIndex": 1,
+   "answer": "color"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "{first: 20, second: 30}",
+    "{first: 50, second: 30}",
+    "{first: 20, second: 30, first: 50}",
+    "Syntax Error"
+   ],
+   "answerIndex": 1,
+   "answer": "{first: 50, second: 30}"
+  },
+  {
+   "q": "Which of the following is not a difference between HTML and XHTML?",
+   "options": [
+    "Charset in both html and xhtml is “text/html”",
+    "Tags and attributes are case-insensitive in HTML but not in XHTML",
+    "Special characters must be escaped using character entities in XHTML unlike HTML",
+    "Charset in html is “text/html” where as in xhtml it is “application/xml+xhtml”"
+   ],
+   "answerIndex": 0,
+   "answer": "Charset in both html and xhtml is “text/html”"
+  },
+  {
+   "q": "Which of the following is a correct syntax to display “Hello World” in an alert box using JavaScript?",
+   "options": [
+    "alertBox('Hello World');",
+    "alert('Hello World');",
+    "msgAlert('Hello World');",
+    "displayAlert('Hello World');"
+   ],
+   "answerIndex": 1,
+   "answer": "alert('Hello World');"
+  },
+  {
+   "q": "What does the undefined value in JavaScript represent?",
+   "options": [
+    "An unassigned variable",
+    "A null value",
+    "A logical false",
+    "An error condition"
+   ],
+   "answerIndex": 0,
+   "answer": "An unassigned variable"
+  },
+  {
+   "q": "What is the <select> tag used for?",
+   "options": [
+    "Creates a combo box.",
+    "Select some attributes and change their style.",
+    "Change text font.",
+    "None of the above."
+   ],
+   "answerIndex": 0,
+   "answer": "Creates a combo box."
+  },
+  {
+   "q": "Which of the following are examples of block-level elements in HTML?",
+   "options": [
+    "<div>",
+    "<p>",
+    "<h1>",
+    "All of the above"
+   ],
+   "answerIndex": 3,
+   "answer": "All of the above"
+  },
+  {
+   "q": "Which selector is used to target an element based on its id?",
+   "options": [
+    "#id",
+    ".id",
+    "*id",
+    "id"
+   ],
+   "answerIndex": 0,
+   "answer": "#id"
+  },
+  {
+   "q": "How do you select elements with the class name \"example\"?",
+   "options": [
+    ".example",
+    "#example",
+    "example",
+    "*example"
+   ],
+   "answerIndex": 0,
+   "answer": ".example"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "Object",
+    "Number",
+    "String",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "Number"
+  },
+  {
+   "q": "What is DOM in HTML?",
+   "options": [
+    "Language dependent application programming",
+    "Hierarchy of objects in ASP.NET",
+    "Application programming interface",
+    "Convention for representing and interacting with objects in html documents"
+   ],
+   "answerIndex": 3,
+   "answer": "Convention for representing and interacting with objects in html documents"
+  },
+  {
+   "q": "Which element is used to get highlighted text in HTML5?",
+   "options": [
+    "<u>",
+    "<mark>",
+    "<highlight>",
+    "<b>"
+   ],
+   "answerIndex": 1,
+   "answer": "<mark>"
+  },
+  {
+   "q": "Which operator is used to check both the value and the type of a variable in JavaScript?",
+   "options": [
+    "==",
+    "===",
+    "!=",
+    "!=="
+   ],
+   "answerIndex": 1,
+   "answer": "==="
+  },
+  {
+   "q": "What is the output of the following code snippet? let x = 'Hello'; let y = 'World'; console.log(x + ' ' + y);",
+   "options": [
+    "HelloWorld",
+    "'Hello World'",
+    "'Hello' 'World'",
+    "Hello World"
+   ],
+   "answerIndex": 1,
+   "answer": "'Hello World'"
+  },
+  {
+   "q": "How do you define a function in JavaScript?",
+   "options": [
+    "function = myFunc() {}",
+    "function: myFunc() {}",
+    "function myFunc() {}",
+    "myFunc() = function {}"
+   ],
+   "answerIndex": 2,
+   "answer": "function myFunc() {}"
+  },
+  {
+   "q": "What is meant by an empty tag in HTML?",
+   "options": [
+    "There is no such concept of an empty tag in HTML",
+    "An empty tag does not require a closing tag",
+    "An empty tag cannot have any content within it",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "An empty tag does not require a closing tag"
+  },
+  {
+   "q": "Which of the following properties is used to change the font of text?",
+   "options": [
+    "font-family",
+    "font-size",
+    "text-align",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "font-family"
+  },
+  {
+   "q": "Identify the error in the CSS code: .class { color: blue; font-weight; bold; }",
+   "options": [
+    "Syntax error in property declaration",
+    "Missing class name",
+    "Incorrect property value",
+    "No error"
+   ],
+   "answerIndex": 0,
+   "answer": "Syntax error in property declaration"
+  }
+ ],
+ "web-mock-2": [
+  {
+   "q": "What components make up the CSS Box Model?",
+   "options": [
+    "Content, Padding, Border, Margin",
+    "Padding, Margin, Border, Shadow",
+    "Content, Margin, Border, Outline",
+    "Content, Padding, Shadow, Margin"
+   ],
+   "answerIndex": 0,
+   "answer": "Content, Padding, Border, Margin"
+  },
+  {
+   "q": "Which CSS property is used to control the outer space around an element?",
+   "options": [
+    "Padding",
+    "Margin",
+    "Border",
+    "Content"
+   ],
+   "answerIndex": 1,
+   "answer": "Margin"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "8",
+    "7",
+    "0",
+    "1"
+   ],
+   "answerIndex": 1,
+   "answer": "7"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "0 1 2",
+    "0 undefined undefined",
+    "undefined undefined undefined",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "undefined undefined undefined"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "[111, 44, 1, 22]",
+    "[44,1,22,111]",
+    "[111,44,22,1]",
+    "[1,22,111,44]"
+   ],
+   "answerIndex": 0,
+   "answer": "[111, 44, 1, 22]"
+  },
+  {
+   "q": "HTML is a subset of ___________",
+   "options": [
+    "SGMT",
+    "SGML",
+    "SGME",
+    "XHTML"
+   ],
+   "answerIndex": 1,
+   "answer": "SGML"
+  },
+  {
+   "q": "Which of the following HTML code will make an image clickable?",
+   "options": [
+    "<a href=\"https://www.knacademy.com/\">KN Academy Home Page</a>",
+    "<img src=\"https://www.knacademy.com/knacademy-logo\"> <a href=\"https://www.knacademy.com/\">KN Academy Home Page</a> </img>",
+    "<a href=\"https://www.knacademy.com/\">KN Academy Home Page</a> <img src=\"https://www.knacademy.com/knacademy-logo\" />",
+    "<a href=\"https://www.knacademy.com/\"><img src=\"https://www.knacademy.com/knacademy-logo\" /></a>"
+   ],
+   "answerIndex": 3,
+   "answer": "<a href=\"https://www.knacademy.com/\"><img src=\"https://www.knacademy.com/knacademy-logo\" /></a>"
+  },
+  {
+   "q": "Which HTML element is used for short quote?",
+   "options": [
+    "<em>",
+    "<abbr>",
+    "<q>",
+    "<blockquote>"
+   ],
+   "answerIndex": 2,
+   "answer": "<q>"
+  },
+  {
+   "q": "[Image question] What is the output of the JavaScript code shown? An array of 3 elements has a new element pushed onto it (see images/web-mock-2-q9.png). console.log(arr.length) after push.",
+   "options": [
+    "3",
+    "4",
+    "5",
+    "Error"
+   ],
+   "answerIndex": 1,
+   "answer": "4"
+  },
+  {
+   "q": "[Image question] What is the flaw in the JavaScript function shown? A pow(x, n) style function is defined without a default for the exponent parameter (see images/web-mock-2-q10.png).",
+   "options": [
+    "It doesn't handle the case when exponent is not provided",
+    "It returns the wrong value",
+    "It causes an infinite loop",
+    "Syntax error"
+   ],
+   "answerIndex": 0,
+   "answer": "It doesn't handle the case when exponent is not provided"
+  },
+  {
+   "q": "Which property allows an image link to show a text label?",
+   "options": [
+    "alt",
+    "str",
+    "alternative",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "alt"
+  },
+  {
+   "q": "How is black color represented in terms of RGB values?",
+   "options": [
+    "RCB(0, 0, 0)",
+    "RCB(100, 100, 100)",
+    "RCB(100, 100, 0)",
+    "RCB(100, 0, 0)"
+   ],
+   "answerIndex": 0,
+   "answer": "RCB(0, 0, 0)"
+  },
+  {
+   "q": "The default value of the BORDER attribute is?",
+   "options": [
+    "1pixel",
+    "2pixel",
+    "4pixel",
+    "8pixel"
+   ],
+   "answerIndex": 0,
+   "answer": "1pixel"
+  },
+  {
+   "q": "What are the types of unordered lists in HTML?",
+   "options": [
+    "Circle,square,disc",
+    "Triangle,square,disc",
+    "Triangle,circle,disc",
+    "All of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "Circle,square,disc"
+  },
+  {
+   "q": "What are those objects called which are used for storing data on the client provided by the HTML local storage?",
+   "options": [
+    "Windows.localStorage",
+    "Windows.sessionStorage",
+    "Both A and B",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "Both A and B"
+  },
+  {
+   "q": "What does the Alpha value in RGBA represent?",
+   "options": [
+    "Opacity value for a color",
+    "The shade of a color",
+    "Both A and B",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "Opacity value for a color"
+  },
+  {
+   "q": "What does the Alpha value of 0.0 represent?",
+   "options": [
+    "Fully Opaque",
+    "Fully Transparent",
+    "50% Transparent",
+    "None of the above"
+   ],
+   "answerIndex": 1,
+   "answer": "Fully Transparent"
+  },
+  {
+   "q": "How does setting 'margin: auto;' affect an element?",
+   "options": [
+    "Centers the element horizontally",
+    "Increases the element's height",
+    "Adds automatic padding",
+    "Does nothing specific"
+   ],
+   "answerIndex": 0,
+   "answer": "Centers the element horizontally"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "-Infinity Infinity",
+    "Infinity -Infinity",
+    "Infinity Infinity",
+    "-Infinity -Infinity"
+   ],
+   "answerIndex": 0,
+   "answer": "-Infinity Infinity"
+  },
+  {
+   "q": "What will be the output of the following code snippet?",
+   "options": [
+    "11 NaN NaN",
+    "11 NaN [object Object]",
+    "11 Hello6 [object Object]6",
+    "None of the above"
+   ],
+   "answerIndex": 2,
+   "answer": "11 Hello6 [object Object]6"
+  }
+ ],
+ "web-mock-3": [
+  {
+   "q": "What is the work of <address> element in HTML5?",
+   "options": [
+    "contains IP address",
+    "contains home address",
+    "contains url",
+    "contains contact details for author"
+   ],
+   "answerIndex": 3,
+   "answer": "contains contact details for author"
+  },
+  {
+   "q": "An element has width: 100px; padding: 15px; border: 5px solid black;. What is its total width if box-sizing: content-box;?",
+   "options": [
+    "100px",
+    "115px",
+    "130px",
+    "140px"
+   ],
+   "answerIndex": 3,
+   "answer": "140px"
+  },
+  {
+   "q": "Identify the issue: div { width: 100%; padding: 20px; } without using box-sizing: border-box;",
+   "options": [
+    "The div will be wider than its parent",
+    "The div's width is too small",
+    "No issue",
+    "The padding is ignored"
+   ],
+   "answerIndex": 0,
+   "answer": "The div will be wider than its parent"
+  },
+  {
+   "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q4.png]",
+   "options": [
+    "NaN",
+    "Number",
+    "Object",
+    "Array"
+   ],
+   "answerIndex": 2,
+   "answer": "Object"
+  },
+  {
+   "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q5.png]",
+   "options": [
+    "3",
+    "0",
+    "Error",
+    "5"
+   ],
+   "answerIndex": 3,
+   "answer": "5"
+  },
+  {
+   "q": "How do you find the length of an array in JavaScript?",
+   "options": [
+    "array.size()",
+    "array.length",
+    "array.count()",
+    "length(array)"
+   ],
+   "answerIndex": 1,
+   "answer": "array.length"
+  },
+  {
+   "q": "In JavaScript, how can you check if a variable is an array?",
+   "options": [
+    "typeof variable",
+    "variable.isArray()",
+    "Array.isArray(variable)",
+    "variable instanceof Array"
+   ],
+   "answerIndex": 2,
+   "answer": "Array.isArray(variable)"
+  },
+  {
+   "q": "[Image question] What is the output of the JavaScript function shown? The function takes a number and returns its cube (num * num * num) (see images/web-mock-3-q8.png).",
+   "options": [
+    "[1, 2, 3, 4]",
+    "[10, 20, 30, 40]",
+    "[0.1, 0.2, 0.3, 0.4]",
+    "Error"
+   ],
+   "answerIndex": 0,
+   "answer": "[1, 2, 3, 4]"
+  },
+  {
+   "q": "What will be the output of this code snippet? let numbers = [1, 2, 3]; numbers[10] = 11; console.log(numbers.length);",
+   "options": [
+    "3",
+    "4",
+    "11",
+    "10"
+   ],
+   "answerIndex": 2,
+   "answer": "11"
+  },
+  {
+   "q": "Output of the below Js code snippet: [See image: images/web-mock-3-q10.png]",
+   "options": [
+    "44",
+    "8",
+    "4",
+    "Error"
+   ],
+   "answerIndex": 0,
+   "answer": "44"
+  },
+  {
+   "q": "What CSS property allows an element to expand in proportion to its sibling elements in a flex container?",
+   "options": [
+    "flex-grow",
+    "flex-wrap",
+    "align-content",
+    "justify-content"
+   ],
+   "answerIndex": 0,
+   "answer": "flex-grow"
+  },
+  {
+   "q": "What does the CSS box-shadow property do?",
+   "options": [
+    "Adds a shadow inside the border of an element.",
+    "Adds a shadow outside the border of an element.",
+    "Increases the width of the border.",
+    "Controls the visibility of the element."
+   ],
+   "answerIndex": 1,
+   "answer": "Adds a shadow outside the border of an element."
+  },
+  {
+   "q": "What is the correct syntax of web address?",
+   "options": [
+    "port://domain.filenmae:path/scheme/prefix",
+    "prefix://scheme.port:domain/filename/path",
+    "path://prefix.port:domain/filename/scheme",
+    "scheme://prefix.domain:port/path/filename"
+   ],
+   "answerIndex": 3,
+   "answer": "scheme://prefix.domain:port/path/filename"
+  },
+  {
+   "q": "Which attribute is not essential under <iframe>?",
+   "options": [
+    "frameborder",
+    "width",
+    "height",
+    "src"
+   ],
+   "answerIndex": 0,
+   "answer": "frameborder"
+  },
+  {
+   "q": "Which property aligns a flex item in the center of its container along the main axis?",
+   "options": [
+    "align-self: center",
+    "justify-self: center",
+    "justify-content: center",
+    "align-items: center"
+   ],
+   "answerIndex": 2,
+   "answer": "justify-content: center"
+  },
+  {
+   "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q16.png]",
+   "options": [
+    "4 10 18",
+    "1 2 3",
+    "1 4 7",
+    "None of the above"
+   ],
+   "answerIndex": 0,
+   "answer": "4 10 18"
+  },
+  {
+   "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q17.png]",
+   "options": [
+    "1 2 3 4",
+    "2 3 4 1",
+    "2 4 3 1",
+    "4 3 2 1"
+   ],
+   "answerIndex": 2,
+   "answer": "2 4 3 1"
+  },
+  {
+   "q": "How do you create a new object in JavaScript?",
+   "options": [
+    "Object.create()",
+    "new Object()",
+    "Both A and B",
+    "Neither A nor B"
+   ],
+   "answerIndex": 2,
+   "answer": "Both A and B"
+  },
+  {
+   "q": "Given the following code, what is printed to the console? let obj1 = { a: 1 }; let obj2 = { a: 1 }; console.log(obj1 === obj2);",
+   "options": [
+    "true",
+    "false",
+    "null",
+    "Error"
+   ],
+   "answerIndex": 1,
+   "answer": "false"
+  },
+  {
+   "q": "Which of the following values of the position property will position an element relative to its nearest positioned ancestor?",
+   "options": [
+    "absolute",
+    "relative",
+    "fixed",
+    "static"
+   ],
+   "answerIndex": 0,
+   "answer": "absolute"
+  }
+ ]
+}

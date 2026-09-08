@@ -1,0 +1,240 @@
+[
+ {
+  "q": "Which of the following colors contain equal amounts of RBG?",
+  "options": [
+   "White",
+   "Gray",
+   "Black",
+   "All of the above"
+  ],
+  "answer": "All of the above",
+  "answerIndex": 3
+ },
+ {
+  "q": "Which of the following is a valid way to integrate CSS into a webpage?",
+  "options": [
+   "Inline",
+   "External",
+   "Internal",
+   "All of the above"
+  ],
+  "answer": "All of the above",
+  "answerIndex": 3,
+  "explanation": "In web development, CSS (Cascading Style Sheets) can be integrated into a webpage in three valid ways: inline, internal, and external. Inline CSS is applied directly to an HTML element using the style attribute. It is useful for applying quick styles to individual elements but is not recommended for larger projects due to poor maintainability. Internal CSS is written within a <style> tag inside the <head> section of an HTML document. This method is suitable for styling single-page websites or small projects where all the styles are contained within the same file. External CSS, on the other hand, involves linking an external .css file to the HTML document using a <link> tag. This is the most scalable and maintainable method, especially for larger websites, as it separates content from presentation and allows styles to be reused across multiple pages. Therefore, all three methods—inline, internal, and external—are valid ways to incorporate CSS into a webpage, making \"All of the above\" the correct answer."
+ },
+ {
+  "q": "Which CSS property is used to change the text color of an element?",
+  "options": [
+   "text-color",
+   "color",
+   "font-color",
+   "background-color"
+  ],
+  "answer": "color",
+  "answerIndex": 1,
+  "explanation": "The color property is used in CSS to define the color of the text content of an element."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "{first: 20, second: 30}",
+   "{first: 50, second: 30}",
+   "{first: 20, second: 30, first: 50}",
+   "Syntax Error"
+  ],
+  "answer": "{first: 50, second: 30}",
+  "answerIndex": 1,
+  "explanation": "In JavaScript, if you define the same key more than once in an object, the last occurrence of that key overwrites any previous values. So, in the object {first: 20, second: 30, first: 50}, the second first: 50 overwrites the earlier first: 20. As a result, the object becomes {first: 50, second: 30}. There’s no syntax error here. JavaScript allows duplicate keys during object creation, but only the last one is retained."
+ },
+ {
+  "q": "Which of the following is not a difference between HTML and XHTML?",
+  "options": [
+   "Charset in both html and xhtml is “text/html”",
+   "Tags and attributes are case-insensitive in HTML but not in XHTML",
+   "Special characters must be escaped using character entities in XHTML unlike HTML",
+   "Charset in html is “text/html” where as in xhtml it is “application/xml+xhtml”"
+  ],
+  "answer": "Charset in both html and xhtml is “text/html”",
+  "answerIndex": 0,
+  "explanation": "HTML is case insensitive while XHTML is case sensitive. In XHTML, special characters can be escaped using character entites but not in HTML. Charset in HTML is “text/html” where as it is “application/xml+xhtml” for XHTML."
+ },
+ {
+  "q": "Which of the following is a correct syntax to display “Hello World” in an alert box using JavaScript?",
+  "options": [
+   "alertBox('Hello World');",
+   "alert('Hello World');",
+   "msgAlert('Hello World');",
+   "displayAlert('Hello World');"
+  ],
+  "answer": "alert('Hello World');",
+  "answerIndex": 1,
+  "explanation": "alert('Hello World'); is the correct syntax to display an alert box with a message in JavaScript."
+ },
+ {
+  "q": "What does the undefined value in JavaScript represent?",
+  "options": [
+   "An unassigned variable",
+   "A null value",
+   "A logical false",
+   "An error condition"
+  ],
+  "answer": "An unassigned variable",
+  "answerIndex": 0,
+  "explanation": "undefined in JavaScript represents a variable that has been declared but not assigned a value."
+ },
+ {
+  "q": "What is the <select> tag used for?",
+  "options": [
+   "Creates a combo box.",
+   "Select some attributes and change their style.",
+   "Change text font.",
+   "None of the above."
+  ],
+  "answer": "Creates a combo box.",
+  "answerIndex": 0,
+  "explanation": "The <select> tag in HTML is used to create a drop-down list, also referred to as a combo box. It lets users select one (or multiple) options from a list. It's commonly used in forms where the user has to choose from predefined options."
+ },
+ {
+  "q": "Which of the following are examples of block-level elements in HTML?",
+  "options": [
+   "<div>",
+   "<p>",
+   "<h1>",
+   "All of the above"
+  ],
+  "answer": "All of the above",
+  "answerIndex": 3
+ },
+ {
+  "q": "Which selector is used to target an element based on its id?",
+  "options": [
+   "#id",
+   ".id",
+   "*id",
+   "id"
+  ],
+  "answer": "#id",
+  "answerIndex": 0,
+  "explanation": "The #id selector is used to target an element based on its unique id attribute."
+ },
+ {
+  "q": "How do you select elements with the class name \"example\"?",
+  "options": [
+   ".example",
+   "#example",
+   "example",
+   "*example"
+  ],
+  "answer": ".example",
+  "answerIndex": 0,
+  "explanation": "Elements with a specific class name are selected using the dot (.) notation followed by the class name."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "Object",
+   "Number",
+   "String",
+   "None of the above"
+  ],
+  "answer": "Number",
+  "answerIndex": 1,
+  "explanation": "NaN in Javascript is defined to be of type number despite its name(not a number)."
+ },
+ {
+  "q": "What is DOM in HTML?",
+  "options": [
+   "Language dependent application programming",
+   "Hierarchy of objects in ASP.NET",
+   "Application programming interface",
+   "Convention for representing and interacting with objects in html documents"
+  ],
+  "answer": "Convention for representing and interacting with objects in html documents",
+  "answerIndex": 3,
+  "explanation": "The Document Object Model is a cross-platform and language-independent application programming interface that treats an HTML, XHTML, or XML document as a tree structure. A document can be viewed as a logical tree with help of DOM Model."
+ },
+ {
+  "q": "Which element is used to get highlighted text in HTML5?",
+  "options": [
+   "<u>",
+   "<mark>",
+   "<highlight>",
+   "<b>"
+  ],
+  "answer": "<mark>",
+  "answerIndex": 1,
+  "explanation": "The <mark> element is used to highlight a section of text. It is useful for quoting a text or if one wants to bring attention to the text. The <b> tag is used to make text/paragraph bold. <u> tag is used to underline the text you wanted. <p>This is the example.<mark> I like this dog. </mark></p>"
+ },
+ {
+  "q": "Which operator is used to check both the value and the type of a variable in JavaScript?",
+  "options": [
+   "==",
+   "===",
+   "!=",
+   "!=="
+  ],
+  "answer": "===",
+  "answerIndex": 1,
+  "explanation": "The === operator is used in JavaScript to check both the value and the type of a variable."
+ },
+ {
+  "q": "What is the output of the following code snippet? let x = 'Hello'; let y = 'World'; console.log(x + ' ' + y);",
+  "options": [
+   "HelloWorld",
+   "'Hello World'",
+   "'Hello' 'World'",
+   "Hello World"
+  ],
+  "answer": "'Hello World'",
+  "answerIndex": 1,
+  "explanation": "The code concatenates the strings 'Hello' and 'World' with a space in between, resulting in the output 'Hello World'."
+ },
+ {
+  "q": "How do you define a function in JavaScript?",
+  "options": [
+   "function = myFunc() {}",
+   "function: myFunc() {}",
+   "function myFunc() {}",
+   "myFunc() = function {}"
+  ],
+  "answer": "function myFunc() {}",
+  "answerIndex": 2,
+  "explanation": "A function in JavaScript is defined using the function keyword followed by the function name and parentheses for parameters."
+ },
+ {
+  "q": "What is meant by an empty tag in HTML?",
+  "options": [
+   "There is no such concept of an empty tag in HTML",
+   "An empty tag does not require a closing tag",
+   "An empty tag cannot have any content within it",
+   "None of the above"
+  ],
+  "answer": "An empty tag does not require a closing tag",
+  "answerIndex": 1,
+  "explanation": "In HTML, empty tags are those tags that don’t require a closing tag for completion."
+ },
+ {
+  "q": "Which of the following properties is used to change the font of text?",
+  "options": [
+   "font-family",
+   "font-size",
+   "text-align",
+   "None of the above"
+  ],
+  "answer": "font-family",
+  "answerIndex": 0,
+  "explanation": "The font-family property is used to change text font in HTML"
+ },
+ {
+  "q": "Identify the error in the CSS code: .class { color: blue; font-weight; bold; }",
+  "options": [
+   "Syntax error in property declaration",
+   "Missing class name",
+   "Incorrect property value",
+   "No error"
+  ],
+  "answer": "Syntax error in property declaration",
+  "answerIndex": 0,
+  "explanation": "The error is a syntax mistake in the font-weight property declaration. It should be font-weight: bold;."
+ }
+]

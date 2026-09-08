@@ -1,0 +1,362 @@
+[
+ {
+  "id": "6822e750bc897d5f172be81e",
+  "title": "Accenture Cognitive Mock-1",
+  "section": "Accenture Mock Test (Based on Last Year)"
+ },
+ {
+  "id": "682448ccf50d135bc4ece50b",
+  "title": "Accenture Technical Mock-1",
+  "section": "Accenture Mock Test (Based on Last Year)"
+ },
+ {
+  "id": "68247da34708d92ceb1c8750",
+  "title": "Accenture Technical Mock-2",
+  "section": "Accenture Mock Test 2(Based on Last Year)"
+ },
+ {
+  "id": "6823272da6ac4d4c0ebac9bf",
+  "title": "Accenture Cognitive Mock-2",
+  "section": "Accenture Mock Test 2(Based on Last Year)"
+ },
+ {
+  "id": "6811eeff545a1a1838b30a3b",
+  "title": "SQL Mock-1",
+  "section": "Coding Questions"
+ },
+ {
+  "id": "6812017c6d37691b11f42fbf",
+  "title": "SQL Mock-2",
+  "section": "Coding Questions"
+ },
+ {
+  "id": "678232a98a0b67535fdd9dba",
+  "title": "English Ability",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "67824c67d0d45d0f956ff8b3",
+  "title": "Critical Reasoning and Problem Solving",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "67828272ee1cf74cd89504f9",
+  "title": "Abstract Reasoning",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "678291fdbca5095bf4769457",
+  "title": "Common Application and MS Office",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "67829c3fbca5095bf4769804",
+  "title": "Network Security and Cloud",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "67838b402bb1e33a4e7102c2",
+  "title": "Pseudo Code",
+  "section": "Practice Mock Test 1"
+ },
+ {
+  "id": "67824303a7b6263bebe707f7",
+  "title": "English Ability",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "67824c73a9346911c19100b9",
+  "title": "Critical Reasoning and Problem Solving",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "6782827d18a48c1d847e9d77",
+  "title": "Abstract Reasoning",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "6782920666e3de5d447e8a8a",
+  "title": "Common Application and MS Office",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "67837f000dc7db464e678d08",
+  "title": "Network Security and Cloud",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "67838b4a7241546b49f3bef7",
+  "title": "Pseudo Code",
+  "section": "Practice Mock Test 2"
+ },
+ {
+  "id": "685563eded73e63b38e4edd5",
+  "title": "Easy Quant-1",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "68557535ca61610d1b406e82",
+  "title": "Easy Quant-2",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "685588b5a3ad377be443a157",
+  "title": "Easy Quant-3",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "6855922f4bf51d5d51871c09",
+  "title": "Easy Quant-4",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "6858d5603c360b4f78d1f55c",
+  "title": "Easy Reasoning-1",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "6858f9569bbf2c08ed424233",
+  "title": "Easy Reasoning-2",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "68590938c5ac5f7649e076a8",
+  "title": "Easy Reasoning-3",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "6859127fdbd1da7047d89355",
+  "title": "Easy Reasoning-4",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "685950b27de4016dba85290a",
+  "title": "Easy Verbal-1",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "685a69582a8a696a800919e1",
+  "title": "Easy Verbal-4",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "685a56b4cef2e85dbf4e400f",
+  "title": "Easy Verbal-3",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "685a3fb9c64e833e9f25b0eb",
+  "title": "Easy Verbal-2",
+  "section": "Practice Test (Aptitude)"
+ },
+ {
+  "id": "68ab10cbb8cfa818afdb7119",
+  "title": "Security and Cloud Mock-4",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68ab10bb0c180e38b4c1dbc5",
+  "title": "Security and Cloud Mock-3",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "6874968e9569f6338d332ef3",
+  "title": "Security and Cloud Mock-2",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68e15334bccee72e76bb1d6d",
+  "title": "Cloud SB Mock-1",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68e1533af3ba0f245bf869ba",
+  "title": "Cloud SB Mock-2",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "687496701a31be6f8bad504e",
+  "title": "Security and Cloud Mock-1",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68e365dff5305c51ac3334f8",
+  "title": "Situational (Devops) New Pattern Type",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68e368525be43929243741cc",
+  "title": "Situational (Story Based) New Pattern",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a9dd929cffee6e0d2e97b3",
+  "title": "PPT Mock-1",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a9dd9d0217406c48edf848",
+  "title": "PPT Mock-2",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a87c86dbe22445e6bb7f79",
+  "title": "Word Mock-1",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a9c805e41dcd394968b4bd",
+  "title": "Word Mock-2",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a9d4c4e755246a87b8f314",
+  "title": "Word Mock-3",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a87c37d035ea7f6f278e2d",
+  "title": "Excel Mock-1",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a87c43dfe25a2b7e8590b8",
+  "title": "Excel Mock-2",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a87c4df8786f24f4068354",
+  "title": "Excel Mock-3",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68a87c594584d8199687c052",
+  "title": "Excel Mock-4",
+  "section": "Security & MS Office"
+ },
+ {
+  "id": "68133a31ff0c0c39c57ff79b",
+  "title": "Pseudo Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "681366b2306a0512a154676b",
+  "title": "Pseudo Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "67665f199bf8ba525fe262b9",
+  "title": "Pseudocode - 1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "676f8e64d7427f2e8c486c69",
+  "title": "Pseudocode - 2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6783e592d4b7eb431b145795",
+  "title": "Pseudocode - 3",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6783e5e228a26e77e7a8c635",
+  "title": "Pseudocode - 4",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68d943dd5d50a35f162e73a1",
+  "title": "Recursion (Medium - Hard)",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68d7b551c2b1a63f13fb44aa",
+  "title": "Pseudocode Bit Operators (Medium-Hard)",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "681ba91ed1e88728dfd3fc14",
+  "title": "Networking Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "681bb1926b437a3aa1b031ae",
+  "title": "Networking Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0df85bb50d514e71678a8",
+  "title": "Networking SB Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0df9c8c80e9370492f109",
+  "title": "Networking SB Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68d94a249029e5344ee57be6",
+  "title": "Networking (Medium - Hard)",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0df418d6ee942a4d90478",
+  "title": "OS SB Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0df4d077fcd5bfcd49825",
+  "title": "OS SB Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0dfca1877cb4ec98e37e1",
+  "title": "Cybersecurity SB Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68e0dfeef2ba3778bb8e47c3",
+  "title": "Cybersecurity SB Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6818b9c251bd422e606502e1",
+  "title": "OOPS Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6818c39955d7766ba37930e3",
+  "title": "OOPS Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6818cd8b8db1cc2c51ac09ea",
+  "title": "OOPS Mock-3",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6818a5a455d7766ba379289b",
+  "title": "Java Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "681897881c57650a42c8ba0d",
+  "title": "Java Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "68313aea273a1427759e2a4d",
+  "title": "Web Mock-1",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6831476f1cc3377cd509f5e1",
+  "title": "Web Mock-2",
+  "section": "Updated Pattern (Practice Set)"
+ },
+ {
+  "id": "6831725e0b28b1351317ca22",
+  "title": "Web Mock-3",
+  "section": "Updated Pattern (Practice Set)"
+ }
+]

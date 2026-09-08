@@ -9,6 +9,7 @@ const CM_MODES = {
 const LANG_LABELS = { java: "Java", cpp: "C++", sql: "MySQL-ish (SQLite)", javascript: "JavaScript" };
 
 let problems = [];
+let pdfs = [];
 let current = null;          // full problem payload
 let editor = null;
 let currentLang = null;
@@ -38,6 +39,8 @@ const store = {
 };
 
 /* ---------------- Problem list ---------------- */
+let listFilter = "all";   // "all" | "pseudo"
+
 async function loadProblems() {
   const res = await fetch("/api/problems");
   problems = await res.json();
@@ -46,19 +49,23 @@ async function loadProblems() {
 
 function renderList() {
   const solved = store.getSolved();
-  $("problem-rows").innerHTML = problems
-    .map((p) => {
-      const diffClass = p.difficulty.toLowerCase();
-      const topics = p.topics.map((t) => `<span class="topic-chip">${t}</span>`).join("");
-      return `<tr data-id="${p.id}">
-        <td>${solved[p.id] ? '<span class="check">&#10003;</span>' : '<span class="check" style="color:var(--text-dim)">&mdash;</span>'}</td>
-        <td style="color:var(--text-dim)">${p.id}</td>
-        <td><b>${p.title}</b></td>
-        <td><span class="diff ${diffClass}">${p.difficulty}</span></td>
-        <td>${topics}</td>
-      </tr>`;
-    })
-    .join("");
+  const shown = problems.filter((p) => listFilter === "all" || p.judge === "quiz");
+  let html = "";
+  shown.forEach((p, i) => {
+    if (i === 0 && listFilter === "pseudo") {
+      html += `<tr class="list-section-row"><td colspan="5" class="list-section">Pseudocode Quizzes</td></tr>`;
+    }
+    const diffClass = p.difficulty.toLowerCase();
+    const topics = p.topics.map((t) => `<span class="topic-chip">${t}</span>`).join("");
+    html += `<tr data-id="${p.id}">
+      <td>${solved[p.id] ? '<span class="check">&#10003;</span>' : '<span class="check" style="color:var(--text-dim)">&mdash;</span>'}</td>
+      <td style="color:var(--text-dim)">${p.id}</td>
+      <td><b>${p.title}</b></td>
+      <td><span class="diff ${diffClass}">${p.difficulty}</span></td>
+      <td>${topics}</td>
+    </tr>`;
+  });
+  $("problem-rows").innerHTML = html;
   document.querySelectorAll("#problem-rows tr").forEach((tr) => {
     tr.addEventListener("click", () => openProblem(+tr.dataset.id));
   });
@@ -78,6 +85,11 @@ async function openProblem(pid) {
   $("ph-difficulty").className = "diff " + current.difficulty.toLowerCase();
   $("ph-topics").textContent = current.topics.join(" · ");
   $("results").innerHTML = "";
+
+  if (current.judge === "quiz") {
+    renderQuiz();
+    return;
+  }
 
   // language selector
   const sel = $("lang-select");
@@ -741,6 +753,136 @@ function renderBrowserResults(results, submit) {
   recordSubmission(passed, `${passedCount}/${results.length} test cases`, submit);
 }
 
+/* ---------------- MCQ Quiz mode ---------------- */
+function quizSelections() {
+  try { return JSON.parse(localStorage.getItem(`pc_quiz_${current.id}`) || "[]"); } catch { return []; }
+}
+function saveQuizSelections(sel) {
+  localStorage.setItem(`pc_quiz_${current.id}`, JSON.stringify(sel));
+}
+
+function renderQuiz() {
+  // quiz mode replaces the editor panel with the question list
+  $("editor-panel-quiz").classList.remove("hidden");
+  $("editor-panel").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("problem-view").classList.remove("hidden");
+  $("ph-number").textContent = current.id + ".";
+  $("ph-title").textContent = current.title;
+  $("ph-difficulty").textContent = current.difficulty;
+  $("ph-difficulty").className = "diff " + current.difficulty.toLowerCase();
+  $("ph-topics").textContent = current.topics.join(" · ");
+  $("results").innerHTML = "";
+
+  const saved = quizSelections();
+  const LETTERS = ["A", "B", "C", "D", "E", "F"];
+  $("quiz-questions").innerHTML = current.questions
+    .map((q) => {
+      const picked = saved[q.n - 1];
+      const opts = q.options
+        .map((o, oi) => {
+          const checked = picked === oi ? " checked" : "";
+          return `<label class="quiz-option${checked ? " picked" : ""}">
+            <input type="radio" name="quiz-q${q.n}" value="${oi}"${checked}>
+            <span class="quiz-letter">${LETTERS[oi]}</span>
+            <span class="quiz-opt-text">${o}</span>
+          </label>`;
+        })
+        .join("");
+      return `<div class="quiz-question" data-n="${q.n}">
+        <div class="quiz-q-head"><span class="quiz-q-num">Q${q.n}</span></div>
+        <div class="quiz-q-text">${q.q}</div>
+        <div class="quiz-opts">${opts}</div>
+      </div>`;
+    })
+    .join("");
+  updateQuizProgress();
+
+  document.querySelectorAll("#quiz-questions .quiz-option input").forEach((inp) => {
+    inp.addEventListener("change", () => {
+      const n = +inp.name.replace("quiz-q", "");
+      const sel = quizSelections();
+      sel[n - 1] = +inp.value;
+      saveQuizSelections(sel);
+      // re-mark picked styling within this question
+      document.querySelectorAll(`#quiz-questions [data-n="${n}"] .quiz-option`).forEach((lab) => {
+        lab.classList.toggle("picked", lab.querySelector("input").checked);
+      });
+      updateQuizProgress();
+    });
+  });
+
+  $("tab-desc").innerHTML = current.description;
+  $("tab-hint").innerHTML = `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
+  buildTabs();
+  switchTab("desc");
+}
+
+function updateQuizProgress() {
+  const sel = quizSelections();
+  const answered = current.questions.filter((q) => sel[q.n - 1] !== undefined && sel[q.n - 1] !== null).length;
+  $("quiz-progress").textContent = `${answered}/${current.questions.length} answered`;
+  $("quiz-submit").disabled = answered < current.questions.length;
+  $("quiz-submit").title = answered < current.questions.length
+    ? "Answer every question to submit" : "";
+}
+
+function clearQuiz() {
+  if (!confirm("Clear all selected answers for this quiz?")) return;
+  saveQuizSelections([]);
+  renderQuiz();
+}
+
+async function submitQuiz() {
+  const sel = quizSelections();
+  setButtonsBusy(true);
+  $("results").innerHTML = `<div class="results-header"><span class="verdict pending">Grading…</span></div>`;
+  try {
+    const res = await fetch("/api/quiz/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ problem_id: current.id, answers: sel }),
+    });
+    const data = await res.json();
+    renderQuizResults(data);
+  } catch (e) {
+    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
+  } finally {
+    setButtonsBusy(false);
+  }
+}
+
+function renderQuizResults(data) {
+  if (data.error) {
+    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(data.error)}</pre>`;
+    return;
+  }
+  const box = $("results");
+  const summary = `<div class="results-header">
+      <span class="verdict ${data.passed ? "ac" : "wa"}">${data.correct === data.total ? "Perfect Score" : "Quiz Graded"}</span>
+      <span style="color:var(--text-dim);font-weight:400">${data.correct}/${data.total} correct (${data.score}%)</span>
+    </div>`;
+  const rows = data.results
+    .filter((r) => !r.passed)
+    .map((r) => {
+      const q = current.questions[r.n - 1];
+      const picked = r.picked === null || r.picked === undefined ? "— (no answer)" :
+        `${"ABCDEF"[r.picked]}. ${q.options[r.picked]}`;
+      const right = `${"ABCDEF"[r.answer]}. ${q.options[r.answer]}`;
+      return `<div class="test-case">
+        <div class="test-head"><span class="tc-badge fail">WRONG</span> Q${r.n}</div>
+        <div class="quiz-review">
+          <div class="quiz-review-row"><span class="io-label">Your answer</span><span class="quiz-review-text wrong">${escapeHtml(picked)}</span></div>
+          <div class="quiz-review-row"><span class="io-label">Correct answer</span><span class="quiz-review-text">${escapeHtml(right)}</span></div>
+        </div>
+      </div>`;
+    })
+    .join("");
+  box.innerHTML = summary + (rows || `<p style="color:var(--text-dim)">All answers correct — nothing to review.</p>`);
+  recordSubmission(data.passed, `${data.correct}/${data.total} correct`, true);
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 /* ---------------- Live preview ---------------- */
 function schedulePreview() {
   clearTimeout(previewTimer);
@@ -788,16 +930,93 @@ function escapeHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/* ---------------- PDF Resources ---------------- */
+async function loadPdfs() {
+  const res = await fetch("/api/pdfs");
+  pdfs = await res.json();
+  renderPdfs();
+}
+
+function renderPdfs() {
+  // group by tag, preserving the library's ordering of tags
+  const groups = [];
+  const byTag = {};
+  for (const p of pdfs) {
+    if (!byTag[p.tag]) {
+      byTag[p.tag] = [];
+      groups.push(p.tag);
+    }
+    byTag[p.tag].push(p);
+  }
+  $("pdf-groups").innerHTML = groups
+    .map((tag) => {
+      const cards = byTag[tag]
+        .map(
+          (p) => `<a class="pdf-card" href="/pdfs/${encodeURIComponent(p.file)}" target="_blank" rel="noopener">
+            <div class="pdf-card-top">
+              <span class="pdf-icon">&#128196;</span>
+              <span class="pdf-size">${p.size_kb >= 1024 ? (p.size_kb / 1024).toFixed(1) + " MB" : p.size_kb + " KB"}</span>
+            </div>
+            <div class="pdf-label">${escapeHtml(p.label)}</div>
+            <div class="pdf-desc">${escapeHtml(p.desc)}</div>
+          </a>`
+        )
+        .join("");
+      return `<div class="pdf-group"><h2 class="pdf-group-title">${escapeHtml(tag)}</h2>
+        <div class="pdf-grid">${cards}</div></div>`;
+    })
+    .join("");
+}
+
 /* ---------------- Wiring ---------------- */
 $("nav-home").addEventListener("click", showList);
 $("nav-problems").addEventListener("click", (e) => { e.preventDefault(); showList(); });
+$("nav-pseudo").addEventListener("click", (e) => { e.preventDefault(); showPseudocode(); });
+$("nav-pdfs").addEventListener("click", (e) => { e.preventDefault(); showPdfs(); });
 $("back-to-list").addEventListener("click", (e) => { e.preventDefault(); showList(); });
 
 function showList() {
+  listFilter = "all";
   $("problem-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
   $("list-view").classList.remove("hidden");
+  $("editor-panel-quiz").classList.add("hidden");
+  $("editor-panel").classList.remove("hidden");
+  document.querySelector("#list-view .page-title").textContent = "Problems";
+  $("nav-problems").classList.add("active");
+  $("nav-pseudo").classList.remove("active");
+  $("nav-pdfs").classList.remove("active");
   current = null;
   renderList();
+}
+
+function showPseudocode() {
+  listFilter = "pseudo";
+  $("problem-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("list-view").classList.remove("hidden");
+  $("editor-panel-quiz").classList.add("hidden");
+  $("editor-panel").classList.remove("hidden");
+  document.querySelector("#list-view .page-title").textContent = "Pseudocode";
+  $("nav-problems").classList.remove("active");
+  $("nav-pseudo").classList.add("active");
+  $("nav-pdfs").classList.remove("active");
+  current = null;
+  renderList();
+}
+
+function showPdfs() {
+  listFilter = "all";
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("editor-panel-quiz").classList.add("hidden");
+  $("editor-panel").classList.add("hidden");
+  $("pdf-view").classList.remove("hidden");
+  $("nav-problems").classList.remove("active");
+  $("nav-pseudo").classList.remove("active");
+  $("nav-pdfs").classList.add("active");
+  current = null;
+  loadPdfs();
 }
 
 $("lang-select").addEventListener("change", (e) => {
@@ -813,5 +1032,7 @@ $("btn-submit").addEventListener("click", submitCode);
 $("btn-reset").addEventListener("click", resetCode);
 $("btn-format").addEventListener("click", formatCode);
 $("preview-reload").addEventListener("click", renderPreview);
+$("quiz-submit").addEventListener("click", submitQuiz);
+$("quiz-clear").addEventListener("click", clearQuiz);
 
 loadProblems();

@@ -6,7 +6,9 @@ browser-judged problems (javascript DOM) define test steps interpreted by the fr
 Problems 4-15 (curated from the KN Academy course) live in problems_extra.py.
 """
 
-from problems_extra import NEW_PROBLEMS
+from problems_extra import NEW_PROBLEMS, QUIZ_PROBLEMS, PDF_QUIZ_PROBLEMS
+from problems_extra_pdfbanks import PDF_BANK_QUIZ_PROBLEMS
+from problems_pseudocode import PSEUDOCODE_QUIZ
 
 def _db(name, hidden, schema, seed, reference_query):
     return {
@@ -470,6 +472,173 @@ initializeCounter();
     },
 ]
 
+PROBLEMS.append(
+    {
+        "id": 27,
+        "slug": "array-index-transformation-sum",
+        "title": "Array Index Transformation Sum (8th Sept Shift 1)",
+        "difficulty": "Easy",
+        "topics": ["Arrays", "Math"],
+        "judge": "server",
+        "languages": ["java", "cpp"],
+        "description": """<p class="text-muted">Accenture — 8th Sept Shift 1</p>
+<p>Given an array of integers <code>nums</code>, perform the following transformation on each
+element based on its <b>0-based index</b> <code>i</code>:</p>
+<ol>
+  <li>Subtract <code>(i % 7) * 3</code> from the element.</li>
+  <li>If the original element <code>nums[i]</code> is divisible by 11, add <code>nums[i] / 11</code>
+  to the modified value.</li>
+</ol>
+<p>Return the <b>total sum</b> of all elements in the array after applying these transformations.</p>
+<h3>Input Format</h3>
+<p>The first line contains an integer <code>n</code> — the number of elements.<br>
+The second line contains <code>n</code> space-separated integers <code>nums[0] .. nums[n-1]</code>.</p>
+<h3>Output Format</h3>
+<p>Print a single integer — the total sum after the transformations.</p>
+<h3>Sample Test Case:</h3>
+<pre>Input:
+5
+10 20 30 40 50
+
+Output:
+120</pre>
+<p class="text-muted">Explanation: modified values are <code>10, 17, 24, 31, 38</code> —
+each index i loses <code>(i % 7) * 3</code>; none of the originals is divisible by 11, so the sum
+is <code>10+17+24+31+38 = 120</code>.</p>
+""",
+        "hint": "Walk the array once keeping the 0-based index i. Subtract (i % 7) * 3 from each element, and only if the ORIGINAL nums[i] % 11 == 0 additionally add nums[i] / 11 (integer division). Sum everything. Note the subtraction continues cycling i%7 = 0,1,2,3,4,5,6,0,1,... for i >= 7.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        long[] nums = new long[n];
+        for (int i = 0; i < n; i++) nums[i] = sc.nextLong();
+
+        // TODO: apply the transformation and print the total sum
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<long long> nums(n);
+    for (int i = 0; i < n; i++) cin >> nums[i];
+
+    // TODO: apply the transformation and print the total sum
+    return 0;
+}""",
+        },
+        "tests": [
+            {"input": "5\n10 20 30 40 50", "expected": "120", "hidden": False},
+            {"input": "1\n5", "expected": "5", "hidden": False},
+            {"input": "10\n10 20 30 40 50 60 70 80 90 100", "expected": "478", "hidden": True},
+            {"input": "12\n11 22 33 44 55 66 77 88 99 110 121 132", "expected": "843", "hidden": True},
+            {"input": "8\n100 100 100 100 100 100 100 100", "expected": "737", "hidden": True},
+            {"input": "9\n-11 0 7 14 21 28 35 42 49", "expected": "118", "hidden": True},
+            {"input": "1\n22", "expected": "24", "hidden": True},
+        ],
+        "samples": [0, 1],
+    }
+)
+
+PROBLEMS.append(
+    {
+        "id": 28,
+        "slug": "equivalent-prefix-sum",
+        "title": "Equivalent Prefix Sum (8th Sept Shift 2)",
+        "difficulty": "Medium",
+        "topics": ["Math", "Binary Search", "Number Theory"],
+        "judge": "server",
+        "languages": ["java", "cpp"],
+        "description": """<p class="text-muted">Accenture — 8th Sept Shift 2</p>
+<p>You are given a target positive integer <code>N</code>.</p>
+<p>For any integer <code>X</code>, define its <b>Equivalent Sum</b> <code>EqSum(X)</code> as the
+sum of all prefix sub-numbers formed by reading <code>X</code> from left to right. If
+<code>X</code> is represented as a string of digits <code>d1 d2 ... dk</code>:</p>
+<pre>EqSum(X) = d1 + int(d1 d2) + ... + int(d1 d2 ... dk)</pre>
+<p>For example, for <code>X = 112</code>:</p>
+<pre>EqSum(112) = 1 + 11 + 112 = 124</pre>
+<p><b>Goal:</b> Find the integer <code>X</code> such that <code>EqSum(X) = N</code>. If no such
+<code>X</code> exists, print <code>-1</code>.</p>
+<h3>Input Format</h3>
+<p>A single integer <code>N</code> <span class="text-muted">(1 &le; N &le; 10<sup>18</sup>)</span>.</p>
+<h3>Output Format</h3>
+<p>Print the unique <code>X</code> with <code>EqSum(X) = N</code>, or <code>-1</code> if none exists.</p>
+<h3>Sample Test Cases:</h3>
+<pre>Input:  124        Input:  112        Input:  10
+Output: 112        Output: 101        Output: -1</pre>
+<p class="text-muted">Explanation: <code>EqSum(112) = 1 + 11 + 112 = 124</code>,
+<code>EqSum(101) = 1 + 10 + 101 = 112</code>, and no <code>X</code> has
+<code>EqSum(X) = 10</code> (since <code>EqSum(9) = 9</code> but <code>EqSum(10) = 11</code>).</p>
+""",
+        "hint": "EqSum is STRICTLY increasing: EqSum(X) > X and each step adds X's own value, so EqSum(X+1) > EqSum(X). That means at most one X can map to N. Binary search X in [1, N]: compute EqSum(mid) by repeatedly taking prefixes (mid, mid/10, mid/100, ... while > 0) and summing — use 64-bit integers. If EqSum(mid) == N return mid; if smaller, go right; else go left. If the search space empties, print -1.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    // sum of all prefixes of x: x + x/10 + x/100 + ...
+    static long eqSum(long x) {
+        long s = 0;
+        while (x > 0) {
+            s += x;
+            x /= 10;
+        }
+        return s;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long n = sc.nextLong();
+
+        // TODO: binary search the unique X with eqSum(X) == n, or print -1
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+// sum of all prefixes of x: x + x/10 + x/100 + ...
+long long eqSum(long long x) {
+    long long s = 0;
+    while (x > 0) {
+        s += x;
+        x /= 10;
+    }
+    return s;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    // TODO: binary search the unique X with eqSum(X) == n, or print -1
+    return 0;
+}""",
+        },
+        "tests": [
+            {"input": "124", "expected": "112", "hidden": False},
+            {"input": "112", "expected": "101", "hidden": False},
+            {"input": "10", "expected": "-1", "hidden": False},
+            {"input": "1", "expected": "1", "hidden": True},
+            {"input": "11", "expected": "10", "hidden": True},
+            {"input": "1107", "expected": "999", "hidden": True},
+            {"input": "1108", "expected": "-1", "hidden": True},
+            {"input": "1111104", "expected": "999999", "hidden": True},
+            {"input": "1000000000000", "expected": "900000000001", "hidden": True},
+        ],
+        "samples": [0, 1, 2],
+    }
+)
+
 PROBLEMS.extend(NEW_PROBLEMS)
+PROBLEMS.extend(QUIZ_PROBLEMS)
+PROBLEMS.extend(PDF_QUIZ_PROBLEMS)
+PROBLEMS.extend(PDF_BANK_QUIZ_PROBLEMS)
+PROBLEMS.append(PSEUDOCODE_QUIZ)
+PROBLEMS.sort(key=lambda p: p["id"])
 
 

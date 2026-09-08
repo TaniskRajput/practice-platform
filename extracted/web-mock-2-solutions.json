@@ -1,0 +1,240 @@
+[
+ {
+  "q": "What components make up the CSS Box Model?",
+  "options": [
+   "Content, Padding, Border, Margin",
+   "Padding, Margin, Border, Shadow",
+   "Content, Margin, Border, Outline",
+   "Content, Padding, Shadow, Margin"
+  ],
+  "answer": "Content, Padding, Border, Margin",
+  "answerIndex": 0,
+  "explanation": "The CSS Box Model consists of four parts: content, padding, border, and margin, starting from the innermost area to the outermost."
+ },
+ {
+  "q": "Which CSS property is used to control the outer space around an element?",
+  "options": [
+   "Padding",
+   "Margin",
+   "Border",
+   "Content"
+  ],
+  "answer": "Margin",
+  "answerIndex": 1,
+  "explanation": "Margin is used to create space around elements, outside of any defined borders."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "8",
+   "7",
+   "0",
+   "1"
+  ],
+  "answer": "7",
+  "answerIndex": 1
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "0 1 2",
+   "0 undefined undefined",
+   "undefined undefined undefined",
+   "None of the above"
+  ],
+  "answer": "undefined undefined undefined",
+  "answerIndex": 2,
+  "explanation": "Since we are passing individual numbers rather than a single object to the function, Javascript will initialize the object parameters with their default value of undefined."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "[111, 44, 1, 22]",
+   "[44,1,22,111]",
+   "[111,44,22,1]",
+   "[1,22,111,44]"
+  ],
+  "answer": "[111, 44, 1, 22]",
+  "answerIndex": 0,
+  "explanation": "The given JavaScript function rotates the elements of the array to the right the specified number of times. Let’s break it down step by step: The function solve(arr, rotations) is called with [44, 1, 22, 111] and 5 as arguments. The loop iterates 5 times, each time: The last element is removed using .pop().That element is placed at the front using .unshift(). The array effectively rotates 5 times. Since rotating the array by its length results in the original array, rotating it 5 times (when the length is 4) is equivalent to rotating it once. After one rotation, the array becomes: Thus, the correct answer is \"[111, 44, 1, 22]\""
+ },
+ {
+  "q": "HTML is a subset of ___________",
+  "options": [
+   "SGMT",
+   "SGML",
+   "SGME",
+   "XHTML"
+  ],
+  "answer": "SGML",
+  "answerIndex": 1,
+  "explanation": "HTML is a subset of SGML. SGML (Standard Generalized Markup Language) is a standard for specifying a document markup language or tag set."
+ },
+ {
+  "q": "Which of the following HTML code will make an image clickable?",
+  "options": [
+   "<a href=\"https://www.knacademy.com/\">KN Academy Home Page</a>",
+   "<img src=\"https://www.knacademy.com/knacademy-logo\"> <a href=\"https://www.knacademy.com/\">KN Academy Home Page</a> </img>",
+   "<a href=\"https://www.knacademy.com/\">KN Academy Home Page</a> <img src=\"https://www.knacademy.com/knacademy-logo\" />",
+   "<a href=\"https://www.knacademy.com/\"><img src=\"https://www.knacademy.com/knacademy-logo\" /></a>"
+  ],
+  "answer": "<a href=\"https://www.knacademy.com/\"><img src=\"https://www.knacademy.com/knacademy-logo\" /></a>",
+  "answerIndex": 3,
+  "explanation": "<a> tag defines a hyperlink, which is used to link from one page to another page. Suppose if we want an image to be clickable then it should go inside <a> Tag."
+ },
+ {
+  "q": "Which HTML element is used for short quote?",
+  "options": [
+   "<em>",
+   "<abbr>",
+   "<q>",
+   "<blockquote>"
+  ],
+  "answer": "<q>",
+  "answerIndex": 2,
+  "explanation": "<em> element indicates emphasis, browser will show the contents of <em> element in italic. A section which is quoted from another source is specified by <blockquote>. The <abbr> defines abbreviation. We used <q> element for shorter quote. Browser put quote around <q> element. <p>This is a <q>black dog</q>.</p> Output: This is a “black dog”."
+ },
+ {
+  "q": "[Image question] What is the output of the JavaScript code shown? An array of 3 elements has a new element pushed onto it (see images/web-mock-2-q9.png). console.log(arr.length) after push.",
+  "options": [
+   "3",
+   "4",
+   "5",
+   "Error"
+  ],
+  "answer": "4",
+  "answerIndex": 1,
+  "explanation": "The function successfully pushes a new element into the array, increasing its length from 3 to 4."
+ },
+ {
+  "q": "[Image question] What is the flaw in the JavaScript function shown? A pow(x, n) style function is defined without a default for the exponent parameter (see images/web-mock-2-q10.png).",
+  "options": [
+   "It doesn't handle the case when exponent is not provided",
+   "It returns the wrong value",
+   "It causes an infinite loop",
+   "Syntax error"
+  ],
+  "answer": "It doesn't handle the case when exponent is not provided",
+  "answerIndex": 0,
+  "explanation": "The function does not handle the scenario when only one argument is passed. This can lead to unexpected behavior or errors."
+ },
+ {
+  "q": "Which property allows an image link to show a text label?",
+  "options": [
+   "alt",
+   "str",
+   "alternative",
+   "None of the above"
+  ],
+  "answer": "alt",
+  "answerIndex": 0,
+  "explanation": "The alt property allows an image link to show a text label."
+ },
+ {
+  "q": "How is black color represented in terms of RGB values?",
+  "options": [
+   "RCB(0, 0, 0)",
+   "RCB(100, 100, 100)",
+   "RCB(100, 100, 0)",
+   "RCB(100, 0, 0)"
+  ],
+  "answer": "RCB(0, 0, 0)",
+  "answerIndex": 0,
+  "explanation": "RCB(0, 0, 0) is equivalent to black color in terms of RGB values."
+ },
+ {
+  "q": "The default value of the BORDER attribute is?",
+  "options": [
+   "1pixel",
+   "2pixel",
+   "4pixel",
+   "8pixel"
+  ],
+  "answer": "1pixel",
+  "answerIndex": 0,
+  "explanation": "1pixel is the default value for the BORDER attribute in HTML."
+ },
+ {
+  "q": "What are the types of unordered lists in HTML?",
+  "options": [
+   "Circle,square,disc",
+   "Triangle,square,disc",
+   "Triangle,circle,disc",
+   "All of the above"
+  ],
+  "answer": "Circle,square,disc",
+  "answerIndex": 0,
+  "explanation": "The unordered lists in HTML can form bullets of form Circle, Square and Disc."
+ },
+ {
+  "q": "What are those objects called which are used for storing data on the client provided by the HTML local storage?",
+  "options": [
+   "Windows.localStorage",
+   "Windows.sessionStorage",
+   "Both A and B",
+   "None of the above"
+  ],
+  "answer": "Both A and B",
+  "answerIndex": 2,
+  "explanation": "Such objects with the property mentioned above are called as Windows.localStorage or Window.sessionStorage."
+ },
+ {
+  "q": "What does the Alpha value in RGBA represent?",
+  "options": [
+   "Opacity value for a color",
+   "The shade of a color",
+   "Both A and B",
+   "None of the above"
+  ],
+  "answer": "Opacity value for a color",
+  "answerIndex": 0,
+  "explanation": "A in RGBA represents the value of the Alpha Channel which is a measure of the Opacity of a color."
+ },
+ {
+  "q": "What does the Alpha value of 0.0 represent?",
+  "options": [
+   "Fully Opaque",
+   "Fully Transparent",
+   "50% Transparent",
+   "None of the above"
+  ],
+  "answer": "Fully Transparent",
+  "answerIndex": 1,
+  "explanation": "The Alpha value varies between 0.0 (fully transparent) to 1.0(fully opaque)."
+ },
+ {
+  "q": "How does setting 'margin: auto;' affect an element?",
+  "options": [
+   "Centers the element horizontally",
+   "Increases the element's height",
+   "Adds automatic padding",
+   "Does nothing specific"
+  ],
+  "answer": "Centers the element horizontally",
+  "answerIndex": 0,
+  "explanation": "Setting 'margin: auto;' on an element will center it within its containing block horizontally, assuming it has a specified width."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "-Infinity Infinity",
+   "Infinity -Infinity",
+   "Infinity Infinity",
+   "-Infinity -Infinity"
+  ],
+  "answer": "-Infinity Infinity",
+  "answerIndex": 0,
+  "explanation": "The Math.max() method returns -Infinity by default and the Math.min() method returns Infinity value by default when passed without any parameters."
+ },
+ {
+  "q": "What will be the output of the following code snippet?",
+  "options": [
+   "11 NaN NaN",
+   "11 NaN [object Object]",
+   "11 Hello6 [object Object]6",
+   "None of the above"
+  ],
+  "answer": "11 Hello6 [object Object]6",
+  "answerIndex": 2
+ }
+]

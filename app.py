@@ -6,7 +6,7 @@ import sqlite3
 import subprocess
 import tempfile
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 
 from problems import PROBLEMS
 
@@ -14,6 +14,42 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROBLEMS_BY_ID = {p["id"]: p for p in PROBLEMS}
+
+PDF_DIR = os.path.join(BASE_DIR, "extracted", "downloaded")
+
+# PDFs served under /pdfs/<file> and shown in the "PDF Resources" section.
+# label = course name shown on the card; tag = grouped category.
+PDF_LIBRARY = [
+    {"file": "Accenture_Technical_-_All_Questions_Set.pdf", "label": "Accenture Technical — All Questions Set", "tag": "Technical MCQ", "desc": "Big bank of technical MCQs across all topics."},
+    {"file": "Accenture_Code_MCQ.pdf", "label": "Accenture Code MCQ (Pseudocode)", "tag": "Pseudocode", "desc": "32 pseudocode-tracing questions with answers (also playable as quiz #21)."},
+    {"file": "Accenture_Paper_Solution.pdf", "label": "Accenture Paper Solution", "tag": "Full Paper", "desc": "Actual on-campus paper with solutions — cloud, DevOps, OS, networks (also quiz #22)."},
+    {"file": "Accenture_Pseudocode_Solution_20_DEC.pdf", "label": "Accenture Pseudocode Solution — 20 Dec", "tag": "Pseudocode", "desc": "Worked pseudocode solutions from the 20 Dec exam."},
+    {"file": "Accenture_20_Dec_Tech_Assessment.pdf", "label": "Accenture 20 Dec (Tech Assessment)", "tag": "Full Paper", "desc": "Technical assessment paper from the 20 Dec exam."},
+    {"file": "Accenture_PYQ_Recent_Set.pdf", "label": "Accenture PYQ (Recent Set)", "tag": "Full Paper", "desc": "Recent previous-year questions with full solutions (web-based tasks included)."},
+    {"file": "Accenture_11_October_2025_-_Coding_Set.pdf", "label": "Accenture 11 October 2025 — Coding Set", "tag": "Coding", "desc": "On-campus coding questions from the 11 Oct 2025 exam."},
+    {"file": "Accenture_Coding_20_Dec.pdf", "label": "Accenture Coding — 20 Dec", "tag": "Coding", "desc": "Coding questions from the 20 Dec exam."},
+    {"file": "Previous_Years_Coding_Full_Questions.pdf", "label": "Previous Years Coding (Full Questions)", "tag": "Coding", "desc": "367-page compilation of every previous-years coding question."},
+    {"file": "Top_60_SQL_Queries_for_interviews_PDF.pdf", "label": "Top 60 SQL Queries for Interviews", "tag": "SQL", "desc": "Classic SQL interview query drills with sample tables."},
+    {"file": "Cognizant__Accenture_Web_Based.pdf", "label": "Cognizant + Accenture Web Based", "tag": "Web Based", "desc": "Previous-year web-based (JS/HTML) questions from Cognizant & Accenture."},
+    {"file": "Pseudocodes_Complete.pdf", "label": "Pseudocodes Complete", "tag": "Pseudocode", "desc": "Full pseudocode MCQ collection — every pattern with answers."},
+    {"file": "CN_MCQ_Complete.pdf", "label": "CN MCQ Complete", "tag": "Networking", "desc": "Complete computer-networks MCQ bank with solutions."},
+    {"file": "Cloud_MCQ.pdf", "label": "Cloud MCQ", "tag": "Cloud", "desc": "Cloud computing MCQs — services, deployment models, virtualization."},
+    {"file": "Network_Security.pdf", "label": "Network Security", "tag": "Security", "desc": "Network-security MCQs — firewalls, cryptography, attacks."},
+    {"file": "Microsoft_Office_MCQ.pdf", "label": "Microsoft Office MCQ", "tag": "MS Office", "desc": "Word / Excel / PowerPoint MCQs asked in Accenture assessments."},
+    {"file": "Path_Game_20_DEC.pdf", "label": "Path Game — 20 Dec", "tag": "Game Based", "desc": "Accenture path-finding game exercise from the 20 Dec exam."},
+    {"file": "Path_Finder_Game.pdf", "label": "Path Finder Game", "tag": "Game Based", "desc": "Path-finder grid game — rules and solved example."},
+    {"file": "The_Hidden_Path_-_Game_Based_Accenture.pdf", "label": "The Hidden Path — Game Based", "tag": "Game Based", "desc": "Hidden-path game assessment walkthrough."},
+    {"file": "Accenture_Memory_Game__Ex-2_.pdf", "label": "Accenture Memory Game (Ex-2)", "tag": "Game Based", "desc": "Memory-game assessment example 2 with answers."},
+    {"file": "Accenture_Memory_Game__Ex-3_.pdf", "label": "Accenture Memory Game (Ex-3)", "tag": "Game Based", "desc": "Memory-game assessment example 3 with answers."},
+    {"file": "Accenture_Full_Paper.pdf", "label": "Accenture Full Paper (162 pages)", "tag": "Full Paper", "desc": "Complete full-length paper — all sections in one document."},
+    {"file": "Verbal_Ability.pdf", "label": "Verbal Ability Sheet", "tag": "Cheatsheets", "desc": "Verbal-ability formulas & concepts cheatsheet."},
+    {"file": "Aptitude_Cheatsheet.pdf", "label": "Aptitude Cheatsheet", "tag": "Cheatsheets", "desc": "Quantitative-aptitude formulas & shortcuts cheatsheet."},
+    {"file": "Reasoning.pdf", "label": "Reasoning Sheet", "tag": "Cheatsheets", "desc": "Logical-reasoning concepts & tricks cheatsheet."},
+    {"file": "OOPS_Java_notes.pdf", "label": "OOPS Java Notes", "tag": "Notes", "desc": "Object-oriented programming in Java — interview notes."},
+    {"file": "Python_Interview_Questions.pdf", "label": "Python Interview Questions", "tag": "Notes", "desc": "Top Python interview questions with answers."},
+    {"file": "OOPS_Python.pdf", "label": "OOPS Python", "tag": "Notes", "desc": "Object-oriented programming in Python — notes & examples."},
+    {"file": "MVC_and_Rest_API.pdf", "label": "MVC & REST API", "tag": "Notes", "desc": "MVC architecture and REST API interview notes."},
+]
 
 COMPILE_TIMEOUT = 30
 RUN_TIMEOUT = 10
@@ -54,6 +90,12 @@ def serialize_problem_full(p):
         data["browserTests"] = [
             {"name": t["name"], "hidden": t["hidden"], "steps": t["steps"], "expect": t["expect"]}
             for t in p["browser_tests"]
+        ]
+    if p["judge"] == "quiz":
+        # questions without the answer key — grading happens server-side
+        data["questions"] = [
+            {"n": i + 1, "q": q["q"], "options": q["options"]}
+            for i, q in enumerate(p["questions"])
         ]
     if p["languages"] == ["sql"]:
         data["databases"] = [
@@ -251,6 +293,21 @@ def api_problems():
     return jsonify([serialize_problem_meta(p) for p in PROBLEMS])
 
 
+@app.route("/api/pdfs")
+def api_pdfs():
+    items = []
+    for p in PDF_LIBRARY:
+        path = os.path.join(PDF_DIR, p["file"])
+        if os.path.exists(path):
+            items.append({**p, "size_kb": os.path.getsize(path) // 1024})
+    return jsonify(items)
+
+
+@app.route("/pdfs/<path:filename>")
+def serve_pdf(filename):
+    return send_from_directory(PDF_DIR, filename)
+
+
 @app.route("/api/problems/<int:pid>")
 def api_problem(pid):
     try:
@@ -268,6 +325,43 @@ def api_run():
 @app.route("/api/submit", methods=["POST"])
 def api_submit():
     return do_judge(request.get_json(force=True), submit=True)
+
+
+@app.route("/api/quiz/submit", methods=["POST"])
+def api_quiz_submit():
+    payload = request.get_json(force=True)
+    pid = payload.get("problem_id")
+    answers = payload.get("answers", [])  # list of selected option indexes (or null)
+    try:
+        problem = get_problem(pid)
+    except KeyError:
+        return jsonify({"error": "Problem not found"}), 404
+    if problem["judge"] != "quiz":
+        return jsonify({"error": "Not a quiz problem"}), 400
+
+    questions = problem["questions"]
+    results = []
+    correct = 0
+    for i, q in enumerate(questions):
+        picked = answers[i] if i < len(answers) else None
+        ok = picked == q["answer"]
+        if ok:
+            correct += 1
+        results.append({
+            "n": i + 1,
+            "picked": picked,
+            "answer": q["answer"],
+            "passed": ok,
+        })
+    score = round(correct * 100.0 / len(questions)) if questions else 0
+    return jsonify({
+        "judge": "quiz",
+        "passed": correct == len(questions),
+        "correct": correct,
+        "total": len(questions),
+        "score": score,
+        "results": results,
+    })
 
 
 def do_judge(payload, submit):

@@ -1,0 +1,1108 @@
+{
+ "1": {
+  "q": "What will be the output of the following pseudocode for A = [4, 8, 15, 16, 23], n = 5?",
+  "options": [
+   "8 4 16 15 23",
+   "4 8 15 16 23",
+   "8 4 15 16 23",
+   "4 8 16 15 23"
+  ],
+  "answer_text": "8 4 16 15 23",
+  "answer_index": 0
+ },
+ "2": {
+  "q": "What will be the output of the following pseudocode for S = \"ACCENTURE\"?",
+  "options": [
+   "2",
+   "3",
+   "4",
+   "5"
+  ],
+  "answer_text": "4",
+  "answer_index": 2
+ },
+ "3": {
+  "q": "What will be the output of the following pseudocode for x = 5, y = 3?",
+  "options": [
+   "8",
+   "11",
+   "9",
+   "13"
+  ],
+  "answer_text": "9",
+  "answer_index": 2
+ },
+ "4": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "30,3",
+   "40,2",
+   "30,2",
+   "40,3"
+  ],
+  "answer_text": "40,3",
+  "answer_index": 3
+ },
+ "5": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "10,3",
+   "15,3",
+   "10,2",
+   "15,2"
+  ],
+  "answer_text": "15,2",
+  "answer_index": 3
+ },
+ "6": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "5",
+   "8",
+   "13",
+   "6"
+  ],
+  "answer_text": "8",
+  "answer_index": 1
+ },
+ "7": {
+  "q": "What will be the output of the following pseudocode for array A = [_, 1, 2, 3, 4, 5, 6, 7] (1- indexed, index 0 unused), n = 7? (Left child of node i = 2i, Right child = 2i+1; a node is a leaf if 2i > n)",
+  "options": [
+   "18",
+   "28",
+   "22",
+   "15"
+  ],
+  "answer_text": "22",
+  "answer_index": 2
+ },
+ "8": {
+  "q": "What will be the output of the following pseudocode for the adjacency matrix below (n = 4)?",
+  "options": [
+   "5",
+   "6",
+   "4",
+   "3"
+  ],
+  "answer_text": "4",
+  "answer_index": 2
+ },
+ "9": {
+  "q": "What will be the output of the following pseudocode for A = [5, 3, 8, 4, 2], n = 5 (single pass only)?",
+  "options": [
+   "3 5 4 2 8",
+   "2 3 4 5 8",
+   "3 4 5 2 8",
+   "3 5 8 4 2"
+  ],
+  "answer_text": "3 5 4 2 8",
+  "answer_index": 0
+ },
+ "10": {
+  "q": "What will be the index (0-based) returned by the following pseudocode for A = [2, 4, 6, 8, 10, 12, 14], target = 10?",
+  "options": [
+   "-1",
+   "5",
+   "4",
+   "3"
+  ],
+  "answer_text": "4",
+  "answer_index": 2
+ },
+ "11": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "6 12",
+   "7 12",
+   "7 13",
+   "6 13"
+  ],
+  "answer_text": "7 12",
+  "answer_index": 1
+ },
+ "12": {
+  "q": "What will be the output of the following pseudocode for matrix A (3x3)?",
+  "options": [
+   "6",
+   "24",
+   "11",
+   "15"
+  ],
+  "answer_text": "11",
+  "answer_index": 2
+ },
+ "13": {
+  "q": "What will be the output of the following pseudocode for S = \"ABC\"?",
+  "options": [
+   "CDE",
+   "BCD",
+   "DEF",
+   "CDA"
+  ],
+  "answer_text": "CDE",
+  "answer_index": 0
+ },
+ "14": {
+  "q": "What will be the output of the following pseudocode for n = 13?",
+  "options": [
+   "5",
+   "4",
+   "2",
+   "3"
+  ],
+  "answer_text": "3",
+  "answer_index": 3
+ },
+ "15": {
+  "q": "What will be the output of the following pseudocode for marks = 82?",
+  "options": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "answer_text": "B",
+  "answer_index": 1
+ },
+ "16": {
+  "q": "What will be the output of the following pseudocode for list 10 → 20 → 30 → 40 → NULL?",
+  "options": [
+   "10 20 30 40",
+   "40 30 20 10 NULL",
+   "Error",
+   "40 30 20 10"
+  ],
+  "answer_text": "40 30 20 10",
+  "answer_index": 3
+ },
+ "17": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, 2, 1, 4, 1]?",
+  "options": [
+   "3",
+   "4",
+   "1",
+   "2"
+  ],
+  "answer_text": "3",
+  "answer_index": 0
+ },
+ "18": {
+  "q": "What will be the output of the following pseudocode for n = 5?",
+  "options": [
+   "5",
+   "13",
+   "8",
+   "9"
+  ],
+  "answer_text": "8",
+  "answer_index": 2
+ },
+ "19": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "9",
+   "14",
+   "6",
+   "10"
+  ],
+  "answer_text": "10",
+  "answer_index": 3
+ },
+ "20": {
+  "q": "What will be the output of the following pseudocode for postfix expression \"5 3 2 * +\"?",
+  "options": [
+   "11",
+   "16",
+   "21",
+   "13"
+  ],
+  "answer_text": "11",
+  "answer_index": 0
+ },
+ "21": {
+  "q": "What will be the output of the following pseudocode for a circular queue of capacity 3?",
+  "options": [
+   "1,4",
+   "2,4",
+   "2,3",
+   "1,3"
+  ],
+  "answer_text": "2,4",
+  "answer_index": 1
+ },
+ "22": {
+  "q": "What will be the BFS traversal output starting from node 0 for the following adjacency list? 0: [1, 2] 1: [0, 3] 2: [0, 3] 3: [1, 2]",
+  "options": [
+   "0 3 1 2",
+   "0 1 2 3",
+   "0 2 1 3",
+   "0 1 3 2"
+  ],
+  "answer_text": "0 1 2 3",
+  "answer_index": 1
+ },
+ "23": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "10",
+   "8",
+   "6",
+   "24"
+  ],
+  "answer_text": "10",
+  "answer_index": 0
+ },
+ "24": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, 4, 5], k = 2?",
+  "options": [
+   "1 2 3 4 5",
+   "4 5 1 2 3",
+   "2 3 4 5 1",
+   "3 4 5 1 2"
+  ],
+  "answer_text": "3 4 5 1 2",
+  "answer_index": 3
+ },
+ "25": {
+  "q": "What will be the output of the following pseudocode for S = \"MALAYALAM\"?",
+  "options": [
+   "true",
+   "false",
+   "error",
+   "1"
+  ],
+  "answer_text": "true",
+  "answer_index": 0
+ },
+ "26": {
+  "q": "What will be the output of the following pseudocode for a = 15, b = 10?",
+  "options": [
+   "10",
+   "25",
+   "5",
+   "-5"
+  ],
+  "answer_text": "5",
+  "answer_index": 2
+ },
+ "27": {
+  "q": "What will be the output of the following pseudocode for A = [-2, 3, -1, 4, -2, 5], n = 6?",
+  "options": [
+   "9",
+   "7",
+   "5",
+   "11"
+  ],
+  "answer_text": "9",
+  "answer_index": 0
+ },
+ "28": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "15",
+   "5",
+   "10",
+   "error"
+  ],
+  "answer_text": "5",
+  "answer_index": 1
+ },
+ "29": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "14",
+   "21",
+   "28",
+   "25"
+  ],
+  "answer_text": "14",
+  "answer_index": 0
+ },
+ "30": {
+  "q": "What will be the output of the following pseudocode for n = 16?",
+  "options": [
+   "true",
+   "false",
+   "0",
+   "Error"
+  ],
+  "answer_text": "true",
+  "answer_index": 0
+ },
+ "31": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, 4, 2, 5, 1], n = 7?",
+  "options": [
+   "1",
+   "2",
+   "5",
+   "4"
+  ],
+  "answer_text": "2",
+  "answer_index": 1
+ },
+ "32": {
+  "q": "What will be the output of the following pseudocode for the binary tree below?",
+  "options": [
+   "5",
+   "2",
+   "4",
+   "3"
+  ],
+  "answer_text": "4",
+  "answer_index": 2
+ },
+ "33": {
+  "q": "What will be the DFS traversal output starting from node 0 for the following adjacency list?",
+  "options": [
+   "0 1 3 2",
+   "0 1 2 3",
+   "0 2 3 1",
+   "0 3 1 2"
+  ],
+  "answer_text": "0 1 3 2",
+  "answer_index": 0
+ },
+ "34": {
+  "q": "What will be the output of the following pseudocode for coins = [1, 3, 4], amount = 6?",
+  "options": [
+   "6",
+   "4",
+   "3",
+   "2"
+  ],
+  "answer_text": "2",
+  "answer_index": 3
+ },
+ "35": {
+  "q": "What will be the output of the following pseudocode for expr = \"{[()]}\"?",
+  "options": [
+   "error",
+   "false",
+   "true",
+   "empty"
+  ],
+  "answer_text": "true",
+  "answer_index": 2
+ },
+ "36": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "4",
+   "0",
+   "7",
+   "8"
+  ],
+  "answer_text": "8",
+  "answer_index": 3
+ },
+ "37": {
+  "q": "What will be the output of the following pseudocode for A = [12, 35, 1, 10, 34, 1], n = 6?",
+  "options": [
+   "10",
+   "12",
+   "34",
+   "35"
+  ],
+  "answer_text": "34",
+  "answer_index": 2
+ },
+ "38": {
+  "q": "What will be the output of the following pseudocode for S1 = \"LISTEN\", S2 = \"SILENT\"?",
+  "options": [
+   "false",
+   "true",
+   "error",
+   "empty"
+  ],
+  "answer_text": "true",
+  "answer_index": 1
+ },
+ "39": {
+  "q": "What will be the output of the following pseudocode for x = 20?",
+  "options": [
+   "5",
+   "40",
+   "25",
+   "45"
+  ],
+  "answer_text": "45",
+  "answer_index": 3
+ },
+ "40": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "45",
+   "120",
+   "24",
+   "60"
+  ],
+  "answer_text": "120",
+  "answer_index": 1
+ },
+ "41": {
+  "q": "What will be the output of the following pseudocode for matrix A (2x3)?",
+  "options": [
+   "1 4 / 2 5 / 3 6",
+   "1 2 3 / 4 5 6",
+   "4 5 6 / 1 2 3",
+   "3 2 1 / 6 5 4"
+  ],
+  "answer_text": "1 4 / 2 5 / 3 6",
+  "answer_index": 0
+ },
+ "42": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "16",
+   "30",
+   "20",
+   "25"
+  ],
+  "answer_text": "25",
+  "answer_index": 3
+ },
+ "43": {
+  "q": "What will be the output of the following pseudocode for the BST below, searching for key = 45? (assume searching 45, which does not exist)",
+  "options": [
+   "false",
+   "true",
+   "error",
+   "NULL"
+  ],
+  "answer_text": "false",
+  "answer_index": 0
+ },
+ "44": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "9",
+   "12",
+   "10",
+   "1234"
+  ],
+  "answer_text": "10",
+  "answer_index": 2
+ },
+ "45": {
+  "q": "What will be the output of the following pseudocode for a = 6, b = 9?",
+  "options": [
+   "9 6",
+   "6 9",
+   "0 15",
+   "15 0"
+  ],
+  "answer_text": "9 6",
+  "answer_index": 0
+ },
+ "46": {
+  "q": "What will be the output of the following pseudocode for A = [3, 7, 2, 7, 5, 7, 1], n = 7?",
+  "options": [
+   "7,2",
+   "7,3",
+   "5,1",
+   "7,4"
+  ],
+  "answer_text": "7,3",
+  "answer_index": 1
+ },
+ "47": {
+  "q": "What will be the output of the following pseudocode for S = \"PROGRAMMING\"?",
+  "options": [
+   "PROGAMING",
+   "PROGRAMING",
+   "PROGAMIN",
+   "PROGRAMMIN"
+  ],
+  "answer_text": "PROGAMIN",
+  "answer_index": 2
+ },
+ "48": {
+  "q": "What will be the output of the following pseudocode for A = [4, 5, 2, 10, 8], n = 5 (find next greater for last element only)?",
+  "options": [
+   "10",
+   "8",
+   "2",
+   "6"
+  ],
+  "answer_text": "8",
+  "answer_index": 1
+ },
+ "49": {
+  "q": "What will be the output of the following pseudocode for Queue Q = [1, 2, 3, 4]?",
+  "options": [
+   "1 2 3 4",
+   "1 3 2 4",
+   "4 1 3 2",
+   "4 3 2 1"
+  ],
+  "answer_text": "4 3 2 1",
+  "answer_index": 3
+ },
+ "50": {
+  "q": "What will be the output of the following pseudocode for the binary tree below?",
+  "options": [
+   "6",
+   "5",
+   "7",
+   "4"
+  ],
+  "answer_text": "6",
+  "answer_index": 0
+ },
+ "51": {
+  "q": "What will be the output of the following pseudocode for adjacency list (directed graph)?",
+  "options": [
+   "true",
+   "false",
+   "error",
+   "1"
+  ],
+  "answer_text": "true",
+  "answer_index": 0
+ },
+ "52": {
+  "q": "What will be the output of the following pseudocode for S1 = \"ABC\", S2 = \"AC\"?",
+  "options": [
+   "0",
+   "1",
+   "2",
+   "3"
+  ],
+  "answer_text": "2",
+  "answer_index": 2
+ },
+ "53": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "25",
+   "10",
+   "16",
+   "32"
+  ],
+  "answer_text": "32",
+  "answer_index": 3
+ },
+ "54": {
+  "q": "What will be the output of the following pseudocode for A = [0, 1, 0, 3, 12], n = 5?",
+  "options": [
+   "1 0 3 12 0",
+   "1 3 12 0 0",
+   "0 0 1 3 12",
+   "1 3 12 0 12"
+  ],
+  "answer_text": "1 3 12 0 0",
+  "answer_index": 1
+ },
+ "55": {
+  "q": "What will be the output of the following pseudocode for S = \"AAABBCCCC\"?",
+  "options": [
+   "A3B3C4",
+   "A2B2C4",
+   "A3B2C3",
+   "A3B2C4"
+  ],
+  "answer_text": "A3B2C4",
+  "answer_index": 3
+ },
+ "56": {
+  "q": "What will be the output of the following pseudocode for A = [4, 1, 2, 1, 2], n = 5?",
+  "options": [
+   "4",
+   "1",
+   "2",
+   "0"
+  ],
+  "answer_text": "4",
+  "answer_index": 0
+ },
+ "57": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "2.512",
+   "1.567",
+   "2.083",
+   "3.0"
+  ],
+  "answer_text": "2.083",
+  "answer_index": 2
+ },
+ "58": {
+  "q": "What will be the output of the following pseudocode for a = 8, b = 12?",
+  "options": [
+   "4",
+   "8",
+   "12",
+   "2"
+  ],
+  "answer_text": "4",
+  "answer_index": 0
+ },
+ "59": {
+  "q": "What will be the output of the following pseudocode for A = [2, 7, 11, 15], n = 4, target = 18?",
+  "options": [
+   "11,7",
+   "2,15",
+   "7,11",
+   "15,2"
+  ],
+  "answer_text": "7,11",
+  "answer_index": 2
+ },
+ "60": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "8",
+   "7",
+   "5",
+   "6"
+  ],
+  "answer_text": "6",
+  "answer_index": 3
+ },
+ "61": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, 4, 5], n = 5?",
+  "options": [
+   "1 5 3 2 4",
+   "5 4 3 1 2",
+   "1 2 3 4 5",
+   "5 4 3 2 1"
+  ],
+  "answer_text": "5 4 3 2 1",
+  "answer_index": 3
+ },
+ "62": {
+  "q": "What will be the output of the following pseudocode for S = \"GOOD IS BETTER\"?",
+  "options": [
+   "BETTER IS GOOD",
+   "GOOD IS BETTER",
+   "BETTER GOOD IS",
+   "IS BETTER GOOD"
+  ],
+  "answer_text": "BETTER IS GOOD",
+  "answer_index": 0
+ },
+ "63": {
+  "q": "What will be the output of the following pseudocode for n = 12?",
+  "options": [
+   "10",
+   "4",
+   "8",
+   "14"
+  ],
+  "answer_text": "8",
+  "answer_index": 2
+ },
+ "64": {
+  "q": "What will be the output (top to bottom) of the following pseudocode for Stack S = [3, 1, 4, 2] (bottom to top)?",
+  "options": [
+   "1 2 3 4",
+   "4 3 2 1",
+   "2 4 1 3",
+   "3 1 4 2"
+  ],
+  "answer_text": "4 3 2 1",
+  "answer_index": 1
+ },
+ "65": {
+  "q": "What will be the output of the following pseudocode for Queue Q = [1, 2, 3, 4, 5, 6]?",
+  "options": [
+   "Depends on implementation details (ambiguous/error - S is empty in second pop loop)",
+   "1 4 2 5 3 6",
+   "4 5 6 1 2 3",
+   "1 2 3 4 5 6"
+  ],
+  "letters": [
+   "a",
+   "b",
+   "c",
+   "d"
+  ],
+  "answer_text": "option a",
+  "answer_index": 0
+ },
+ "66": {
+  "q": "What will be the output of the following pseudocode for the binary tree below?",
+  "options": [
+   "50",
+   "60",
+   "45",
+   "39"
+  ],
+  "answer_text": "60",
+  "answer_index": 1
+ },
+ "67": {
+  "q": "What will be the output of the following pseudocode for adjacency list?",
+  "options": [
+   "3",
+   "2",
+   "4",
+   "5"
+  ],
+  "answer_text": "3",
+  "answer_index": 0
+ },
+ "68": {
+  "q": "What will be the output of the following pseudocode for weights=[1,3,4], values= [15,20,30], capacity=4? Integer funn(Integer wt[], Integer val[], Integer n, Integer cap) Integer dp[n+1][cap+1] for i = 0 to n for w = 0 to cap if (i == 0 or w == 0) dp[i][w] = 0 else if (wt[i-1] <= w) dp[i][w] = max(val[i-1] + dp[i-1][w-wt[i-1]], dp[i-1][w]) else dp[i][w] = dp[i-1][w] end if end for end for return dp[n][cap] end function Print funn([1,3,4], [15,20,30], 3, 4)",
+  "options": [
+   "35",
+   "30",
+   "45",
+   "50"
+  ],
+  "answer_text": "35",
+  "answer_index": 0
+ },
+ "69": {
+  "q": "What will be the output of the following pseudocode for n = 4?",
+  "options": [
+   "13",
+   "14",
+   "15",
+   "16"
+  ],
+  "answer_text": "15",
+  "answer_index": 2
+ },
+ "70": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 4, 5, 6], n = 5 (numbers should be 1 to 6)?",
+  "options": [
+   "2",
+   "3",
+   "4",
+   "5"
+  ],
+  "answer_text": "3",
+  "answer_index": 1
+ },
+ "71": {
+  "q": "What will be the output of the following pseudocode for S1 = \"ABCD\", S2 = \"CDAB\"?",
+  "options": [
+   "false",
+   "true",
+   "error",
+   "1"
+  ],
+  "answer_text": "true",
+  "answer_index": 1
+ },
+ "72": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "-1",
+   "1",
+   "2",
+   "-2"
+  ],
+  "answer_text": "-1",
+  "answer_index": 0
+ },
+ "73": {
+  "q": "What will be the output of the following pseudocode for A = [7, 10, 4, 3, 20, 15], n = 6, k = 3?",
+  "options": [
+   "15",
+   "10",
+   "7",
+   "20"
+  ],
+  "answer_text": "10",
+  "answer_index": 1
+ },
+ "74": {
+  "q": "What will be the output of the following pseudocode for n = 10?",
+  "options": [
+   "19",
+   "20",
+   "25",
+   "30"
+  ],
+  "answer_text": "30",
+  "answer_index": 3
+ },
+ "75": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "1 2 3",
+   "1 1 1",
+   "0 1 2",
+   "3 3 3"
+  ],
+  "answer_text": "1 2 3",
+  "answer_index": 0
+ },
+ "76": {
+  "q": "What will be the output of the following pseudocode for n = 10, pos = 1?",
+  "options": [
+   "11",
+   "12",
+   "8",
+   "9"
+  ],
+  "answer_text": "8",
+  "answer_index": 2
+ },
+ "77": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "error",
+   "false",
+   "true",
+   "0"
+  ],
+  "answer_text": "true",
+  "answer_index": 2
+ },
+ "78": {
+  "q": "What will be the output of the following pseudocode for the weighted adjacency matrix (n=3)?",
+  "options": [
+   "14",
+   "7",
+   "22",
+   "11"
+  ],
+  "answer_text": "11",
+  "answer_index": 3
+ },
+ "79": {
+  "q": "What will be the output of the following pseudocode for grid (2x2)?",
+  "options": [
+   "5",
+   "9",
+   "7",
+   "10"
+  ],
+  "answer_text": "7",
+  "answer_index": 2
+ },
+ "80": {
+  "q": "What will be the output of the following pseudocode for A = [2, 4, 6, 8], n = 4?",
+  "options": [
+   "20",
+   "18",
+   "16",
+   "24"
+  ],
+  "answer_text": "20",
+  "answer_index": 0
+ },
+ "81": {
+  "q": "What will be the output of the following pseudocode for A = [16, 17, 4, 3, 5, 2], n = 6?",
+  "options": [
+   "17 5 2",
+   "2 5 17",
+   "2 5 17 16",
+   "16 17 5 2"
+  ],
+  "answer_text": "2 5 17",
+  "answer_index": 1
+ },
+ "82": {
+  "q": "What will be the output of the following pseudocode for S = \"SWISS\"?",
+  "options": [
+   "I",
+   "S",
+   "W",
+   "_"
+  ],
+  "answer_text": "W",
+  "answer_index": 2
+ },
+ "83": {
+  "q": "What will be the output of the following pseudocode for a = 10, b = 20?",
+  "options": [
+   "2",
+   "5",
+   "3",
+   "4"
+  ],
+  "answer_text": "4",
+  "answer_index": 3
+ },
+ "84": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "1",
+   "2",
+   "5",
+   "8"
+  ],
+  "answer_text": "2",
+  "answer_index": 1
+ },
+ "85": {
+  "q": "What will be the first 3 outputs of the following pseudocode?",
+  "options": [
+   "1, 10, 11",
+   "1, 11, 10",
+   "10, 11, 1",
+   "1, 10, 100"
+  ],
+  "answer_text": "1, 10, 11",
+  "answer_index": 0
+ },
+ "86": {
+  "q": "What will be the output of the following pseudocode for the binary tree below?",
+  "options": [
+   "1 3 2 6 5 4",
+   "4 5 2 6 3 1",
+   "1 2 3 4 5 6",
+   "1 2 4 5 3 6"
+  ],
+  "answer_text": "1 2 3 4 5 6",
+  "answer_index": 2
+ },
+ "87": {
+  "q": "What will be the output of the following pseudocode for A = [2, 3, -2, 4], n = 4?",
+  "options": [
+   "24",
+   "6",
+   "-2",
+   "4"
+  ],
+  "answer_text": "6",
+  "answer_index": 1
+ },
+ "88": {
+  "q": "What will be the output of the following pseudocode for A = [1, 3, 5, 7, 9, 11], target = 7?",
+  "options": [
+   "4",
+   "2",
+   "3",
+   "-1"
+  ],
+  "answer_text": "3",
+  "answer_index": 2
+ },
+ "89": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, 4], n = 4?",
+  "options": [
+   "1 2 3 4",
+   "24 12 8 6",
+   "6 8 12 24",
+   "4 3 2 1"
+  ],
+  "answer_text": "24 12 8 6",
+  "answer_index": 1
+ },
+ "90": {
+  "q": "What will be the output (length) of the following pseudocode for S = \"ABCABCBB\"?",
+  "options": [
+   "4",
+   "3",
+   "5",
+   "2"
+  ],
+  "answer_text": "3",
+  "answer_index": 1
+ },
+ "91": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "5, false",
+   "15, false",
+   "5, true",
+   "15, true"
+  ],
+  "answer_text": "5, false",
+  "answer_index": 0
+ },
+ "92": {
+  "q": "What will be the output of the following pseudocode for n = 7, k = 3?",
+  "options": [
+   "21",
+   "58",
+   "56",
+   "49"
+  ],
+  "answer_text": "56",
+  "answer_index": 2
+ },
+ "93": {
+  "q": "What will be the output (diameter, in number of edges) of the following pseudocode for the binary tree below?",
+  "options": [
+   "4",
+   "3",
+   "5",
+   "2"
+  ],
+  "answer_text": "4",
+  "answer_index": 0
+ },
+ "94": {
+  "q": "What will be one valid output of the following pseudocode (Kahn's algorithm) for adjacency list?",
+  "options": [
+   "0 2 1 3",
+   "0 1 2 3",
+   "1 2 0 3",
+   "3 2 1 0"
+  ],
+  "answer_text": "0 1 2 3",
+  "answer_index": 1
+ },
+ "95": {
+  "q": "What will be the output of the following pseudocode for S1 = \"CAT\", S2 = \"CUT\"?",
+  "options": [
+   "0",
+   "3",
+   "2",
+   "1"
+  ],
+  "answer_text": "1",
+  "answer_index": 3
+ },
+ "96": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "20",
+   "0",
+   "120",
+   "60"
+  ],
+  "answer_text": "60",
+  "answer_index": 3
+ },
+ "97": {
+  "q": "What will be the output of the following pseudocode for A = [-7, 1, 5, 2, -4, 3, 0], n = 7 (equilibrium index: sum of elements left equals sum of elements right)?",
+  "options": [
+   "3",
+   "2",
+   "4",
+   "-1"
+  ],
+  "answer_text": "3",
+  "answer_index": 0
+ },
+ "98": {
+  "q": "What will be the output of the following pseudocode for a = -5, b = 3?",
+  "options": [
+   "true",
+   "false",
+   "error",
+   "0"
+  ],
+  "answer_text": "true",
+  "answer_index": 0
+ },
+ "99": {
+  "q": "What will be the output of the following pseudocode for A = [1, 2, 3, -4, -1, 4], n = 6?",
+  "options": [
+   "0",
+   "-1",
+   "-4",
+   "4"
+  ],
+  "answer_text": "-4",
+  "answer_index": 2
+ },
+ "100": {
+  "q": "What will be the output of the following pseudocode?",
+  "options": [
+   "24",
+   "14",
+   "20",
+   "9"
+  ],
+  "answer_text": "20",
+  "answer_index": 2
+ }
+}

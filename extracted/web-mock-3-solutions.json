@@ -1,0 +1,230 @@
+[
+ {
+  "q": "What is the work of <address> element in HTML5?",
+  "options": [
+   "contains IP address",
+   "contains home address",
+   "contains url",
+   "contains contact details for author"
+  ],
+  "answer": "contains contact details for author",
+  "answerIndex": 3,
+  "explanation": "The contact details for author of a page is specified by <address> attribute. The content is often displayed in italics, e.g. <address> <a href=\"mailto:enquiry@knacademy.com\">KN Academy</a> </address> Output: KN Academy"
+ },
+ {
+  "q": "An element has width: 100px; padding: 15px; border: 5px solid black;. What is its total width if box-sizing: content-box;?",
+  "options": [
+   "100px",
+   "115px",
+   "130px",
+   "140px"
+  ],
+  "answer": "140px",
+  "answerIndex": 3,
+  "explanation": "With box-sizing: content-box;, the total width is the sum of the width, padding (15px+15px), and border (5px+5px), totaling 140px."
+ },
+ {
+  "q": "Identify the issue: div { width: 100%; padding: 20px; } without using box-sizing: border-box;",
+  "options": [
+   "The div will be wider than its parent",
+   "The div's width is too small",
+   "No issue",
+   "The padding is ignored"
+  ],
+  "answer": "The div will be wider than its parent",
+  "answerIndex": 0,
+  "explanation": "Without box-sizing: border-box;, the padding is added to the 100% width, making the div wider than its parent container."
+ },
+ {
+  "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q4.png]",
+  "options": [
+   "NaN",
+   "Number",
+   "Object",
+   "Array"
+  ],
+  "answer": "Object",
+  "answerIndex": 2,
+  "explanation": "The …args parameter allows us to collect all remaining arguments into an array, and in Javascript typeof an array is an object."
+ },
+ {
+  "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q5.png]",
+  "options": [
+   "3",
+   "0",
+   "Error",
+   "5"
+  ],
+  "answer": "5",
+  "answerIndex": 3,
+  "explanation": "In Javascript, true is considered as the number 1 when used in any arithmetic expression, hence the expression evaluates to 5."
+ },
+ {
+  "q": "How do you find the length of an array in JavaScript?",
+  "options": [
+   "array.size()",
+   "array.length",
+   "array.count()",
+   "length(array)"
+  ],
+  "answer": "array.length",
+  "answerIndex": 1,
+  "explanation": "The length property of an array is used to find the number of elements in the array."
+ },
+ {
+  "q": "In JavaScript, how can you check if a variable is an array?",
+  "options": [
+   "typeof variable",
+   "variable.isArray()",
+   "Array.isArray(variable)",
+   "variable instanceof Array"
+  ],
+  "answer": "Array.isArray(variable)",
+  "answerIndex": 2,
+  "explanation": "Array.isArray(variable) is a static method that returns true if the variable is an array, otherwise false."
+ },
+ {
+  "q": "[Image question] What is the output of the JavaScript function shown? The function takes a number and returns its cube (num * num * num) (see images/web-mock-3-q8.png).",
+  "options": [
+   "[1, 2, 3, 4]",
+   "[10, 20, 30, 40]",
+   "[0.1, 0.2, 0.3, 0.4]",
+   "Error"
+  ],
+  "answer": "[1, 2, 3, 4]",
+  "answerIndex": 0
+ },
+ {
+  "q": "What will be the output of this code snippet? let numbers = [1, 2, 3]; numbers[10] = 11; console.log(numbers.length);",
+  "options": [
+   "3",
+   "4",
+   "11",
+   "10"
+  ],
+  "answer": "11",
+  "answerIndex": 2,
+  "explanation": "Setting an element at index 10 in an array of length 3 extends the array. The new length of the array becomes 11."
+ },
+ {
+  "q": "Output of the below Js code snippet: [See image: images/web-mock-3-q10.png]",
+  "options": [
+   "44",
+   "8",
+   "4",
+   "Error"
+  ],
+  "answer": "44",
+  "answerIndex": 0
+ },
+ {
+  "q": "What CSS property allows an element to expand in proportion to its sibling elements in a flex container?",
+  "options": [
+   "flex-grow",
+   "flex-wrap",
+   "align-content",
+   "justify-content"
+  ],
+  "answer": "flex-grow",
+  "answerIndex": 0
+ },
+ {
+  "q": "What does the CSS box-shadow property do?",
+  "options": [
+   "Adds a shadow inside the border of an element.",
+   "Adds a shadow outside the border of an element.",
+   "Increases the width of the border.",
+   "Controls the visibility of the element."
+  ],
+  "answer": "Adds a shadow outside the border of an element.",
+  "answerIndex": 1
+ },
+ {
+  "q": "What is the correct syntax of web address?",
+  "options": [
+   "port://domain.filenmae:path/scheme/prefix",
+   "prefix://scheme.port:domain/filename/path",
+   "path://prefix.port:domain/filename/scheme",
+   "scheme://prefix.domain:port/path/filename"
+  ],
+  "answer": "scheme://prefix.domain:port/path/filename",
+  "answerIndex": 3
+ },
+ {
+  "q": "Which attribute is not essential under <iframe>?",
+  "options": [
+   "frameborder",
+   "width",
+   "height",
+   "src"
+  ],
+  "answer": "frameborder",
+  "answerIndex": 0
+ },
+ {
+  "q": "Which property aligns a flex item in the center of its container along the main axis?",
+  "options": [
+   "align-self: center",
+   "justify-self: center",
+   "justify-content: center",
+   "align-items: center"
+  ],
+  "answer": "justify-content: center",
+  "answerIndex": 2
+ },
+ {
+  "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q16.png]",
+  "options": [
+   "4 10 18",
+   "1 2 3",
+   "1 4 7",
+   "None of the above"
+  ],
+  "answer": "4 10 18",
+  "answerIndex": 0
+ },
+ {
+  "q": "What will be the output of the following code snippet? [See image: images/web-mock-3-q17.png]",
+  "options": [
+   "1 2 3 4",
+   "2 3 4 1",
+   "2 4 3 1",
+   "4 3 2 1"
+  ],
+  "answer": "2 4 3 1",
+  "answerIndex": 2
+ },
+ {
+  "q": "How do you create a new object in JavaScript?",
+  "options": [
+   "Object.create()",
+   "new Object()",
+   "Both A and B",
+   "Neither A nor B"
+  ],
+  "answer": "Both A and B",
+  "answerIndex": 2
+ },
+ {
+  "q": "Given the following code, what is printed to the console? let obj1 = { a: 1 }; let obj2 = { a: 1 }; console.log(obj1 === obj2);",
+  "options": [
+   "true",
+   "false",
+   "null",
+   "Error"
+  ],
+  "answer": "false",
+  "answerIndex": 1
+ },
+ {
+  "q": "Which of the following values of the position property will position an element relative to its nearest positioned ancestor?",
+  "options": [
+   "absolute",
+   "relative",
+   "fixed",
+   "static"
+  ],
+  "answer": "absolute",
+  "answerIndex": 0
+ }
+]

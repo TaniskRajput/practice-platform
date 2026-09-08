@@ -7,3 +7,8 @@ extracted/downloaded/*.txt
 extracted/downloaded/manifest.json
 extracted/pdf-passwords.json
 extracted/pdf-creds.json
+
+# scraping credentials / PDF passwords - keep local only
+extracted/missing-pdf-creds.json
+extracted/new-pdf-passwords.json
+extracted/pdf-passwords-byfile.json

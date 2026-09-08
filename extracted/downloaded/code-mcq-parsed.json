@@ -1,0 +1,450 @@
+[
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Pseudo-Code Tracing (Bitwise AND)",
+  "num": 1,
+  "question": "Initial values: p = 1, q = 8, r = 9 q = (11 + 9) & q p = p + q Print p + q + r",
+  "options": [
+   "6",
+   "10",
+   "18",
+   "24"
+  ],
+  "answer": "B",
+  "explanation": "(20 & 8) = 0, so p + q + r = 1 + 0 + 9 = 10."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Pseudo-Code Tracing",
+  "num": 2,
+  "question": "Values: a = 2, b = 8, c = 8 c = 9 + a if ((4 + 10 + a) < (7 + c)) if ((7 + 6) < c) if ((5 + c) < (b + 5)) b = a + b Print a + b + c",
+  "options": [
+   "17",
+   "21",
+   "22",
+   "23"
+  ],
+  "answer": "B",
+  "explanation": "Inner conditions fail, so b remains unchanged."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Pseudo-Code Tracing",
+  "num": 3,
+  "question": "Values: a = 7, b = 4, c = 10 if ((b + c) < (c + a + b)) b = b + c c = (b + b) + a Print a + b + c",
+  "options": [
+   "32",
+   "35",
+   "56",
+   "28"
+  ],
+  "answer": "C",
+  "explanation": "b becomes 14, c = 35, total = 56."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Array / Bitwise AND",
+  "num": 4,
+  "question": "Array: arr = {{1,2},{2,4}} arr = arr + arr & arr arr = (3 + 7) & arr Print arr + arr",
+  "options": [
+   "0.0",
+   "4.0",
+   "8.0",
+   "16.0"
+  ],
+  "answer": "A",
+  "explanation": "Bitwise AND with 10 clears all bits."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Pseudo-Code Tracing",
+  "num": 5,
+  "question": "Values: a = 1, b = 2, c = 10 if (((a+b)+(b+c)) > (a+b+c)) if (a < b) b = b + c Print a + b + c",
+  "options": [
+   "9",
+   "13",
+   "15",
+   "23"
+  ],
+  "answer": "D",
+  "explanation": "Condition true, b updated to 12."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Pseudo-Code Tracing",
+  "num": 6,
+  "question": "Values: a = 3, b = 8, c = 6 c = c + a b = (c + c) + c c = (b + b) + a Print a + b + c",
+  "options": [
+   "37",
+   "51",
+   "87",
+   "39"
+  ],
+  "answer": "C",
+  "explanation": "Sequential execution gives sum = 87."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Array / Bitwise XOR",
+  "num": 7,
+  "question": "Array: arr = {{0,1},{4,1}} arr = (4 + 1) + arr arr = 2 + arr arr = (arr ^ 1) + arr Print arr + arr",
+  "options": [
+   "19",
+   "17",
+   "34",
+   "9"
+  ],
+  "answer": "C",
+  "explanation": "Final scalar value becomes 17, doubled to 34."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "Recursive Pseudo-Code",
+  "num": 8,
+  "question": "A recursive function returns number + func(number - 1) if number > 1.",
+  "options": [
+   "Calculates factorial",
+   "Computes sum of number and predecessors",
+   "Multiplies predecessors",
+   "Finds square"
+  ],
+  "answer": "B",
+  "explanation": "Recursive addition forms a cumulative sum."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "JavaScript Array Method",
+  "num": 9,
+  "question": "var my_arr = [1,2,3]; function myfunction(elem) { return elem + 5; } document.write(my_arr.map(myfunction));",
+  "options": [
+   "6,7,8",
+   "3,2,1",
+   "16",
+   "True"
+  ],
+  "answer": "A",
+  "explanation": "map() applies function to each element."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "SQL UPDATE Query",
+  "num": 10,
+  "question": "Update the status of orders placed before January 1, 2023 to 'Shipped'. Which SQL query correctly performs this update?",
+  "options": [
+   "UPDATE orders SET status = 'Delivered' WHERE order_date < '2023-01-01';",
+   "UPDATE orders SET status = 'Shipped' WHERE order_date > '2023-01-01';",
+   "UPDATE orders SET status = 'Shipped' WHERE status = '2023-01-01';",
+   "UPDATE orders SET status = 'Shipped' WHERE order_date < '2023-01-01';"
+  ],
+  "answer": "D",
+  "explanation": "Updates only the orders with a date before 2023-01-01 and sets status to 'Shipped'."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "SQL GROUP BY Clause",
+  "num": 11,
+  "question": "Which of the following shows the correct usage of the GROUP BY clause?",
+  "options": [
+   "SELECT column_name1, column_name2 FROM table_name WHERE column_name = operator value GROUP BY column_name1",
+   "SELECT * FROM table_name WHERE column_name = operator value GROUP BY column_name",
+   "SELECT column_name, aggregate_function(column_name) FROM table_name WHERE column_name = operator value GROUP BY column_name",
+   "SELECT * FROM table_name GROUP BY column_name"
+  ],
+  "answer": "C",
+  "explanation": "GROUP BY must be used with aggregate functions like COUNT(), SUM(), etc., to summarize grouped data."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "SQL Query Optimization",
+  "num": 12,
+  "question": "Queries searching customers by Email are slow in a table with over 5 million rows. Which technique improves performance the most?",
+  "options": [
+   "Adding more rows to the table",
+   "Creating an index on the Email column",
+   "Using a Foreign Key on the Email column",
+   "Denormalizing the table"
+  ],
+  "answer": "B",
+  "explanation": "Indexing the Email column allows the database to quickly locate rows, greatly improving query performance."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "HTML Audio Autoplay",
+  "num": 13,
+  "question": "Which code correctly implements autoplay for an audio element?",
+  "options": [
+   "<audio autoplay> <source src=\"test.mp3\"> <source src=\"test.ogg\"> </audio>",
+   "<audio controls><source src=\"test.mp3\"></audio>",
+   "<audio src=\"test.mp3\"></audio>",
+   "<audio autoplay controls src=\"test.mp3\"></audio>"
+  ],
+  "answer": "A",
+  "explanation": "The autoplay attribute plays the audio automatically when the page loads."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 14,
+  "question": "FUNCTION cal(number): IF number is 0 OR number is 1 RETURN 1 ELSE RETURN some_operation(number, cal(number - 1)) End IF END FUNCTION cal result = cal(input_number) PRINT result",
+  "options": [
+   "Calculates the factorial of input_number",
+   "Computes the sum of input_number and its predecessors",
+   "Multiplies input_number by the product of its predecessors",
+   "Determines the square of input_number"
+  ],
+  "answer": "A",
+  "explanation": "The function recursively multiplies the number by the factorial of its predecessor, which defines the factorial operation."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 15,
+  "question": "<body> <button onclick=\"myFunction(this);\">Test attribute!</button> <script type=\"text/javascript\"> function myFunction(button) { var newAttr = document.createAttribute(\"myAttribute\"); newAttr.value = \"My Value\"; button.setAttributeNode(newAttr); document.write(button.getAttribute(\"myAttribute\")); } </script> </body>",
+  "options": [
+   "False",
+   "Test attribute!",
+   "My Value",
+   "Nothing will happen"
+  ],
+  "answer": "C",
+  "explanation": "The code creates a custom attribute myAttribute with value \"My Value\" and then retrieves it using getAttribute(), printing \"My Value\"."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 16,
+  "question": "<html> <head> <script language=\"JavaScript\"> function myFunction() { alert(\"My Function is called\"); } </script> </head> <body> <img src=\"http://www.example.com/mylogo.png\" onabort=\"myFunction()\"> </body> </html>",
+  "options": [
+   "When the page is closed",
+   "When the page is loaded",
+   "When the user clicks on ESC before the page loads",
+   "When the page is refreshed"
+  ],
+  "answer": "C",
+  "explanation": "The onabort event is triggered when loading of an image is interrupted, such as pressing ESC before the image fully loads."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 17,
+  "question": "Which statement retrieves items in ascending order from a table in SQL?",
+  "options": [
+   "SELECT * FROM [table] ORDER BY [tbl_clm];",
+   "SELECT * FROM [table] SORT BY [tbl_clm];",
+   "SELECT * FROM [table] ORDER BY [tbl_clm] ASC;",
+   "SELECT * FROM [table] GROUP BY [tbl_clm] ASC;"
+  ],
+  "answer": "C",
+  "explanation": "The ORDER BY [column] ASC clause sorts the result set in ascending order."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 18,
+  "question": "FUNCTION incrementByThree(n) RETURN n + 3 END FUNCTION total = 0 FOR i = 1 TO 3 total = total + incrementByThree(i) END FOR DISPLAY total",
+  "options": [
+   "15",
+   "12",
+   "18",
+   "9"
+  ],
+  "answer": "A",
+  "explanation": "The function adds 3 to each value of i (1, 2, 3), giving 4 + 5 + 6 = 15."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 19,
+  "question": "class Employee extends Person { Address address; }",
+  "options": [
+   "Employee has \"Is-A\" relationship with Person and \"Has-A\" relationship with Address",
+   "Employee has \"Is-A\" relationship with Address and \"Has-A\" relationship with Person",
+   "Employee has \"Is-A\" relationship with Person and Address",
+   "Employee has \"Has-A\" relationship with Address and Person"
+  ],
+  "answer": "A",
+  "explanation": "Inheritance (extends) defines an Is-A relationship, while including a class instance defines a Has-A (composition) relationship."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 23,
+  "question": "class Children { private final void flipper() { System.out.println(\"Children\"); } } public class Parent extends Children { public final void flipper() { System.out.println(\"Parent\"); } public static void main(String[] args) { new Parent().flipper(); } }",
+  "options": [
+   "Children",
+   "Parent",
+   "Children Parent",
+   "Parent Children"
+  ],
+  "answer": "B",
+  "explanation": "The flipper() method in Children is private, so it is not inherited; the Parent class method is called, printing \"Parent\"."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 24,
+  "question": "A company wants to automatically log whenever an employee record is deleted. Schema: CREATE TABLE Employees ( EmpID INT PRIMARY KEY , Name VARCHAR(50) ); CREATE TABLE Auditing ( LogID INT PRIMARY KEY AUTO_INCREMENT, EmpID INT, DeletedOn DATETIME );",
+  "options": [
+   "CREATE TRIGGER trg_DeleteEmployee AFTER DELETE ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (OLD.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee BEFORE DELETE ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (NEW.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee AFTER INSERT ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (NEW.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee AFTER DELETE ON Auditing FOR EACH ROW INSERT INTO Employees (EmpID) VALUES (OLD.EmpID);"
+  ],
+  "answer": "A",
+  "explanation": "Using AFTER DELETE on Employees and OLD.EmpID ensures that each deleted record is logged with the deletion timestamp in the Auditing table."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 25,
+  "question": "Which statement retrieves items in ascending order from a table in SQL?",
+  "options": [
+   "SELECT * FROM [table] ORDER BY [tbl_clm];",
+   "SELECT * FROM [table] SORT BY [tbl_clm];",
+   "SELECT * FROM [table] ORDER BY [tbl_clm] ASC;",
+   "SELECT * FROM [table] GROUP BY [tbl_clm] ASC;"
+  ],
+  "answer": "C",
+  "explanation": "The ORDER BY [column] ASC clause explicitly sorts the result set in ascending order; GROUP BY and SORT BY are incorrect in this context."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 26,
+  "question": "FUNCTION incrementByThree(n) RETURN n + 3 END FUNCTION total = 0 FOR i = 1 TO 3 total = total + incrementByThree(i) END FOR DISPLAY total",
+  "options": [
+   "15",
+   "12",
+   "18",
+   "9"
+  ],
+  "answer": "A",
+  "explanation": "The loop computes incrementByThree(1) + incrementByThree(2) + incrementByThree(3) \u2192 4 + 5 + 6 = 15."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 27,
+  "question": "A company wants to automatically log whenever an employee record is deleted. Schema: CREATE TABLE Employees ( EmpID INT PRIMARY KEY , Name VARCHAR(50) ); CREATE TABLE Auditing ( LogID INT PRIMARY KEY AUTO_INCREMENT, EmpID INT, DeletedOn DATETIME );",
+  "options": [
+   "CREATE TRIGGER trg_DeleteEmployee AFTER DELETE ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (OLD.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee BEFORE DELETE ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (NEW.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee AFTER INSERT ON Employees FOR EACH ROW INSERT INTO Auditing (EmpID, DeletedOn) VALUES (NEW.EmpID, NOW());",
+   "CREATE TRIGGER trg_DeleteEmployee AFTER DELETE ON Auditing FOR EACH ROW INSERT INTO Employees (EmpID) VALUES (OLD.EmpID);"
+  ],
+  "answer": "A",
+  "explanation": "AFTER DELETE on Employees with OLD.EmpID logs the deleted record into Auditing immediately after deletion, fulfilling the automatic logging requirement."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 28,
+  "question": "A company wants to automatically log whenever an employee record is deleted. Schema: CREATE TABLE Employees ( EmpID INT PRIMARY KEY , Name VARCHAR(50) ); CREATE TABLE Auditing ( LogID INT PRIMARY KEY AUTO_INCREMENT, EmpID INT, DeletedOn DATETIME );",
+  "options": [
+   "A trigger using AFTER DELETE on Employees, FOR EACH ROW , inserting into Auditing (EmpID, DeletedOn) with values from OLD.EmpID and NOW().",
+   "A trigger using BEFORE DELETE on Employees, inserting into Auditing using NEW.EmpID.",
+   "A trigger using AFTER INSERT on Employees, inserting into Auditing using NEW .EmpID.",
+   "A trigger using AFTER DELETE on Auditing, inserting back into Employees."
+  ],
+  "answer": "A",
+  "explanation": "Using AFTER DELETE on Employees and OLD.EmpID ensures automatic logging of deleted records in the Auditing table."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 29,
+  "question": "<canvas id=\"myCanvas\">HTML5 Canvas not supported.</canvas>",
+  "options": [
+   "A comment for the user",
+   "A comment for incompatible browsers",
+   "A comment for Internet Explorer and Opera",
+   "All of the given options"
+  ],
+  "answer": "B",
+  "explanation": "The text inside the <canvas> tag is displayed only if the browser does not support HTML5 Canvas, acting as fallback content for incompatible browsers."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 30,
+  "question": "class Employee extends Person { Address address; }",
+  "options": [
+   "Employee has \"Is-A\" relationship with Person and \"Has-A\" relationship with Address",
+   "Employee has \"Is-A\" relationship with Address and \"Has-A\" relationship with Person",
+   "Employee has \"Is-A\" relationship with Person and Address",
+   "Employee has \"Has-A\" relationship with Address and Person"
+  ],
+  "answer": "A",
+  "explanation": "Inheritance (extends) defines an Is-A relationship (Employee is a Person), while containing an instance of another class defines a Has-A relationship (Employee has an Address)."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 32,
+  "question": "<img src=\"...\" onabort=\"myFunction()\">",
+  "options": [
+   "When the page is closed",
+   "When the page is loaded",
+   "When the user clicks on ESC before the page loads",
+   "When the page is refreshed"
+  ],
+  "answer": "C",
+  "explanation": "The onabort event is triggered if the image loading is interrupted, for example by pressing ESC before the image fully loads."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 33,
+  "question": "class Employee extends Person { Address address; }",
+  "options": [
+   "Employee has \"Is-A\" relationship with Person and \"Has-A\" relationship with Address",
+   "Employee has \"Is-A\" relationship with Address and \"Has-A\" relationship with Person",
+   "Employee has \"Is-A\" relationship with Person and Address",
+   "Employee has \"Has-A\" relationship with Address and Person"
+  ],
+  "answer": "A",
+  "explanation": "Inheritance (extends) establishes an Is-A relationship (Employee is a Person), and including an instance variable creates a Has-A relationship (Employee has an Address)."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 34,
+  "question": "var my_arr = [3, 16, 2, 18]; function myFunction(elem) { return elem + 5; } document.write(my_arr.map(myFunction));",
+  "options": [
+   "8, 21, 7, 23",
+   "3, 16, 2, 18",
+   "False",
+   "True"
+  ],
+  "answer": "A",
+  "explanation": "The map() method applies myFunction to each element, adding 5, producing [8, 21, 7, 23]."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 35,
+  "question": "Which optimization technique improves performance for: SELECT * FROM Customers WHERE Email = 'abc@example.com'; when the table has over 5 million rows?",
+  "options": [
+   "Adding more rows to the table",
+   "Creating an index on the Email column",
+   "Using a Foreign Key on the Email column",
+   "Denormalizing the table"
+  ],
+  "answer": "B",
+  "explanation": "Indexing the Email column allows the database to quickly locate matching rows without scanning all 5 million records, drastically improving query performance."
+ },
+ {
+  "source": "Accenture Code MCQ PDF",
+  "topic_hint": "",
+  "num": 36,
+  "question": "SELECT emp_name FROM employees WHERE emp_name LIKE '%a%';",
+  "options": [
+   "Names starting with the alphabet 'a'",
+   "Names ending with the alphabet 'a'",
+   "Names containing the alphabet 'a' anywhere",
+   "Names that do not contain the alphabet 'a'"
+  ],
+  "answer": "C",
+  "explanation": "The '%a%' pattern in SQL LIKE matches strings that contains 'a', followed by any sequence of characters. Question 37: Parent class extends Children, Children.flipper() is private final, Parent.flipper() is public final, main calls new Parent().flipper(). Options: A. Children B. Parent C. Children Parent D. Parent Children Answer: B. Parent Explanation: The private method in Children is not inherited, so Parent\u2019s flipper() is executed. Question 3: Code calls t.F1(21) and then prints t.F2(), where"
+ }
+]

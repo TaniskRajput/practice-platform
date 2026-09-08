@@ -1,0 +1,462 @@
+[
+ {
+  "answer": "Alan Kay",
+  "explanation": "Alan Kay invented OOP, Andrea Ferro was a part of SmallTalk Development. Dennis invented C++ and Adele Goldberg was in team to develop SmallTalk but Alan actually had got rewarded for OOP.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Andrea Ferro"
+   },
+   {
+    "status": "plain",
+    "text": "Adele Goldberg"
+   },
+   {
+    "status": "correct",
+    "text": "Alan Kay"
+   },
+   {
+    "status": "plain",
+    "text": "Dennis Ritchie"
+   }
+  ],
+  "question": "Who invented OOP?"
+ },
+ {
+  "answer": "Duplicate/Redundant data",
+  "explanation": "Code reusability is done using inheritance. Modularity is supported by using different code files and classes. Codes are more efficient because of features of OOP.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Efficient Code"
+   },
+   {
+    "status": "plain",
+    "text": "Code reusability"
+   },
+   {
+    "status": "plain",
+    "text": "Modularity"
+   },
+   {
+    "status": "user-correct",
+    "text": "Duplicate/Redundant data"
+   }
+  ],
+  "question": "Which is not a feature of OOP in general definitions?"
+ },
+ {
+  "answer": "Functions",
+  "explanation": "While classes, objects, and inheritance are fundamental concepts of OOP, functions are a broader programming concept not specific to OOP.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Classes"
+   },
+   {
+    "status": "plain",
+    "text": "Objects"
+   },
+   {
+    "status": "user-correct",
+    "text": "Functions"
+   },
+   {
+    "status": "plain",
+    "text": "Inheritance"
+   }
+  ],
+  "question": "Which of the following is NOT a basic concept of OOP?"
+ },
+ {
+  "answer": "barks",
+  "explanation": "The Dog class overrides the speak method of the Animal class. When speak() is called on an instance of Dog, it returns \"barks\".",
+  "options": [
+   {
+    "status": "user-wrong",
+    "text": "makes a sound"
+   },
+   {
+    "status": "correct",
+    "text": "barks"
+   },
+   {
+    "status": "plain",
+    "text": "SyntaxError"
+   },
+   {
+    "status": "plain",
+    "text": "None"
+   }
+  ],
+  "question": "What is the output of the following Python code?\nclass Animal:\ndef speak(self):\nreturn \"makes a sound\"\nclass Dog(Animal):\ndef speak(self):\nreturn \"barks\"\nprint(Dog().speak())"
+ },
+ {
+  "answer": "class",
+  "explanation": "The class keyword is used in Java to define a new class.",
+  "options": [
+   {
+    "status": "correct",
+    "text": "class"
+   },
+   {
+    "status": "user-wrong",
+    "text": "Class"
+   },
+   {
+    "status": "plain",
+    "text": "object"
+   },
+   {
+    "status": "plain",
+    "text": "Object"
+   }
+  ],
+  "question": "Which keyword is used to create a class in Java?"
+ },
+ {
+  "answer": "Inheritance",
+  "explanation": "Which of these features of OOP would indicate code reusability?",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Polymorphism"
+   },
+   {
+    "status": "plain",
+    "text": "Abstraction"
+   },
+   {
+    "status": "user-correct",
+    "text": "Inheritance"
+   },
+   {
+    "status": "plain",
+    "text": "Encapsulation"
+   }
+  ],
+  "question": "Which of these features of OOP would indicate code reusability?"
+ },
+ {
+  "answer": "Explicit",
+  "explanation": "the explicit specifier is specifically applied to constructors (and also conversion operators) to prevent implicit conversions.",
+  "options": [
+   {
+    "status": "correct",
+    "text": "Explicit"
+   },
+   {
+    "status": "plain",
+    "text": "Implicit"
+   },
+   {
+    "status": "plain",
+    "text": "Protected"
+   },
+   {
+    "status": "user-wrong",
+    "text": "Public"
+   }
+  ],
+  "question": "Which of these specifiers would be applied to the constructors only?"
+ },
+ {
+  "answer": "Doesn’t consist of any return type",
+  "explanation": "Including a return type in a constructor is a syntax error",
+  "options": [
+   {
+    "status": "plain",
+    "text": "May consist of a return type"
+   },
+   {
+    "status": "user-correct",
+    "text": "Doesn’t consist of any return type"
+   },
+   {
+    "status": "plain",
+    "text": "Has some return type"
+   },
+   {
+    "status": "plain",
+    "text": "Of a derived class has a return type"
+   }
+  ],
+  "question": "A constructor _____________."
+ },
+ {
+  "answer": "RAM",
+  "explanation": "Memory is allocated for the objects in RAM",
+  "options": [
+   {
+    "status": "user-correct",
+    "text": "RAM"
+   },
+   {
+    "status": "plain",
+    "text": "ROM"
+   },
+   {
+    "status": "plain",
+    "text": "Cache"
+   },
+   {
+    "status": "plain",
+    "text": "HDD"
+   }
+  ],
+  "question": "In which of the following is memory allocated for the objects?"
+ },
+ {
+  "answer": "Storage class",
+  "explanation": "On what basis is it determined, when a variable comes into existence in memory?",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Data Type"
+   },
+   {
+    "status": "correct",
+    "text": "Storage class"
+   },
+   {
+    "status": "plain",
+    "text": "Scope"
+   },
+   {
+    "status": "user-wrong",
+    "text": "All of the above"
+   }
+  ],
+  "question": "On what basis is it determined, when a variable comes into existence in memory?"
+ },
+ {
+  "answer": "class_name",
+  "explanation": "Select the following which shows the correct constructor.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "()class_name"
+   },
+   {
+    "status": "plain",
+    "text": "-class_name"
+   },
+   {
+    "status": "user-correct",
+    "text": "class_name"
+   },
+   {
+    "status": "plain",
+    "text": "~class_name"
+   }
+  ],
+  "question": "Select the following which shows the correct constructor."
+ },
+ {
+  "answer": "Dot or arrow operator, as required",
+  "explanation": "Since both operators (. and ->) are used depending on whether we are working with an object or a pointer, the best choice is “Dot or arrow operator, as required”.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Dot operator"
+   },
+   {
+    "status": "plain",
+    "text": "Arrow operator"
+   },
+   {
+    "status": "user-correct",
+    "text": "Dot or arrow operator, as required"
+   },
+   {
+    "status": "plain",
+    "text": "Dot, arrow, or direct call"
+   }
+  ],
+  "question": "To access data members of a class, which of the following is used?"
+ },
+ {
+  "answer": "3",
+  "explanation": "There is a total of 3 access specifiers - private, public, protected",
+  "options": [
+   {
+    "status": "plain",
+    "text": "1"
+   },
+   {
+    "status": "plain",
+    "text": "2"
+   },
+   {
+    "status": "user-correct",
+    "text": "3"
+   },
+   {
+    "status": "plain",
+    "text": "4"
+   }
+  ],
+  "question": "Total access specifiers in OOPS for C++ are?"
+ },
+ {
+  "answer": "0",
+  "explanation": "Instances of abstract class cannot be made.",
+  "options": [
+   {
+    "status": "user-correct",
+    "text": "0"
+   },
+   {
+    "status": "plain",
+    "text": "1"
+   },
+   {
+    "status": "plain",
+    "text": "4"
+   },
+   {
+    "status": "plain",
+    "text": "8"
+   }
+  ],
+  "question": "Total instances of an abstract class that can be created?"
+ },
+ {
+  "answer": "It supports usual declaration of primitive data types",
+  "explanation": "As Java supports usual declaration of data variables, it is partial implementation of OOP. Because according to rules of OOP, object constructors must be used, even for declaration of variables.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "It allows code to be written outside classes"
+   },
+   {
+    "status": "user-correct",
+    "text": "It supports usual declaration of primitive data types"
+   },
+   {
+    "status": "plain",
+    "text": "It does not support pointers"
+   },
+   {
+    "status": "plain",
+    "text": "It doesn’t support all types of inheritance"
+   }
+  ],
+  "question": "Why Java is Partially OOP language?"
+ },
+ {
+  "answer": "class derived_classname : access base_classname{ /*define class body*/ };",
+  "explanation": "And finally the body of class. Semicolon after the body is also must.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "class base_classname :access derived_classname{ /*define class body*/ };"
+   },
+   {
+    "status": "correct",
+    "text": "class derived_classname : access base_classname{ /*define class body*/ };"
+   },
+   {
+    "status": "plain",
+    "text": "class derived_classname : base_classname{ /*define class body*/ };"
+   },
+   {
+    "status": "user-wrong",
+    "text": "class base_classname : derived_classname{ /*define class body*/ };"
+   }
+  ],
+  "question": "Which is the correct syntax of inheritance?"
+ },
+ {
+  "answer": "Encapsulation and Inheritance",
+  "explanation": "Encapsulation is indicated by use of classes. Inheritance is shown by inheriting the student class into topper class. Polymorphism is not shown here because we have defined the constructor in the topper class but that doesn’t mean that default constructor is overloaded.",
+  "options": [
+   {
+    "status": "user-correct",
+    "text": "Encapsulation and Inheritance"
+   },
+   {
+    "status": "plain",
+    "text": "Inheritance and polymorphism"
+   },
+   {
+    "status": "plain",
+    "text": "Polymorphism"
+   },
+   {
+    "status": "plain",
+    "text": "Inheritance"
+   }
+  ],
+  "question": "Which feature of OOP is indicated by the following code?"
+ },
+ {
+  "answer": "Message Passing",
+  "explanation": "The interaction between two object is called the message passing feature. Data transfer is not a feature of OOP. Also, message reading is not a feature of OOP.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Message reading"
+   },
+   {
+    "status": "correct",
+    "text": "Message Passing"
+   },
+   {
+    "status": "plain",
+    "text": "Data transfer"
+   },
+   {
+    "status": "user-wrong",
+    "text": "Data Binding"
+   }
+  ],
+  "question": "The feature by which one object can interact with another object is _____________"
+ },
+ {
+  "answer": "The language must follow all the rules of OOP",
+  "explanation": "The language must follow all the rules of OOP to be called a purely OOP language. Even if a single OOP feature is not followed, then it’s known to be a partially OOP language.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "The language should follow at least 1 feature of OOP"
+   },
+   {
+    "status": "plain",
+    "text": "The language must follow only 3 features of OOP"
+   },
+   {
+    "status": "correct",
+    "text": "The language must follow all the rules of OOP"
+   },
+   {
+    "status": "user-wrong",
+    "text": "The language should follow 3 or more features of OOP"
+   }
+  ],
+  "question": "Which among the following, for a pure OOP language, is true?"
+ },
+ {
+  "answer": "Increases overhead of function definition always",
+  "explanation": "It never increases function definition overhead, one way or another if you don’t use polymorphism, you will use the definition in some other way, so it actually helps to write efficient codes.",
+  "options": [
+   {
+    "status": "plain",
+    "text": "Helps in redefining the same functionality"
+   },
+   {
+    "status": "correct",
+    "text": "Increases overhead of function definition always"
+   },
+   {
+    "status": "plain",
+    "text": "It is feature of OOP"
+   },
+   {
+    "status": "user-wrong",
+    "text": "Ease in readability of program"
+   }
+  ],
+  "question": "Which of the following is not true about polymorphism?"
+ }
+]

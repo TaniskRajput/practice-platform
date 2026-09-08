@@ -1,0 +1,560 @@
+[
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 1,
+  "question": "In a cloud-based application where scalability is crucial, which cloud storage option allows dynamic scaling without the need for manual intervention?",
+  "options": [
+   "Block storage",
+   "File storage",
+   "Object storage",
+   "Table storage"
+  ],
+  "answer": "C",
+  "explanation": "Object storage automatically scales as data grows, making it ideal for highly scalable cloud applications."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 2,
+  "question": "A mobile application needs to retrieve a list of all available restaurants from a food delivery service\u2019s API. The application should only read data without making any changes to the server resources. Which HTTP method is most appropriate for this operation?",
+  "options": [
+   "POST",
+   "PUT",
+   "DELETE",
+   "GET"
+  ],
+  "answer": "D",
+  "explanation": "GET is used to retrieve data from a server without modifying any existing resources."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 3,
+  "question": "During application development, a developer encounters an error due to an incorrect or unavailable API endpoint, resulting in a \u201cNot Found\u201d response. Which HTTP status code most accurately represents this error?",
+  "options": [
+   "404",
+   "500",
+   "403",
+   "400"
+  ],
+  "answer": "A",
+  "explanation": "HTTP 404 is returned when the requested endpoint or resource does not exist on the server."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 5,
+  "question": "Which protocol is commonly used to secure data in transit over the internet by encrypting communication between systems?",
+  "options": [
+   "HTTP",
+   "MTP",
+   "SSL/TLS",
+   "SMTP"
+  ],
+  "answer": "C",
+  "explanation": "TLS (Transport Layer Security) encrypts data during transmission and is the modern, secure standard used for protecting data in transit."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 10,
+  "question": "As a computer architect designing the control unit of a CPU, you need to specify how data is moved from the accumulator to memory. Which option best describes this operation?",
+  "options": [
+   "The process of transferring data from the accumulator to memory is called a register transfer",
+   "The process of transferring data from the accumulator to memory is called a memory read operation",
+   "The process of transferring data from the accumulator to memory is called a memory write operation",
+   "The process of transferring data from the accumulator to memory is called an instruction fetch"
+  ],
+  "answer": "C",
+  "explanation": "Writing data from a CPU register (accumulator) into memory is classified as a memory write operation. 10. Hybrid Cloud Connectivity An enterprise is adopting a hybrid cloud model where they combine on-premise infrastructure with public cloud services to securely connect these environments and ensure reliability. What solutions should they implement? Answer: Secure VPN or dedicated connectivity like Direct Connect ensures reliable hybrid cloud integration. 11. VPN for Remote Access Assume that an"
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 24,
+  "question": "You are building a training module in MS PowerPoint and want to restrict navigation so that users must view each slide sequentially with narration, without freely skipping slides. Which setting provides the strictest control over slide navigation?",
+  "options": [
+   "Add hyperlinks between slides",
+   "Use normal Slide Show mode",
+   "Set up Slide Show as Browsed at a kiosk (full screen)",
+   "Enable Presenter View"
+  ],
+  "answer": "C",
+  "explanation": "\u201cKiosk mode\u201d disables manual slide navigation and forces slides to advance only as designed, providing the strictest control."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 25,
+  "question": "If a company wants to ensure secure and reliable email transmission for its cloud-based email service, which protocol should they implement?",
+  "options": [
+   "HTTP",
+   "FTP",
+   "SMTP",
+   "POP3"
+  ],
+  "answer": "C",
+  "explanation": "SMTP (Simple Mail Transfer Protocol) is the standard protocol used for sending emails reliably between mail servers."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 26,
+  "question": "To create a document template for repeated use, which file format should you save the document in?",
+  "options": [
+   ".docx",
+   ".pdf",
+   ".dotx",
+   ".txt"
+  ],
+  "answer": "C",
+  "explanation": "The .dotx format is specifically designed for Word document templates intended for repeated use."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 27,
+  "question": "An application relies on multiple hardware peripherals and requires strict isolation from other running containers to maintain data integrity and operational security. The development team uses a kernel-level configuration to allocate specific hardware resources to each container and restrict access to non-allocated devices. What is the most critical factor in maintaining operational security and preventing resource contention among containers?",
+  "options": [
+   "Ensuring that the host OS scheduler allocates CPU cycles equally to all containers",
+   "Configuring the kernel to enforce strict resource isolation and limit peripheral access to only allocated devices",
+   "Allowing virtualization software to dynamically allocate additional memory as required",
+   "Allowing containers to share network interfaces with individual access control lists"
+  ],
+  "answer": "B",
+  "explanation": "Strict kernel-level resource isolation prevents unauthorized hardware access and avoids resource contention between containers."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 28,
+  "question": "Data is transferred between the CPU and a peripheral device through a shared bus controlled by device controllers to improve data transfer speed and reduce latency. The system uses controllers with dedicated high-speed buffers. Which of the following device controllers is most suitable for this purpose?",
+  "options": [
+   "Wireless Controller",
+   "USB Controller",
+   "SATA Controller",
+   "Ethernet Controller"
+  ],
+  "answer": "C",
+  "explanation": "SATA controllers provide high-speed buffered data transfer between storage devices and the CPU, minimizing latency and improving throughput."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 29,
+  "question": "Hackers attempt to intercept and manipulate data packets traveling across a network by inserting malicious code or routing information, allowing them to redirect traffic through their own system. This enables them to eavesdrop or alter data without detection. What type of attack is this called?",
+  "options": [
+   "Packet Sniffing",
+   "IP Spoofing",
+   "Routing Table Poisoning",
+   "DNS Spoofing"
+  ],
+  "answer": "C",
+  "explanation": "Routing table poisoning redirects network traffic through the attacker\u2019s system, enabling interception or modification of data packets."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 30,
+  "question": "Question: You are employed by a company that has recently suffered a security breach. As the IT manager, you are responsible for enhancing the security of the computer's operating system. Which property of an operating system should you prioritize to achieve this goal?",
+  "options": [
+   "Access Control",
+   "User Interface",
+   "Multitasking",
+   "Virtual Memory"
+  ],
+  "answer": "A",
+  "explanation": "Access control manages permissions and restricts unauthorized access, making it critical for operating system security."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 31,
+  "question": "Jane wants to create a slide that illustrates a progression over time using icons, text, and blanks. She wants it to appear visually dynamic without manually animating each step. Which MS PowerPoint feature can help speed up this process?",
+  "options": [
+   "Use Slide Zoom feature to create dynamic progression",
+   "Use a SmartArt process layout",
+   "Apply the Morph transition across duplicated slides for a smooth effect",
+   "Create a custom layout with background images and animation triggers"
+  ],
+  "answer": "C",
+  "explanation": "The Morph transition automatically animates objects across slides, creating a smooth visual progression without manual animation."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 31,
+  "question": "A cloud infrastructure requires running multiple isolated environments on a single physical server. Which technology is primarily used to achieve this?",
+  "options": [
+   "Containers",
+   "Virtual Machines (VMs)",
+   "Serverless computing"
+  ],
+  "answer": "B",
+  "explanation": "Virtual machines provide full isolation for multiple environments on a single physical server, making them ideal for securely running separate workloads."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 32,
+  "question": "During a context switch, the operating system saves the state of the currently running process and loads the state of the next process to be executed. Which CPU register, responsible for holding the address of the next instruction to be fetched, must be saved and restored during this operation?",
+  "options": [
+   "Stack Pointer",
+   "General Purpose Register",
+   "Program Counter",
+   "Instruction Register"
+  ],
+  "answer": "C",
+  "explanation": "The Program Counter stores the address of the next instruction, so saving and restoring it ensures the process resumes correctly after a context switch."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 33,
+  "question": "Two geographically separate offices, Office A and Office B, need to allow all users in Office A to securely access resources in Office B and vice versa, as if they were on the same local network. Which VPN topology is most appropriate for this scenario?",
+  "options": [
+   "Remote Access VPN",
+   "Site-to-Site VPN",
+   "Client-to-Server VPN",
+   "Peer-to-Peer VPN"
+  ],
+  "answer": "B",
+  "explanation": "A Site-to-Site VPN connects entire networks across locations, allowing users in both offices to securely access each other\u2019s resources as if on the same LAN."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 34,
+  "question": "A development team is designing a new RESTful API to manage a product catalog for their ecommerce platform. They need to create an endpoint that retrieves details of a specific product using its unique product ID. Which HTTP method and URL structure best align with RESTful principles for this operation?",
+  "options": [
+   "POST /products/{productId}",
+   "GET /products/{productId}",
+   "PUT /products/{productId}",
+   "DELETE /products/{productId}"
+  ],
+  "answer": "B",
+  "explanation": "The GET method is used in RESTful APIs to retrieve data, and including the product ID in the URL specifies the resource to fetch."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 35,
+  "question": "A containerized application is consuming massive memory, causing performance issues. What is the recommended approach to address this problem effectively?",
+  "options": [
+   "Increase the memory limit for the container",
+   "Use a larger base image for the container",
+   "Reduce the number of replicas of the container",
+   "Analyze the application code for memory leaks"
+  ],
+  "answer": "D",
+  "explanation": "Memory issues are best resolved by identifying and fixing leaks in the application code rather than just increasing container resources."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 37,
+  "question": "An internet connection is established by a user, connecting devices like a computer, smartphone, and smart TV to a router. Which OSI model layer is responsible for transmitting Ethernet, cable, and Wi-Fi signals between these devices?",
+  "options": [
+   "Physical Layer",
+   "Network Layer",
+   "Data Link Layer",
+   "Application Layer"
+  ],
+  "answer": "A",
+  "explanation": "The Physical Layer handles the transmission of raw electrical, optical, or wireless signals over media like Ethernet cables and Wi-Fi."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 38,
+  "question": "Your machine may need to request a list of employees from the South region for an internal campaign. Which Excel formula allows you to generate this list dynamically from the dataset below? Sample Dataset: Employee Name Department Role Salary Bonus Join Date Region E001 Alice Sales Manager 70000 5000 01-03-2018 South E002 Bob HR Executive 50000 3000 12-06-2019 North E003 Carol IT Developer 60000 4000 15-08-2020 South E004 David Marketing Analyst 55000 3500 22-01-2021 East E005 Eve Sales Executive 52000 2500 30-11-2019 South",
+  "options": [
+   "=FILTER(A2:H6, H2:H6=\"South\")",
+   "=VLOOKUP(\"South\", H2:H6, 2, FALSE)",
+   "=INDEX(A2:A6, MATCH(\"South\", H2:H6, 0))",
+   "=IF(H2:H6=\"South\", A2:A6, \"\")"
+  ],
+  "answer": "A",
+  "explanation": "The FILTER function dynamically returns all rows where the Region column equals \"South,\" generating the required list automatically."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 39,
+  "question": "In a PivotTable, which feature allows you to create custom calculations and summaries based on the existing data?",
+  "options": [
+   "Calculated Fields",
+   "Calculated Items",
+   "Slicers",
+   "Grouping"
+  ],
+  "answer": "A",
+  "explanation": "Calculated Fields let you define custom formulas in a PivotTable to perform calculations on the summarized data."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 40,
+  "question": "Data packets are transmitted between routers and switches to ensure proper delivery across different network segments. Which OSI model layer is responsible for establishing logical paths and routing data packets between different network segments?",
+  "options": [
+   "Data Link Layer",
+   "Network Layer",
+   "Transport Layer",
+   "Session Layer"
+  ],
+  "answer": "B",
+  "explanation": "The Network Layer determines logical addressing and routing to deliver packets across multiple network segments."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 41,
+  "question": "In a cloud computing environment, which security measure helps protect user accounts by requiring two different types of identification before granting access?",
+  "options": [
+   "Firewalls",
+   "Encryption",
+   "Multi-Factor Authentication (MFA)",
+   "Antivirus Software"
+  ],
+  "answer": "C",
+  "explanation": "MFA enhances account security by requiring multiple forms of verification, such as a password and a one-time code."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 42,
+  "question": "A small business uses ring network topology. If a single workstation goes down, what impact will it have on the network?",
+  "options": [
+   "Minimal impact; network reroutes traffic",
+   "Network becomes isolated",
+   "Network slows down",
+   "Network breaks completely"
+  ],
+  "answer": "D",
+  "explanation": "In a ring topology, each device is connected in a closed loop, so the failure of one workstation disrupts the entire network."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 43,
+  "question": "What is the process of converting data into a secure format to prevent unauthorized access?",
+  "options": [
+   "Encryption",
+   "Authentication",
+   "Authorization",
+   "Compression"
+  ],
+  "answer": "A",
+  "explanation": "Encryption transforms data into a coded format to ensure that only authorized parties can access it."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 44,
+  "question": "A mobile application sends data to a server using an API. The developer decides to use the POST method for this operation. What is the primary characteristic of the POST method in this context?",
+  "options": [
+   "It retrieves data from the server",
+   "It updates existing data on the server",
+   "It submits data to be processed by the server",
+   "It deletes data from the server"
+  ],
+  "answer": "C",
+  "explanation": "The POST method is used to send data to the server for processing, often resulting in the creation of a new resource."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 45,
+  "question": "A company needs to keep sensitive data on-premises while leveraging cloud resources for other operations. Which cloud deployment model should be used?",
+  "options": [
+   "Public Cloud",
+   "Private Cloud",
+   "Hybrid Cloud",
+   "Community Cloud"
+  ],
+  "answer": "C",
+  "explanation": "A Hybrid Cloud combines on-premises infrastructure with cloud services, allowing sensitive data to remain local while using cloud resources for scalability."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 46,
+  "question": "A public-facing API has undergone significant breaking changes, including modifications to endpoints and data structures, making it incompatible with older client applications. The development team wants to deploy these changes without breaking existing integrations. Which API versioning strategy is generally recommended in this scenario?",
+  "options": [
+   "Make changes directly to the existing endpoints and update the documentation",
+   "Use query parameters to specify the version (e.g., /api/resource?version=2)",
+   "Include the version number in the URL path (e.g., /api/v2/resource)",
+   "Use custom HTTP headers to specify the API version"
+  ],
+  "answer": "C",
+  "explanation": "URL-based versioning clearly separates breaking changes while allowing older clients to continue using the previous API version."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 47,
+  "question": "A network administrator wants to assign IP addresses dynamically to devices in a network. Which protocol is used for this purpose?",
+  "options": [
+   "DNS",
+   "DHCP",
+   "ARP",
+   "ICMP"
+  ],
+  "answer": "B",
+  "explanation": "DHCP automatically assigns IP addresses and network configuration details to devices on a network."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 48,
+  "question": "A startup is concerned about unpredictable expenses due to variable cloud usage. Which cloud feature should they implement to manage and predict costs more accurately?",
+  "options": [
+   "Auto-scaling",
+   "Reserved instances",
+   "Load balancing",
+   "Content Delivery Network (CDN)"
+  ],
+  "answer": "B",
+  "explanation": "Reserved instances provide predictable, discounted pricing by committing to usage over a fixed term, helping control costs."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 49,
+  "question": "A company needs a security solution where the firewall acts as an intermediary, inspecting all incoming and outgoing traffic between the user\u2019s device and the internet. Which type of firewall is most suitable for this requirement?",
+  "options": [
+   "Packet Filtering Firewall",
+   "Proxy Firewall",
+   "Circuit-Level Gateway",
+   "Application Firewall"
+  ],
+  "answer": "B",
+  "explanation": "A proxy firewall sits between users and the internet, inspecting and filtering all traffic by acting as an intermediary."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 50,
+  "question": "You are a network administrator for a company with several remote offices. The company wants to implement a VPN to provide secure remote access to its internal network. Which VPN type is the best choice for this scenario?",
+  "options": [
+   "PPTP",
+   "L2TP",
+   "SSL VPN",
+   "IPSec VPN"
+  ],
+  "answer": "C",
+  "explanation": "SSL VPNs provide secure remote access over the internet using a web browser and are ideal for remote users across multiple locations."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 51,
+  "question": "Question: A team wants to improve deployment speed and reduce downtime when updating their containerized application. Which practice should they adopt?",
+  "options": [
+   "Use rolling updates with health checks",
+   "Increase the number of replicas",
+   "Disable the health checks",
+   "Use a larger base image"
+  ],
+  "answer": "A",
+  "explanation": "Rolling updates with health checks update containers gradually, ensuring availability and minimizing downtime during deployments."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 52,
+  "question": "Which cloud service model provides users with hardware resources such as virtual machines and storage?",
+  "options": [
+   "IaaS",
+   "PaaS",
+   "SaaS",
+   "DaaS"
+  ],
+  "answer": "A",
+  "explanation": "Infrastructure as a Service (IaaS) offers virtualized hardware resources like servers, storage, and networking."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 53,
+  "question": "Your organization has decided to outsource antivirus management to a third party. Which of the following tasks cannot be assigned to the third party?",
+  "options": [
+   "Monitoring of servers on your organization\u2019s premises",
+   "Preparing the internal antivirus policy for the systems",
+   "Rectification of virus infections on systems",
+   "Updating the antivirus definition files on user systems"
+  ],
+  "answer": "B",
+  "explanation": "Defining internal security policies is a strategic responsibility of the organization and should not be outsourced to third parties."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 54,
+  "question": "Google updates its website weekly by adding new features and fixing bugs using an Agile development approach. After each update, the new version is automatically deployed to the live environment. Which DevOps practice is being implemented to ensure rapid and frequent releases?",
+  "options": [
+   "The practice involves automating the process of releasing software to production frequently and reliably",
+   "Continuous integration focuses on merging code changes regularly to prevent integration issues",
+   "Continuous testing ensures that automated tests are run continuously to validate code quality",
+   "Monitoring involves tracking application performance and user activity after deployment"
+  ],
+  "answer": "A",
+  "explanation": "Continuous Deployment automates frequent and reliable releases to production without manual intervention."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 55,
+  "question": "What is the main purpose of network segmentation in security?",
+  "options": [
+   "Increasing bandwidth",
+   "Improving signal strength",
+   "Limiting the spread of attacks",
+   "Reducing latency"
+  ],
+  "answer": "C",
+  "explanation": "Network segmentation isolates network segments to prevent attackers from easily moving across the entire network."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 56,
+  "question": "A development team is designing a new RESTful API to manage a product catalog. They need to create an endpoint that retrieves detailed information about a specific product using its unique product ID. Which HTTP method and URL structure best align with RESTful principles?",
+  "options": [
+   "POST /products/{id}/details",
+   "GET /product_details?id={id}",
+   "PUT /products/{id}/fetch",
+   "GET /products/{id}"
+  ],
+  "answer": "D",
+  "explanation": "RESTful design uses the GET method to retrieve resources and identifies a specific resource through a clean, resource-based URL."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 57,
+  "question": "Azure is migrating its legacy data sources to new cloud-based platforms while maintaining operations without downtime. During migration, data from both the old and new systems must be accessed simultaneously for real-time reporting and analytics, with logical integration and no physical data movement. Which architectural layer best handles this requirement while ensuring minimal disruption and secure access?",
+  "options": [
+   "Connection layer using direct database access protocols",
+   "Consumption layer utilizing middleware with abstracted APIs",
+   "Abstraction layer that logically unifies disparate data sources",
+   "Data caching layer storing temporary data"
+  ],
+  "answer": "C",
+  "explanation": "An abstraction (data virtualization) layer enables unified, real-time access to multiple data sources without physically moving the data."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 58,
+  "question": "As part of a data center modernization initiative, the IoT team must address storage challenges by leveraging existing storage devices from multiple vendors and integrating them into a next- generation storage solution. How does resource pooling play a crucial role in achieving elasticity in cloud storage?",
+  "options": [
+   "By eliminating the need for server virtualization",
+   "By minimizing financial and contractual commitments",
+   "By ensuring a globally scalable and resilient storage solution",
+   "By optimizing capacity for executing code and running instances"
+  ],
+  "answer": "C",
+  "explanation": "Resource pooling aggregates storage resources from different systems, enabling elastic scaling and high availability across the cloud environment."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 59,
+  "question": "You are a software developer creating an application for a large corporation. The application is expected to run on various computers with different hardware and operating systems. Which operating system property is most important to ensure compatibility and smooth operation?",
+  "options": [
+   "User Interface",
+   "Security",
+   "Device Management",
+   "Resource Allocation"
+  ],
+  "answer": "C",
+  "explanation": "Device management ensures the OS can interface with different hardware components, allowing applications to run smoothly across diverse systems."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 60,
+  "question": "A company migrates its application to a cloud computing environment. How does the concept of \"shared responsibility\" impact security management in this scenario?",
+  "options": [
+   "The cloud provider handles all security measures",
+   "Security is managed by third-party auditors",
+   "Both the cloud provider and the customer share security responsibilities",
+   "The customer is solely responsible for security"
+  ],
+  "answer": "C",
+  "explanation": "In cloud computing, providers secure the infrastructure, while customers are responsible for securing their applications, data, and access."
+ },
+ {
+  "source": "Accenture Paper Solution PDF",
+  "num": 61,
+  "question": "An embedded system encrypts data using a substitution cipher. After deployment, some characters in the encrypted text are not correctly decrypted. What is the most likely cause of this issue?",
+  "options": [
+   "The decryption map incorrectly handles negative indices",
+   "The decryption process incorrectly uses the encryption key, leading to incorrect character mapping",
+   "The encryption map creates duplicate character mappings",
+   "The length of the character string causes an incorrect modulo operation"
+  ],
+  "answer": "B",
+  "explanation": "Using an incorrect key during decryption causes mismatched character mappings, resulting in incorrectly decrypted characters."
+ }
+]
