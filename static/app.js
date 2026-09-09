@@ -588,6 +588,13 @@ function counterPreviewDoc(userCode, tests) {
         var results = [];
         var tests = ${JSON.stringify(tests)};
 
+        function styleValue(el, prop) {
+          if (!el) return '(missing)';
+          if (prop === 'className') return el.className;
+          if (prop === 'disabled') return String(el.disabled);
+          return (el.style[prop] || '').toLowerCase();
+        }
+
         function applyStep(s) {
           if (s.click) {
             document.getElementById(s.click).click();
@@ -646,10 +653,25 @@ function counterPreviewDoc(userCode, tests) {
           }
           if (e.style !== undefined) {
             var target = document.querySelector(e.style.selector);
-            var actual = target ? (target.style[e.style.property] || '').toLowerCase() : '(missing)';
+            var actual = styleValue(target, e.style.property);
             ok = ok && (actual === e.style.value);
             parts.push(e.style.selector + ' ' + e.style.property + ' = ' + actual +
               ' (expected ' + e.style.value + ')');
+          }
+          if (e.style2 !== undefined) {
+            var target2 = document.querySelector(e.style2.selector);
+            var actual2 = styleValue(target2, e.style2.property);
+            ok = ok && (actual2 === e.style2.value);
+            parts.push(e.style2.selector + ' ' + e.style2.property + ' = ' + actual2 +
+              ' (expected ' + e.style2.value + ')');
+          }
+          if (e.storage !== undefined) {
+            var stored;
+            try { stored = window.localStorage.getItem(e.storage.key); } catch (err) { stored = '(unavailable)'; }
+            stored = stored === null ? 'null' : String(stored);
+            ok = ok && (stored === e.storage.value);
+            parts.push('localStorage.' + e.storage.key + ' = ' + stored +
+              ' (expected ' + e.storage.value + ')');
           }
           if (e.visible !== undefined) {
             var vis = [];
@@ -679,6 +701,8 @@ function counterPreviewDoc(userCode, tests) {
             if (t.expect.qty !== undefined) expectedParts.push('row ' + (t.expect.qty.row + 1) + ' qty = ' + t.expect.qty.value);
             if (t.expect.subtotal !== undefined) expectedParts.push('row ' + (t.expect.subtotal.row + 1) + ' subtotal = "' + t.expect.subtotal.value + '"');
             if (t.expect.style !== undefined) expectedParts.push(t.expect.style.selector + ' ' + t.expect.style.property + ' = ' + t.expect.style.value);
+            if (t.expect.style2 !== undefined) expectedParts.push(t.expect.style2.selector + ' ' + t.expect.style2.property + ' = ' + t.expect.style2.value);
+            if (t.expect.storage !== undefined) expectedParts.push('localStorage.' + t.expect.storage.key + ' = ' + t.expect.storage.value);
             if (t.expect.visible !== undefined) expectedParts.push('visible = [' + t.expect.visible.join(', ') + ']');
             results.push({ name: t.name, hidden: t.hidden, pass: r.ok,
               expected: expectedParts.join('; '),

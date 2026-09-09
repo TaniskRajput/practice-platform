@@ -69,6 +69,7 @@ def serialize_problem_meta(p):
         "title": p["title"],
         "difficulty": p["difficulty"],
         "topics": p["topics"],
+        "judge": p["judge"],
     }
 
 

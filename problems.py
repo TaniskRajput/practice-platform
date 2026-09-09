@@ -9,6 +9,7 @@ Problems 4-15 (curated from the KN Academy course) live in problems_extra.py.
 from problems_extra import NEW_PROBLEMS, QUIZ_PROBLEMS, PDF_QUIZ_PROBLEMS
 from problems_extra_pdfbanks import PDF_BANK_QUIZ_PROBLEMS
 from problems_pseudocode import PSEUDOCODE_QUIZ
+from problems_2026 import CODE_2026_PROBLEMS, WEB_2026_PROBLEMS, QUIZ_WEB_MCQ_2026, QUIZ_SQL_2026
 
 def _db(name, hidden, schema, seed, reference_query):
     return {
@@ -639,6 +640,10 @@ PROBLEMS.extend(QUIZ_PROBLEMS)
 PROBLEMS.extend(PDF_QUIZ_PROBLEMS)
 PROBLEMS.extend(PDF_BANK_QUIZ_PROBLEMS)
 PROBLEMS.append(PSEUDOCODE_QUIZ)
+PROBLEMS.extend(CODE_2026_PROBLEMS)
+PROBLEMS.extend(WEB_2026_PROBLEMS)
+PROBLEMS.append(QUIZ_WEB_MCQ_2026)
+PROBLEMS.append(QUIZ_SQL_2026)
 PROBLEMS.sort(key=lambda p: p["id"])
 
 
