@@ -1,19 +1,24 @@
 {
-  "functions": {
-    "api/index.py": {
-      "includeFiles": [
-        "app.py",
-        "problems*.py",
-        "templates/**",
-        "static/**",
-        "extracted/images/**"
-      ]
-    }
-  },
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index.py"
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "app.py",
+          "problems*.py",
+          "templates/**",
+          "static/**",
+          "extracted/images/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
     }
   ]
 }
