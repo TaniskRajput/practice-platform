@@ -1,8 +1,19 @@
 {
+  "functions": {
+    "api/index.py": {
+      "includeFiles": [
+        "app.py",
+        "problems*.py",
+        "templates/**",
+        "static/**",
+        "extracted/images/**"
+      ]
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/app.py"
+      "destination": "/api/index.py"
     }
   ]
 }
