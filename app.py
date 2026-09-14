@@ -19,7 +19,8 @@ app = Flask(__name__)
 # (and any other template) show up without restarting the server.
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///practice.db")
+default_database_url = "sqlite:////tmp/practice.db" if os.environ.get("VERCEL") else "sqlite:///practice.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", default_database_url)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Database & Auth
@@ -127,6 +128,9 @@ def load_user(user_id):
 def init_db():
     with app.app_context():
         db.create_all()
+
+
+init_db()
 
 
 def get_problem(pid):
@@ -408,9 +412,11 @@ def logout():
 def get_current_user():
     if current_user.is_authenticated:
         return jsonify({
-            "user_id": current_user.id,
-            "username": current_user.username,
-            "email": current_user.email
+            "user": {
+                "user_id": current_user.id,
+                "username": current_user.username,
+                "email": current_user.email,
+            }
         })
     return jsonify({"user": None})
 
@@ -724,7 +730,6 @@ def do_judge(payload, submit):
 
 
 if __name__ == "__main__":
-    init_db()
     print("Practice platform running at http://localhost:5000")
     # use_reloader restarts the server when code or data files change, so edits
     # show up on the tunnel URL without a manual restart. Debugger stays OFF
