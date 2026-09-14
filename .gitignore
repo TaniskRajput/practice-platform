@@ -1,5 +1,8 @@
 __pycache__/
 server.log
+tunnel.log
+venv/
+instance/
 *.pyc
 # scraped course PDFs are large copyrighted material - keep local only
 extracted/downloaded/*.pdf

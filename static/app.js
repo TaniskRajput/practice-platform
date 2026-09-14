@@ -6,40 +6,211 @@ const CM_MODES = {
   sql: "text/x-sql",
   javascript: "javascript",
 };
-const LANG_LABELS = { java: "Java", cpp: "C++", sql: "MySQL-ish (SQLite)", javascript: "JavaScript" };
+const LANG_LABELS = {
+  java: "Java",
+  cpp: "C++",
+  sql: "MySQL-ish (SQLite)",
+  javascript: "JavaScript",
+};
 
 let problems = [];
 let pdfs = [];
-let current = null;          // full problem payload
+let current = null; // full problem payload
 let editor = null;
 let currentLang = null;
 let previewTimer = null;
-let judgePending = null;     // {resolve} for browser judge
+let judgePending = null; // {resolve} for browser judge
+let currentUser = null; // {id, username, email} or null
+let userSolved = {}; // {problem_id: true}
+let userSubmissions = []; // all submissions for current user
 
 const $ = (id) => document.getElementById(id);
 
-/* ---------------- localStorage helpers ---------------- */
-const store = {
-  getSolved() { try { return JSON.parse(localStorage.getItem("pc_solved") || "{}"); } catch { return {}; } },
-  setSolved(pid) {
-    const s = this.getSolved(); s[pid] = true;
-    localStorage.setItem("pc_solved", JSON.stringify(s));
+/* ============================================================== */
+/* AUTH & USER MANAGEMENT */
+/* ============================================================== */
+
+const auth = {
+  async checkAuth() {
+    const res = await fetch("/api/auth/me");
+    const data = await res.json();
+    currentUser = data.user;
+    return currentUser;
   },
-  solvedCount() { return Object.keys(this.getSolved()).length; },
-  getCode(pid, lang) { return localStorage.getItem(`pc_code_${pid}_${lang}`) || null; },
-  setCode(pid, lang, code) { localStorage.setItem(`pc_code_${pid}_${lang}`, code); },
-  getLang(pid) { return localStorage.getItem(`pc_lang_${pid}`) || null; },
-  setLang(pid, lang) { localStorage.setItem(`pc_lang_${pid}`, lang); },
-  getSubs(pid) { try { return JSON.parse(localStorage.getItem(`pc_subs_${pid}`) || "[]"); } catch { return []; } },
+
+  async register(username, email, password) {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+    if (res.ok) {
+      currentUser = await res.json();
+      return true;
+    }
+    return false;
+  },
+
+  async login(email, password) {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.ok) {
+      currentUser = await res.json();
+      return true;
+    }
+    return false;
+  },
+
+  async logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    currentUser = null;
+    closeAuthModal();
+  },
+};
+
+function openAuthModal(isRegister = false) {
+  const modal = $("auth-modal");
+  const form = $("auth-form");
+  const title = $("auth-title");
+  const toggleText = $("auth-toggle-text");
+  const toggleLink = $("auth-toggle-link");
+  const usernameGroup = $("username-group");
+
+  if (isRegister) {
+    title.textContent = "Register";
+    toggleText.textContent = "Already have an account?";
+    toggleLink.textContent = "Login";
+    usernameGroup.classList.remove("hidden");
+    $("auth-submit").textContent = "Register";
+  } else {
+    title.textContent = "Login";
+    toggleText.textContent = "Don't have an account?";
+    toggleLink.textContent = "Register";
+    usernameGroup.classList.add("hidden");
+    $("auth-submit").textContent = "Login";
+  }
+
+  form.dataset.mode = isRegister ? "register" : "login";
+  $("auth-error").classList.add("hidden");
+  modal.classList.remove("hidden");
+  $("auth-email").focus();
+}
+
+function closeAuthModal() {
+  $("auth-modal").classList.add("hidden");
+}
+
+function updateUserMenu() {
+  const loginBtn = $("btn-login");
+  const userMenu = $("user-menu");
+  const userName = $("user-name");
+
+  if (currentUser) {
+    loginBtn.classList.add("hidden");
+    userMenu.classList.remove("hidden");
+    userName.textContent = `Hi, ${currentUser.username}!`;
+  } else {
+    loginBtn.classList.remove("hidden");
+    userMenu.classList.add("hidden");
+  }
+}
+
+async function loadUserProgress() {
+  if (!currentUser) return;
+
+  try {
+    const res = await fetch("/api/user/progress");
+    if (res.ok) {
+      const data = await res.json();
+      userSolved = data.solved.reduce((o, id) => ({ ...o, [id]: true }), {});
+      userSubmissions = data.submissions;
+    }
+  } catch (e) {
+    console.error("Failed to load progress:", e);
+  }
+}
+
+/* ============================================================== */
+/* localStorage helpers */
+/* ============================================================== */
+const store = {
+  getSolved() {
+    if (currentUser) return userSolved; // Use server data if logged in
+    try {
+      return JSON.parse(localStorage.getItem("pc_solved") || "{}");
+    } catch {
+      return {};
+    }
+  },
+  setSolved(pid) {
+    if (currentUser) {
+      userSolved[pid] = true;
+    } else {
+      const s = this.getSolved();
+      s[pid] = true;
+      localStorage.setItem("pc_solved", JSON.stringify(s));
+    }
+  },
+  solvedCount() {
+    return Object.keys(this.getSolved()).length;
+  },
+
+  async getCode(pid, lang) {
+    if (currentUser) {
+      const res = await fetch(`/api/user/code/${pid}/${lang}`);
+      if (res.ok) {
+        const data = await res.json();
+        return data.code || null;
+      }
+    }
+    return localStorage.getItem(`pc_code_${pid}_${lang}`) || null;
+  },
+
+  setCode(pid, lang, code) {
+    localStorage.setItem(`pc_code_${pid}_${lang}`, code);
+    if (currentUser) {
+      fetch(`/api/user/code/${pid}/${lang}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      }).catch((e) => console.error("Failed to save code:", e));
+    }
+  },
+
+  getLang(pid) {
+    return localStorage.getItem(`pc_lang_${pid}`) || null;
+  },
+  setLang(pid, lang) {
+    localStorage.setItem(`pc_lang_${pid}`, lang);
+  },
+
+  getSubs(pid) {
+    if (currentUser) {
+      return userSubmissions.filter((s) => s.problem_id === pid);
+    }
+    try {
+      return JSON.parse(localStorage.getItem(`pc_subs_${pid}`) || "[]");
+    } catch {
+      return [];
+    }
+  },
+
   addSub(pid, sub) {
-    const subs = this.getSubs(pid);
-    subs.unshift(sub);
-    localStorage.setItem(`pc_subs_${pid}`, JSON.stringify(subs.slice(0, 30)));
+    if (currentUser) {
+      userSubmissions.unshift({ ...sub, problem_id: pid });
+    } else {
+      const subs = this.getSubs(pid);
+      subs.unshift(sub);
+      localStorage.setItem(`pc_subs_${pid}`, JSON.stringify(subs.slice(0, 30)));
+    }
   },
 };
 
 /* ---------------- Problem list ---------------- */
-let listFilter = "all";   // "all" | "pseudo"
+let listFilter = "all"; // "all" | "pseudo"
 
 async function loadProblems() {
   const res = await fetch("/api/problems");
@@ -49,14 +220,18 @@ async function loadProblems() {
 
 function renderList() {
   const solved = store.getSolved();
-  const shown = problems.filter((p) => listFilter === "all" || p.judge === "quiz");
+  const shown = problems.filter(
+    (p) => listFilter === "all" || p.judge === "quiz",
+  );
   let html = "";
   shown.forEach((p, i) => {
     if (i === 0 && listFilter === "pseudo") {
       html += `<tr class="list-section-row"><td colspan="5" class="list-section">Pseudocode Quizzes</td></tr>`;
     }
     const diffClass = p.difficulty.toLowerCase();
-    const topics = p.topics.map((t) => `<span class="topic-chip">${t}</span>`).join("");
+    const topics = p.topics
+      .map((t) => `<span class="topic-chip">${t}</span>`)
+      .join("");
     html += `<tr data-id="${p.id}">
       <td>${solved[p.id] ? '<span class="check">&#10003;</span>' : '<span class="check" style="color:var(--text-dim)">&mdash;</span>'}</td>
       <td style="color:var(--text-dim)">${p.id}</td>
@@ -69,7 +244,8 @@ function renderList() {
   document.querySelectorAll("#problem-rows tr").forEach((tr) => {
     tr.addEventListener("click", () => openProblem(+tr.dataset.id));
   });
-  $("solved-counter").innerHTML = `Solved <b>${store.solvedCount()}</b>/${problems.length}`;
+  $("solved-counter").innerHTML =
+    `Solved <b>${store.solvedCount()}</b>/${problems.length}`;
 }
 
 /* ---------------- Problem view ---------------- */
@@ -102,7 +278,8 @@ async function openProblem(pid) {
   // description tab
   $("tab-desc").innerHTML = current.description;
   // hint tab
-  $("tab-hint").innerHTML = `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
+  $("tab-hint").innerHTML =
+    `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
 
   buildTabs();
   initEditor();
@@ -112,16 +289,46 @@ async function openProblem(pid) {
   switchTab(current.judge === "browser" ? "preview" : "desc");
 }
 
+async function initEditor() {
+  const saved = await store.getCode(current.id, currentLang);
+  const boiler = current.boilerplate[currentLang] || "";
+  if (!editor) {
+    editor = CodeMirror($("editor"), {
+      lineNumbers: true,
+      theme: "material-darker",
+      indentUnit: 4,
+      tabSize: 4,
+      extraKeys: {
+        "Ctrl-Enter": () => runCode(),
+        "Cmd-Enter": () => runCode(),
+      },
+    });
+    editor.on("change", () => {
+      store.setCode(current.id, currentLang, editor.getValue());
+      if (current.judge === "browser") schedulePreview();
+    });
+  }
+  editor.setOption("mode", CM_MODES[currentLang]);
+  editor.setValue(saved !== null ? saved : boiler);
+}
+
 function buildTabs() {
   const tabs = [
     { id: "desc", label: "Description" },
-    ...(current.languages[0] === "sql" ? [{ id: "dataset", label: "Schema & Data" }] : []),
-    ...(current.judge === "browser" ? [{ id: "preview", label: "Live Preview" }] : []),
+    ...(current.languages[0] === "sql"
+      ? [{ id: "dataset", label: "Schema & Data" }]
+      : []),
+    ...(current.judge === "browser"
+      ? [{ id: "preview", label: "Live Preview" }]
+      : []),
     { id: "hint", label: "Hint" },
     { id: "subs", label: "Submissions" },
   ];
   $("desc-tabs").innerHTML = tabs
-    .map((t, i) => `<div class="tab${i === 0 ? " active" : ""}" data-tab="${t.id}">${t.label}</div>`)
+    .map(
+      (t, i) =>
+        `<div class="tab${i === 0 ? " active" : ""}" data-tab="${t.id}">${t.label}</div>`,
+    )
     .join("");
   document.querySelectorAll("#desc-tabs .tab").forEach((el) => {
     el.addEventListener("click", () => switchTab(el.dataset.tab));
@@ -136,27 +343,31 @@ function switchTab(tabId) {
     $("tab-" + t).classList.toggle("hidden", t !== tabId);
   });
   if (tabId === "subs") renderSubmissions();
-  if (tabId === "preview" && current && current.judge === "browser") renderPreview();
+  if (tabId === "preview" && current && current.judge === "browser")
+    renderPreview();
 }
 
 function renderSubmissions() {
   const subs = store.getSubs(current.id);
   if (!subs.length) {
-    $("tab-subs").innerHTML = `<p style="color:var(--text-dim)">No submissions yet. Hit <b>Run</b> to test samples or <b>Submit</b> for the full judge.</p>`;
+    $("tab-subs").innerHTML =
+      `<p style="color:var(--text-dim)">No submissions yet. Hit <b>Run</b> to test samples or <b>Submit</b> for the full judge.</p>`;
     return;
   }
   $("tab-subs").innerHTML = subs
-    .map((s) => `<div class="sub-item">
+    .map(
+      (s) => `<div class="sub-item">
       <span class="sub-verdict ${s.passed ? "ac" : "wa"}">${s.passed ? "Accepted" : "Wrong Answer"}</span>
       <span>${s.detail}</span>
       <span class="sub-meta">${LANG_LABELS[s.lang] || s.lang} · ${new Date(s.time).toLocaleString()}</span>
-    </div>`)
+    </div>`,
+    )
     .join("");
 }
 
 /* ---------------- Editor ---------------- */
-function initEditor() {
-  const saved = store.getCode(current.id, currentLang);
+async function initEditor() {
+  const saved = await store.getCode(current.id, currentLang);
   const boiler = current.boilerplate[currentLang] || "";
   if (!editor) {
     editor = CodeMirror($("editor"), {
@@ -164,7 +375,10 @@ function initEditor() {
       theme: "material-darker",
       indentUnit: 4,
       tabSize: 4,
-      extraKeys: { "Ctrl-Enter": () => runCode(), "Cmd-Enter": () => runCode() },
+      extraKeys: {
+        "Ctrl-Enter": () => runCode(),
+        "Cmd-Enter": () => runCode(),
+      },
     });
     editor.on("change", () => {
       store.setCode(current.id, currentLang, editor.getValue());
@@ -189,10 +403,10 @@ function formatBraces(code) {
   const IND = "    ";
   let out = "";
   let depth = 0;
-  let paren = 0;      // parens on the current statement — `for (…;…;…)` must not split
+  let paren = 0; // parens on the current statement — `for (…;…;…)` must not split
   let buf = "";
   let lastKind = "nl"; // what caused the last flush: "stmt" or "nl"
-  const blocks = [];   // per open block: saved paren depth + whether opener was `do`
+  const blocks = []; // per open block: saved paren depth + whether opener was `do`
   const n = code.length;
   let i = 0;
 
@@ -298,7 +512,9 @@ function formatBraces(code) {
           k++;
         }
         if (code[k] === "{") {
-          buf = ("} " + m[1] + cond).replace(/\s+/g, " ").replace(/\s+$/, "") + " {";
+          buf =
+            ("} " + m[1] + cond).replace(/\s+/g, " ").replace(/\s+$/, "") +
+            " {";
           flush("stmt");
           depth++;
           i = k + 1;
@@ -376,13 +592,13 @@ function formatSql(code) {
   s = s.replace(/\s+/g, " ");
   s = s.replace(
     /\b(select|from|where|group\s+by|having|order\s+by|limit|inner\s+join|left\s+join|right\s+join|full\s+join|cross\s+join|join|on|as|and|or|not|in|is|null|like|between|distinct|case|when|then|else|end|asc|desc|union\s+all|union|count|sum|avg|min|max|cast|coalesce|strftime|substring|round|abs)\b/gi,
-    (m) => m.toUpperCase()
+    (m) => m.toUpperCase(),
   );
 
   // newline before major clauses
   s = s.replace(
     /\b(SELECT|FROM|WHERE|GROUP BY|HAVING|ORDER BY|LIMIT|LEFT JOIN|RIGHT JOIN|INNER JOIN|FULL JOIN|CROSS JOIN|JOIN|UNION ALL|UNION)\b/g,
-    "\n$1"
+    "\n$1",
   );
   // newline after top-level commas (column / order-by lists)
   let tmp = "";
@@ -432,13 +648,18 @@ function formatCode() {
 }
 
 /* ---------------- Run / Submit ---------------- */
-async function runCode() { await judge(false); }
-async function submitCode() { await judge(true); }
+async function runCode() {
+  await judge(false);
+}
+async function submitCode() {
+  await judge(true);
+}
 
 async function judge(submit) {
   if (!current) return;
   setButtonsBusy(true);
-  $("results").innerHTML = `<div class="results-header"><span class="verdict pending">${submit ? "Judging…" : "Running…"}</span></div>`;
+  $("results").innerHTML =
+    `<div class="results-header"><span class="verdict pending">${submit ? "Judging…" : "Running…"}</span></div>`;
   $("results").classList.remove("hidden");
   $("results").style.display = "block";
 
@@ -447,7 +668,11 @@ async function judge(submit) {
       const results = await browserJudge(submit);
       renderBrowserResults(results, submit);
     } else {
-      const payload = { problem_id: current.id, language: currentLang, code: editor.getValue() };
+      const payload = {
+        problem_id: current.id,
+        language: currentLang,
+        code: editor.getValue(),
+      };
       const res = await fetch(submit ? "/api/submit" : "/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -457,7 +682,8 @@ async function judge(submit) {
       renderServerResults(data, submit);
     }
   } catch (e) {
-    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
+    $("results").innerHTML =
+      `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
   } finally {
     setButtonsBusy(false);
   }
@@ -516,7 +742,11 @@ function renderServerResults(data, submit) {
         <span class="verdict ${data.passed ? "ac" : "wa"}">${data.passed ? "Accepted" : "Wrong Answer"}</span>
         <span style="color:var(--text-dim);font-weight:400">${data.passed_count}/${data.total} datasets passed</span>
       </div>${cases}`;
-    recordSubmission(data.passed, `${data.passed_count}/${data.total} datasets`, submit);
+    recordSubmission(
+      data.passed,
+      `${data.passed_count}/${data.total} datasets`,
+      submit,
+    );
     return;
   }
 
@@ -546,16 +776,34 @@ function renderServerResults(data, submit) {
       <span class="verdict ${data.passed ? "ac" : "wa"}">${data.passed ? "Accepted" : "Wrong Answer"}</span>
       <span style="color:var(--text-dim);font-weight:400">${data.passed_count}/${data.total} test cases passed</span>
     </div>${cases}`;
-  recordSubmission(data.passed, `${data.passed_count}/${data.total} test cases`, submit);
+  recordSubmission(
+    data.passed,
+    `${data.passed_count}/${data.total} test cases`,
+    submit,
+  );
 }
 
 function recordSubmission(passed, detail, submit) {
   if (!submit) return;
   if (passed) store.setSolved(current.id);
-  store.addSub(current.id, {
-    time: Date.now(), passed, detail, lang: currentLang,
-  });
+  const sub = { time: Date.now(), passed, detail, lang: currentLang };
+  store.addSub(current.id, sub);
   renderList();
+
+  // Also send to server if logged in
+  if (currentUser) {
+    fetch("/api/record-submission", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        problem_id: current.id,
+        language: currentLang,
+        code: editor.getValue(),
+        passed: passed,
+        verdict: detail,
+      }),
+    }).catch((e) => console.error("Failed to record submission:", e));
+  }
 }
 
 /* ---------------- Browser judge (JS/DOM) ---------------- */
@@ -568,7 +816,9 @@ function setFrameHtml(frame, html) {
 }
 
 function counterPreviewDoc(userCode, tests) {
-  const style = current.browserStyle || `
+  const style =
+    current.browserStyle ||
+    `
     body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justify-content: center; padding-top: 60px; background: #fafafa; }
     .counter-container { text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 14px; padding: 34px 44px; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
     #count { font-size: 56px; margin-bottom: 18px; color: #222; }
@@ -727,22 +977,31 @@ function browserJudge(submit) {
     const frame = $("judge-frame");
     const timer = setTimeout(() => {
       judgePending = null;
-      resolve(tests.map((t) => ({
-        name: t.name, hidden: t.hidden, pass: false,
-        expected: t.name,
-        actual: "Timed out — check your code for errors (e.g. a runtime error during initialization)",
-      })));
+      resolve(
+        tests.map((t) => ({
+          name: t.name,
+          hidden: t.hidden,
+          pass: false,
+          expected: t.name,
+          actual:
+            "Timed out — check your code for errors (e.g. a runtime error during initialization)",
+        })),
+      );
     }, 5000);
 
     judgePending = (msg) => {
       clearTimeout(timer);
       judgePending = null;
       if (msg.type === "judge-runtime-error") {
-        resolve(tests.map((t) => ({
-          name: t.name, hidden: t.hidden, pass: false,
-          expected: t.name,
-          actual: `Runtime error: ${msg.error}`,
-        })));
+        resolve(
+          tests.map((t) => ({
+            name: t.name,
+            hidden: t.hidden,
+            pass: false,
+            expected: t.name,
+            actual: `Runtime error: ${msg.error}`,
+          })),
+        );
       } else {
         resolve(msg.results);
       }
@@ -752,7 +1011,10 @@ function browserJudge(submit) {
 }
 
 window.addEventListener("message", (e) => {
-  if (e.data && (e.data.type === "judge-result" || e.data.type === "judge-runtime-error")) {
+  if (
+    e.data &&
+    (e.data.type === "judge-result" || e.data.type === "judge-runtime-error")
+  ) {
     if (judgePending) judgePending(e.data);
   }
 });
@@ -761,25 +1023,39 @@ function renderBrowserResults(results, submit) {
   const passedCount = results.filter((r) => r.pass).length;
   const passed = passedCount === results.length;
   const cases = results
-    .map((r) => `<div class="test-case">
+    .map(
+      (r) => `<div class="test-case">
       <div class="test-head"><span class="tc-badge ${r.pass ? "pass" : "fail"}">${r.pass ? "PASSED" : "FAILED"}</span>
         ${escapeHtml(r.name)} ${r.hidden ? '<span class="tc-badge hidden-tag">hidden</span>' : ""}</div>
-      ${r.pass ? "" : `<div class="tc-io">
+      ${
+        r.pass
+          ? ""
+          : `<div class="tc-io">
         <div><div class="io-label">Expected</div><pre>${escapeHtml(r.expected)}</pre></div>
         <div><div class="io-label">Your output</div><pre class="wrong">${escapeHtml(r.actual)}</pre></div>
-      </div>`}
-    </div>`)
+      </div>`
+      }
+    </div>`,
+    )
     .join("");
   $("results").innerHTML = `<div class="results-header">
       <span class="verdict ${passed ? "ac" : "wa"}">${passed ? "Accepted" : "Wrong Answer"}</span>
       <span style="color:var(--text-dim);font-weight:400">${passedCount}/${results.length} test cases passed</span>
     </div>${cases}`;
-  recordSubmission(passed, `${passedCount}/${results.length} test cases`, submit);
+  recordSubmission(
+    passed,
+    `${passedCount}/${results.length} test cases`,
+    submit,
+  );
 }
 
 /* ---------------- MCQ Quiz mode ---------------- */
 function quizSelections() {
-  try { return JSON.parse(localStorage.getItem(`pc_quiz_${current.id}`) || "[]"); } catch { return []; }
+  try {
+    return JSON.parse(localStorage.getItem(`pc_quiz_${current.id}`) || "[]");
+  } catch {
+    return [];
+  }
 }
 function saveQuizSelections(sel) {
   localStorage.setItem(`pc_quiz_${current.id}`, JSON.stringify(sel));
@@ -822,33 +1098,43 @@ function renderQuiz() {
     .join("");
   updateQuizProgress();
 
-  document.querySelectorAll("#quiz-questions .quiz-option input").forEach((inp) => {
-    inp.addEventListener("change", () => {
-      const n = +inp.name.replace("quiz-q", "");
-      const sel = quizSelections();
-      sel[n - 1] = +inp.value;
-      saveQuizSelections(sel);
-      // re-mark picked styling within this question
-      document.querySelectorAll(`#quiz-questions [data-n="${n}"] .quiz-option`).forEach((lab) => {
-        lab.classList.toggle("picked", lab.querySelector("input").checked);
+  document
+    .querySelectorAll("#quiz-questions .quiz-option input")
+    .forEach((inp) => {
+      inp.addEventListener("change", () => {
+        const n = +inp.name.replace("quiz-q", "");
+        const sel = quizSelections();
+        sel[n - 1] = +inp.value;
+        saveQuizSelections(sel);
+        // re-mark picked styling within this question
+        document
+          .querySelectorAll(`#quiz-questions [data-n="${n}"] .quiz-option`)
+          .forEach((lab) => {
+            lab.classList.toggle("picked", lab.querySelector("input").checked);
+          });
+        updateQuizProgress();
       });
-      updateQuizProgress();
     });
-  });
 
   $("tab-desc").innerHTML = current.description;
-  $("tab-hint").innerHTML = `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
+  $("tab-hint").innerHTML =
+    `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
   buildTabs();
   switchTab("desc");
 }
 
 function updateQuizProgress() {
   const sel = quizSelections();
-  const answered = current.questions.filter((q) => sel[q.n - 1] !== undefined && sel[q.n - 1] !== null).length;
-  $("quiz-progress").textContent = `${answered}/${current.questions.length} answered`;
+  const answered = current.questions.filter(
+    (q) => sel[q.n - 1] !== undefined && sel[q.n - 1] !== null,
+  ).length;
+  $("quiz-progress").textContent =
+    `${answered}/${current.questions.length} answered`;
   $("quiz-submit").disabled = answered < current.questions.length;
-  $("quiz-submit").title = answered < current.questions.length
-    ? "Answer every question to submit" : "";
+  $("quiz-submit").title =
+    answered < current.questions.length
+      ? "Answer every question to submit"
+      : "";
 }
 
 function clearQuiz() {
@@ -860,7 +1146,8 @@ function clearQuiz() {
 async function submitQuiz() {
   const sel = quizSelections();
   setButtonsBusy(true);
-  $("results").innerHTML = `<div class="results-header"><span class="verdict pending">Grading…</span></div>`;
+  $("results").innerHTML =
+    `<div class="results-header"><span class="verdict pending">Grading…</span></div>`;
   try {
     const res = await fetch("/api/quiz/submit", {
       method: "POST",
@@ -870,7 +1157,8 @@ async function submitQuiz() {
     const data = await res.json();
     renderQuizResults(data);
   } catch (e) {
-    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
+    $("results").innerHTML =
+      `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
   } finally {
     setButtonsBusy(false);
   }
@@ -878,7 +1166,8 @@ async function submitQuiz() {
 
 function renderQuizResults(data) {
   if (data.error) {
-    $("results").innerHTML = `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(data.error)}</pre>`;
+    $("results").innerHTML =
+      `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(data.error)}</pre>`;
     return;
   }
   const box = $("results");
@@ -890,8 +1179,10 @@ function renderQuizResults(data) {
     .filter((r) => !r.passed)
     .map((r) => {
       const q = current.questions[r.n - 1];
-      const picked = r.picked === null || r.picked === undefined ? "— (no answer)" :
-        `${"ABCDEF"[r.picked]}. ${q.options[r.picked]}`;
+      const picked =
+        r.picked === null || r.picked === undefined
+          ? "— (no answer)"
+          : `${"ABCDEF"[r.picked]}. ${q.options[r.picked]}`;
       const right = `${"ABCDEF"[r.answer]}. ${q.options[r.answer]}`;
       return `<div class="test-case">
         <div class="test-head"><span class="tc-badge fail">WRONG</span> Q${r.n}</div>
@@ -902,7 +1193,10 @@ function renderQuizResults(data) {
       </div>`;
     })
     .join("");
-  box.innerHTML = summary + (rows || `<p style="color:var(--text-dim)">All answers correct — nothing to review.</p>`);
+  box.innerHTML =
+    summary +
+    (rows ||
+      `<p style="color:var(--text-dim)">All answers correct — nothing to review.</p>`);
   recordSubmission(data.passed, `${data.correct}/${data.total} correct`, true);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
@@ -924,7 +1218,7 @@ function renderDataset() {
   // parse column names out of the CREATE TABLE statements in the schema
   const headersFor = (table) => {
     const m = (db.schema || "").match(
-      new RegExp(`CREATE TABLE ${table}\\s*\\(([^;]+)\\)`, "i")
+      new RegExp(`CREATE TABLE ${table}\\s*\\(([^;]+)\\)`, "i"),
     );
     if (!m) return [];
     return m[1]
@@ -951,7 +1245,10 @@ function renderDataset() {
 
 /* ---------------- Utils ---------------- */
 function escapeHtml(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 /* ---------------- PDF Resources ---------------- */
@@ -976,14 +1273,16 @@ function renderPdfs() {
     .map((tag) => {
       const cards = byTag[tag]
         .map(
-          (p) => `<a class="pdf-card" href="/pdfs/${encodeURIComponent(p.file)}" target="_blank" rel="noopener">
+          (
+            p,
+          ) => `<a class="pdf-card" href="/pdfs/${encodeURIComponent(p.file)}" target="_blank" rel="noopener">
             <div class="pdf-card-top">
               <span class="pdf-icon">&#128196;</span>
               <span class="pdf-size">${p.size_kb >= 1024 ? (p.size_kb / 1024).toFixed(1) + " MB" : p.size_kb + " KB"}</span>
             </div>
             <div class="pdf-label">${escapeHtml(p.label)}</div>
             <div class="pdf-desc">${escapeHtml(p.desc)}</div>
-          </a>`
+          </a>`,
         )
         .join("");
       return `<div class="pdf-group"><h2 class="pdf-group-title">${escapeHtml(tag)}</h2>
@@ -994,10 +1293,22 @@ function renderPdfs() {
 
 /* ---------------- Wiring ---------------- */
 $("nav-home").addEventListener("click", showList);
-$("nav-problems").addEventListener("click", (e) => { e.preventDefault(); showList(); });
-$("nav-pseudo").addEventListener("click", (e) => { e.preventDefault(); showPseudocode(); });
-$("nav-pdfs").addEventListener("click", (e) => { e.preventDefault(); showPdfs(); });
-$("back-to-list").addEventListener("click", (e) => { e.preventDefault(); showList(); });
+$("nav-problems").addEventListener("click", (e) => {
+  e.preventDefault();
+  showList();
+});
+$("nav-pseudo").addEventListener("click", (e) => {
+  e.preventDefault();
+  showPseudocode();
+});
+$("nav-pdfs").addEventListener("click", (e) => {
+  e.preventDefault();
+  showPdfs();
+});
+$("back-to-list").addEventListener("click", (e) => {
+  e.preventDefault();
+  showList();
+});
 
 function showList() {
   listFilter = "all";
@@ -1059,4 +1370,70 @@ $("preview-reload").addEventListener("click", renderPreview);
 $("quiz-submit").addEventListener("click", submitQuiz);
 $("quiz-clear").addEventListener("click", clearQuiz);
 
-loadProblems();
+/* ================================================================== */
+/* AUTH UI WIRING */
+/* ================================================================== */
+
+$("btn-login").addEventListener("click", (e) => {
+  e.preventDefault();
+  openAuthModal(false);
+});
+
+$("btn-logout").addEventListener("click", (e) => {
+  e.preventDefault();
+  auth.logout().then(() => {
+    userSolved = {};
+    userSubmissions = [];
+    updateUserMenu();
+    renderList();
+  });
+});
+
+$("auth-toggle-link").addEventListener("click", (e) => {
+  e.preventDefault();
+  const mode = $("auth-form").dataset.mode;
+  openAuthModal(mode !== "register");
+});
+
+$("auth-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = $("auth-email").value.trim();
+  const password = $("auth-password").value;
+  const username = $("auth-username").value.trim();
+  const isRegister = $("auth-form").dataset.mode === "register";
+  const errorEl = $("auth-error");
+
+  if (!email || !password) {
+    errorEl.textContent = "Please fill in all fields";
+    errorEl.classList.remove("hidden");
+    return;
+  }
+
+  const success = isRegister
+    ? await auth.register(username, email, password)
+    : await auth.login(email, password);
+
+  if (success) {
+    closeAuthModal();
+    await loadUserProgress();
+    updateUserMenu();
+    renderList();
+  } else {
+    errorEl.textContent = isRegister ? "Registration failed" : "Login failed";
+    errorEl.classList.remove("hidden");
+  }
+});
+
+$("auth-modal").addEventListener("click", (e) => {
+  if (e.target === $("auth-modal")) closeAuthModal();
+});
+
+/* INITIALIZE */
+(async () => {
+  await auth.checkAuth();
+  updateUserMenu();
+  if (currentUser) {
+    await loadUserProgress();
+  }
+  loadProblems();
+})();

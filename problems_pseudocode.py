@@ -331,7 +331,7 @@ PSEUDOCODE_QUESTIONS = [
     (
         "What will be the output of the following pseudocode for Queue Q = [1, 2, 3, 4, 5, 6]?",
         ["Depends on implementation details (ambiguous/error - S is empty in second pop loop)", "1 4 2 5 3 6", "4 5 6 1 2 3", "1 2 3 4 5 6"],
-        0,
+        0,  # answer key in the source PDF says "option a" (ambiguous/error)
     ),
     (
         "What will be the output of the following pseudocode for the binary tree below?",

@@ -1,103 +1,164 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PracticeCode — Coding Practice Platform</title>
-  <link rel="stylesheet" href="/static/vendor/codemirror.min.css">
-  <link rel="stylesheet" href="/static/vendor/theme.min.css">
-  <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-  <header class="topbar">
-    <div class="logo" id="nav-home">
-      <span class="logo-mark">&lt;/&gt;</span> PracticeCode
-    </div>
-    <nav class="topnav">
-      <a href="#" id="nav-problems" class="active">Problems</a>
-      <a href="#" id="nav-pseudo">Pseudocode</a>
-      <a href="#" id="nav-pdfs">PDF Resources</a>
-    </nav>
-    <div class="topbar-right" id="solved-counter"></div>
-  </header>
-
-  <!-- Problem list -->
-  <main id="list-view">
-    <div class="list-container">
-      <h1 class="page-title">Problems</h1>
-      <table class="problem-table">
-        <thead>
-          <tr><th style="width:40px"></th><th style="width:50px">#</th><th>Title</th><th style="width:100px">Difficulty</th><th style="width:260px">Topics</th></tr>
-        </thead>
-        <tbody id="problem-rows"></tbody>
-      </table>
-    </div>
-  </main>
-
-  <!-- PDF resources -->
-  <main id="pdf-view" class="hidden">
-    <div class="list-container">
-      <h1 class="page-title">PDF Resources</h1>
-      <p class="pdf-intro">Previous-year papers, coding sets and solution PDFs — click a card to open it in the browser. Quizzes built from some of these are in the Problems list (#21, #22).</p>
-      <div class="pdf-groups" id="pdf-groups"></div>
-    </div>
-  </main>
-
-  <!-- Problem detail -->
-  <main id="problem-view" class="hidden">
-    <div class="problem-header">
-      <a href="#" id="back-to-list" class="back-link">&larr; Problems</a>
-      <span id="ph-number"></span>
-      <h2 id="ph-title"></h2>
-      <span id="ph-difficulty" class="diff"></span>
-      <span id="ph-topics"></span>
-    </div>
-    <div class="problem-layout">
-      <section class="desc-panel">
-        <div class="tabs" id="desc-tabs"></div>
-        <div class="tab-content" id="tab-desc"></div>
-        <div class="tab-content hidden" id="tab-hint"></div>
-        <div class="tab-content hidden" id="tab-subs"></div>
-        <div class="tab-content hidden" id="tab-preview">
-          <div class="preview-toolbar">
-            <span class="live-dot"></span> Live preview — clicks work here; edits re-render automatically
-            <button id="preview-reload" class="btn btn-ghost btn-small">Reload</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PracticeCode — Coding Practice Platform</title>
+    <link rel="stylesheet" href="/static/vendor/codemirror.min.css" />
+    <link rel="stylesheet" href="/static/vendor/theme.min.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="auth-title">Login</h2>
+        <form id="auth-form">
+          <div class="form-group hidden" id="username-group">
+            <label>Username</label>
+            <input
+              type="text"
+              id="auth-username"
+              placeholder="chooseyourname"
+            />
           </div>
-          <iframe id="preview-frame"></iframe>
-        </div>
-        <div class="tab-content hidden" id="tab-dataset"></div>
-      </section>
-      <section class="editor-panel" id="editor-panel">
-        <div class="editor-toolbar">
-          <select id="lang-select" class="lang-select"></select>
-          <span class="toolbar-spacer"></span>
-          <button id="btn-reset" class="btn btn-ghost">Reset</button>
-          <button id="btn-format" class="btn btn-ghost" title="Auto-structure the code">Auto-Structure</button>
-          <button id="btn-run" class="btn btn-run">Run</button>
-          <button id="btn-submit" class="btn btn-submit">Submit</button>
-        </div>
-        <div id="editor"></div>
-        <div id="results"></div>
-      </section>
-      <section class="editor-panel quiz-panel hidden" id="editor-panel-quiz">
-        <div class="editor-toolbar">
-          <span class="quiz-progress" id="quiz-progress"></span>
-          <span class="toolbar-spacer"></span>
-          <button id="quiz-clear" class="btn btn-ghost">Clear Answers</button>
-          <button id="quiz-submit" class="btn btn-submit">Submit Quiz</button>
-        </div>
-        <div class="quiz-scroll" id="quiz-questions"></div>
-        <div id="results"></div>
-      </section>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="auth-email" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="auth-password" placeholder="••••••" />
+          </div>
+          <div id="auth-error" class="form-error hidden"></div>
+          <button type="submit" id="auth-submit" class="btn btn-primary">
+            Login
+          </button>
+          <div class="auth-toggle">
+            <span id="auth-toggle-text">Don't have an account?</span>
+            <a href="#" id="auth-toggle-link">Register</a>
+          </div>
+        </form>
+      </div>
     </div>
-  </main>
 
-  <iframe id="judge-frame" style="display:none"></iframe>
+    <header class="topbar">
+      <div class="logo" id="nav-home">
+        <span class="logo-mark">&lt;/&gt;</span> PracticeCode
+      </div>
+      <nav class="topnav">
+        <a href="#" id="nav-problems" class="active">Problems</a>
+        <a href="#" id="nav-pseudo">Pseudocode</a>
+        <a href="#" id="nav-pdfs">PDF Resources</a>
+      </nav>
+      <div class="topbar-right">
+        <span id="solved-counter"></span>
+        <div id="user-menu" class="user-menu hidden">
+          <span id="user-name"></span>
+          <button id="btn-logout" class="btn btn-ghost btn-small">
+            Logout
+          </button>
+        </div>
+        <button id="btn-login" class="btn btn-ghost btn-small">Login</button>
+      </div>
+    </header>
 
-  <script src="/static/vendor/codemirror.min.js"></script>
-  <script src="/static/vendor/javascript.min.js"></script>
-  <script src="/static/vendor/clike.min.js"></script>
-  <script src="/static/vendor/sql.min.js"></script>
-  <script src="/static/app.js"></script>
-</body>
+    <!-- Problem list -->
+    <main id="list-view">
+      <div class="list-container">
+        <h1 class="page-title">Problems</h1>
+        <table class="problem-table">
+          <thead>
+            <tr>
+              <th style="width: 40px"></th>
+              <th style="width: 50px">#</th>
+              <th>Title</th>
+              <th style="width: 100px">Difficulty</th>
+              <th style="width: 260px">Topics</th>
+            </tr>
+          </thead>
+          <tbody id="problem-rows"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- PDF resources -->
+    <main id="pdf-view" class="hidden">
+      <div class="list-container">
+        <h1 class="page-title">PDF Resources</h1>
+        <p class="pdf-intro">
+          Previous-year papers, coding sets and solution PDFs — click a card to
+          open it in the browser. Quizzes built from some of these are in the
+          Problems list (#21, #22).
+        </p>
+        <div class="pdf-groups" id="pdf-groups"></div>
+      </div>
+    </main>
+
+    <!-- Problem detail -->
+    <main id="problem-view" class="hidden">
+      <div class="problem-header">
+        <a href="#" id="back-to-list" class="back-link">&larr; Problems</a>
+        <span id="ph-number"></span>
+        <h2 id="ph-title"></h2>
+        <span id="ph-difficulty" class="diff"></span>
+        <span id="ph-topics"></span>
+      </div>
+      <div class="problem-layout">
+        <section class="desc-panel">
+          <div class="tabs" id="desc-tabs"></div>
+          <div class="tab-content" id="tab-desc"></div>
+          <div class="tab-content hidden" id="tab-hint"></div>
+          <div class="tab-content hidden" id="tab-subs"></div>
+          <div class="tab-content hidden" id="tab-preview">
+            <div class="preview-toolbar">
+              <span class="live-dot"></span> Live preview — clicks work here;
+              edits re-render automatically
+              <button id="preview-reload" class="btn btn-ghost btn-small">
+                Reload
+              </button>
+            </div>
+            <iframe id="preview-frame"></iframe>
+          </div>
+          <div class="tab-content hidden" id="tab-dataset"></div>
+        </section>
+        <section class="editor-panel" id="editor-panel">
+          <div class="editor-toolbar">
+            <select id="lang-select" class="lang-select"></select>
+            <span class="toolbar-spacer"></span>
+            <button id="btn-reset" class="btn btn-ghost">Reset</button>
+            <button
+              id="btn-format"
+              class="btn btn-ghost"
+              title="Auto-structure the code"
+            >
+              Auto-Structure
+            </button>
+            <button id="btn-run" class="btn btn-run">Run</button>
+            <button id="btn-submit" class="btn btn-submit">Submit</button>
+          </div>
+          <div id="editor"></div>
+          <div id="results"></div>
+        </section>
+        <section class="editor-panel quiz-panel hidden" id="editor-panel-quiz">
+          <div class="editor-toolbar">
+            <span class="quiz-progress" id="quiz-progress"></span>
+            <span class="toolbar-spacer"></span>
+            <button id="quiz-clear" class="btn btn-ghost">Clear Answers</button>
+            <button id="quiz-submit" class="btn btn-submit">Submit Quiz</button>
+          </div>
+          <div class="quiz-scroll" id="quiz-questions"></div>
+          <div id="results"></div>
+        </section>
+      </div>
+    </main>
+
+    <iframe id="judge-frame" style="display: none"></iframe>
+
+    <script src="/static/vendor/codemirror.min.js"></script>
+    <script src="/static/vendor/javascript.min.js"></script>
+    <script src="/static/vendor/clike.min.js"></script>
+    <script src="/static/vendor/sql.min.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
 </html>

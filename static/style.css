@@ -280,3 +280,112 @@ tr.list-section-row td.list-section {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
 }
+
+/* ========== AUTH MODAL & USER MENU ========== */
+
+/* Login/Register Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.7);
+  z-index: 100;
+}
+.modal-content {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+.modal-content h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 14px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  text-transform: capitalize;
+}
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color .12s ease;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255,161,22,.1);
+}
+
+.form-error {
+  background: rgba(239,71,67,.1);
+  border: 1px solid rgba(239,71,67,.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #ff9f9f;
+  margin-bottom: 14px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .12s ease;
+  margin-bottom: 14px;
+}
+.btn-primary:hover { background: #ffb84d; }
+.btn-primary:active { background: #ff9500; }
+
+.auth-toggle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.auth-toggle a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: 4px;
+  cursor: pointer;
+}
+.auth-toggle a:hover { text-decoration: underline; }
+
+/* User Menu */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 12px;
+}
+#user-name {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+

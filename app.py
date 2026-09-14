@@ -5,12 +5,31 @@ import shutil
 import sqlite3
 import subprocess
 import tempfile
+from datetime import datetime
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from problems import PROBLEMS
 
 app = Flask(__name__)
+# Serve freshly-rendered templates on every request so edits to index.html
+# (and any other template) show up without restarting the server.
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///practice.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Database & Auth
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+
+# Custom unauthorized handler for API endpoints
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({"error": "Unauthorized"}), 401
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROBLEMS_BY_ID = {p["id"]: p for p in PROBLEMS}
@@ -53,6 +72,61 @@ PDF_LIBRARY = [
 
 COMPILE_TIMEOUT = 30
 RUN_TIMEOUT = 10
+
+
+# ------------------------------------------------------------------ #
+# Database Models
+# ------------------------------------------------------------------ #
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    submissions = db.relationship("Submission", backref="user", lazy=True, cascade="all, delete-orphan")
+    drafts = db.relationship("CodeDraft", backref="user", lazy=True, cascade="all, delete-orphan")
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    problem_id = db.Column(db.Integer, nullable=False)
+    language = db.Column(db.String(20), nullable=False)
+    code = db.Column(db.Text, nullable=False)
+    passed = db.Column(db.Boolean, default=False)
+    verdict = db.Column(db.String(50))  # "AC", "WA", "CE", "RTE", "TLE"
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+
+class CodeDraft(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    problem_id = db.Column(db.Integer, nullable=False)
+    language = db.Column(db.String(20), nullable=False)
+    code = db.Column(db.Text, nullable=False)
+    last_saved = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    __table_args__ = (db.UniqueConstraint("user_id", "problem_id", "language", name="unique_draft"),)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# ------------------------------------------------------------------ #
+# Database Initialization
+# ------------------------------------------------------------------ #
+
+def init_db():
+    with app.app_context():
+        db.create_all()
 
 
 def get_problem(pid):
@@ -276,6 +350,71 @@ def judge_sql(query, databases, include_hidden):
 # Routes
 # ------------------------------------------------------------------ #
 
+# ================================================================ #
+# AUTH ROUTES
+# ================================================================ #
+
+@app.route("/api/auth/register", methods=["POST"])
+def register():
+    data = request.get_json(force=True)
+    username = data.get("username", "").strip()
+    email = data.get("email", "").strip()
+    password = data.get("password", "")
+
+    if not username or not email or not password:
+        return jsonify({"error": "Missing fields"}), 400
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 400
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error": "Email already exists"}), 400
+
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    login_user(user)
+
+    return jsonify({"ok": True, "user_id": user.id, "username": user.username})
+
+
+@app.route("/api/auth/login", methods=["POST"])
+def login():
+    data = request.get_json(force=True)
+    email = data.get("email", "").strip()
+    password = data.get("password", "")
+
+    if not email or not password:
+        return jsonify({"error": "Missing credentials"}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user or not user.check_password(password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    login_user(user)
+    return jsonify({"ok": True, "user_id": user.id, "username": user.username})
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"ok": True})
+
+
+@app.route("/api/auth/me", methods=["GET"])
+def get_current_user():
+    if current_user.is_authenticated:
+        return jsonify({
+            "user_id": current_user.id,
+            "username": current_user.username,
+            "email": current_user.email
+        })
+    return jsonify({"user": None})
+
+
 @app.after_request
 def no_cache(response):
     # always revalidate HTML so new deploys (buttons, layout) show up instantly
@@ -292,6 +431,109 @@ def index():
 @app.route("/api/problems")
 def api_problems():
     return jsonify([serialize_problem_meta(p) for p in PROBLEMS])
+
+
+# ================================================================ #
+# USER PROGRESS ROUTES
+# ================================================================ #
+
+@app.route("/api/user/progress", methods=["GET"])
+def user_progress():
+    """Get user's solved problems and recent submissions."""
+    if not current_user.is_authenticated:
+        return jsonify({"solved": [], "submissions": []})
+    
+    # Get all solved problems
+    solved_subs = db.session.query(Submission.problem_id).filter(
+        Submission.user_id == current_user.id,
+        Submission.passed == True
+    ).distinct().all()
+    solved = [s[0] for s in solved_subs]
+    
+    # Get last 50 submissions for display
+    submissions = db.session.query(Submission).filter(
+        Submission.user_id == current_user.id
+    ).order_by(Submission.created_at.desc()).limit(50).all()
+    
+    return jsonify({
+        "solved": solved,
+        "submissions": [
+            {
+                "problem_id": s.problem_id,
+                "language": s.language,
+                "passed": s.passed,
+                "verdict": s.verdict,
+                "timestamp": s.created_at.isoformat()
+            }
+            for s in submissions
+        ]
+    })
+
+
+@app.route("/api/user/code/<int:pid>/<lang>", methods=["GET"])
+def get_user_code(pid, lang):
+    """Get saved draft code for a problem."""
+    if not current_user.is_authenticated:
+        return jsonify({"code": ""})
+    
+    draft = CodeDraft.query.filter_by(
+        user_id=current_user.id,
+        problem_id=pid,
+        language=lang
+    ).first()
+    
+    return jsonify({"code": draft.code if draft else ""})
+
+
+@app.route("/api/user/code/<int:pid>/<lang>", methods=["POST"])
+@login_required
+def save_user_code(pid, lang):
+    """Save draft code for a problem."""
+    data = request.get_json(force=True)
+    code = data.get("code", "")
+    
+    draft = CodeDraft.query.filter_by(
+        user_id=current_user.id,
+        problem_id=pid,
+        language=lang
+    ).first()
+    
+    if draft:
+        draft.code = code
+        draft.last_saved = datetime.now()
+    else:
+        draft = CodeDraft(
+            user_id=current_user.id,
+            problem_id=pid,
+            language=lang,
+            code=code
+        )
+        db.session.add(draft)
+    
+    db.session.commit()
+    return jsonify({"ok": True})
+
+
+@app.route("/api/record-submission", methods=["POST"])
+@login_required
+def record_submission():
+    """Record a submission."""
+    data = request.get_json(force=True)
+    
+    submission = Submission(
+        user_id=current_user.id,
+        problem_id=data.get("problem_id"),
+        language=data.get("language"),
+        code=data.get("code", ""),
+        passed=data.get("passed", False),
+        verdict=data.get("verdict", "")
+    )
+    
+    db.session.add(submission)
+    db.session.commit()
+    
+    return jsonify({"ok": True, "submission_id": submission.id})
+
 
 
 @app.route("/api/pdfs")
@@ -377,6 +619,21 @@ def do_judge(payload, submit):
     if not code.strip():
         return jsonify({"error": "Code is empty"}), 400
 
+    # Helper to record submission and return
+    def judge_and_record(result_dict, passed=None):
+        if submit and current_user.is_authenticated and passed is not None:
+            submission = Submission(
+                user_id=current_user.id,
+                problem_id=pid,
+                language=language,
+                code=code,
+                passed=passed,
+                verdict=result_dict.get("judge", "unknown")
+            )
+            db.session.add(submission)
+            db.session.commit()
+        return jsonify(result_dict)
+
     # ---------------- Browser-judged (JS/DOM) ---------------- #
     if problem["judge"] == "browser":
         return jsonify({"judge": "browser", "code": code})
@@ -384,12 +641,13 @@ def do_judge(payload, submit):
     # ---------------- SQL ---------------- #
     if language == "sql":
         results, all_pass = judge_sql(code, problem["databases"], include_hidden=submit)
-        return jsonify({
+        result = {
             "judge": "sql", "passed": all_pass,
             "passed_count": sum(1 for r in results if r["passed"]),
             "total": len(results),
             "results": results,
-        })
+        }
+        return judge_and_record(result, all_pass)
 
     # ---------------- Java / C++ ---------------- #
     if language not in ("java", "cpp"):
@@ -402,6 +660,10 @@ def do_judge(payload, submit):
     # each test case gets its own process so a crash mid-way can't
     # corrupt later cases' outputs
     outputs = []
+    compile_err = None
+    runtime_err = None
+    timeout = False
+    
     for t in tests:
         workdir = tempfile.mkdtemp(prefix="judge_")
         try:
@@ -413,15 +675,28 @@ def do_judge(payload, submit):
             outcome = {"timeout": True}
         finally:
             shutil.rmtree(workdir, ignore_errors=True)
+        
         if "compile_error" in outcome:
-            return jsonify({"judge": "compile", "compile_error": outcome["compile_error"]})
+            compile_err = outcome["compile_error"]
+            break
         if "runtime_error" in outcome:
-            return jsonify({"judge": "runtime", "runtime_error": outcome["runtime_error"]})
+            runtime_err = outcome["runtime_error"]
+            break
         if "timeout" in outcome:
-            return jsonify({"judge": "timeout", "error": "Time Limit Exceeded"})
-        # a program may print multiple lines per test (e.g. one prime per
-        # line); the whole stdout of the run is the test's output
+            timeout = True
+            break
         outputs.append("\n".join(outcome["outputs"]))
+    
+    if compile_err:
+        result = {"judge": "compile", "compile_error": compile_err}
+        return judge_and_record(result, False)
+    if runtime_err:
+        result = {"judge": "runtime", "runtime_error": runtime_err}
+        return judge_and_record(result, False)
+    if timeout:
+        result = {"judge": "timeout", "error": "Time Limit Exceeded"}
+        return judge_and_record(result, False)
+    
     results = []
     for i, t in enumerate(tests):
         actual = outputs[i].strip() if i < len(outputs) else "(no output)"
@@ -436,15 +711,29 @@ def do_judge(payload, submit):
             "index": i, "hidden": t["hidden"], "passed": passed,
             "input": format_input(t["input"]), "expected": expected, "actual": actual,
         })
-    return jsonify({
+    
+    all_passed = all(r["passed"] for r in results)
+    result = {
         "judge": "code",
-        "passed": all(r["passed"] for r in results),
+        "passed": all_passed,
         "passed_count": sum(1 for r in results if r["passed"]),
         "total": len(results),
         "results": results,
-    })
+    }
+    return judge_and_record(result, all_passed)
 
 
 if __name__ == "__main__":
+    init_db()
     print("Practice platform running at http://localhost:5000")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    # use_reloader restarts the server when code or data files change, so edits
+    # show up on the tunnel URL without a manual restart. Debugger stays OFF
+    # so the reloader is safe to expose publicly.
+    app.run(
+        host="0.0.0.0", port=5000,
+        debug=False, use_reloader=True,
+        extra_files=[
+            "problems.py", "problems_pseudocode.py", "problems_2026.py",
+            "problems_extra.py", "problems_extra_pdfbanks.py",
+        ],
+    )
