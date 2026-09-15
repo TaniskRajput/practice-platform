@@ -252,6 +252,7 @@ function renderList() {
 async function openProblem(pid) {
   const res = await fetch(`/api/problems/${pid}`);
   current = await res.json();
+  setRoute(`#p=${pid}`);
 
   $("list-view").classList.add("hidden");
   $("problem-view").classList.remove("hidden");
@@ -1128,13 +1129,17 @@ function updateQuizProgress() {
   const answered = current.questions.filter(
     (q) => sel[q.n - 1] !== undefined && sel[q.n - 1] !== null,
   ).length;
-  $("quiz-progress").textContent =
-    `${answered}/${current.questions.length} answered`;
-  $("quiz-submit").disabled = answered < current.questions.length;
+  const total = current.questions.length;
+  $("quiz-progress").textContent = `${answered}/${total} answered`;
+  // Partial submissions are allowed: on 100+ question banks, requiring every
+  // answer before enabling Submit made the button look broken.
+  $("quiz-submit").disabled = answered === 0;
   $("quiz-submit").title =
-    answered < current.questions.length
-      ? "Answer every question to submit"
-      : "";
+    answered === 0
+      ? "Answer at least one question to submit"
+      : answered < total
+        ? `${total - answered} unanswered — you can still submit`
+        : "";
 }
 
 function clearQuiz() {
@@ -1145,6 +1150,17 @@ function clearQuiz() {
 
 async function submitQuiz() {
   const sel = quizSelections();
+  const unanswered = current.questions.filter(
+    (q) => sel[q.n - 1] === undefined || sel[q.n - 1] === null,
+  ).length;
+  if (
+    unanswered > 0 &&
+    !confirm(
+      `${unanswered} question${unanswered === 1 ? "" : "s"} unanswered. Submit anyway?`,
+    )
+  ) {
+    return;
+  }
   setButtonsBusy(true);
   $("results").innerHTML =
     `<div class="results-header"><span class="verdict pending">Grading…</span></div>`;
@@ -1291,6 +1307,42 @@ function renderPdfs() {
     .join("");
 }
 
+/* ---------------- URL routing (reload stays on the same page) ---------------- */
+let applyingRoute = false;
+
+function setRoute(hash) {
+  if ((location.hash || "") === hash) return;
+  applyingRoute = true;
+  location.hash = hash;
+}
+
+async function applyRoute() {
+  const hash = location.hash || "";
+  const m = hash.match(/^#p=(\d+)$/);
+  if (m) {
+    const pid = +m[1];
+    if (!current || current.id !== pid) await openProblem(pid);
+    return;
+  }
+  if (hash === "#pseudo") {
+    showPseudocode();
+    return;
+  }
+  if (hash === "#pdfs") {
+    showPdfs();
+    return;
+  }
+  showList();
+}
+
+window.addEventListener("hashchange", () => {
+  if (applyingRoute) {
+    applyingRoute = false;
+    return;
+  }
+  applyRoute();
+});
+
 /* ---------------- Wiring ---------------- */
 $("nav-home").addEventListener("click", showList);
 $("nav-problems").addEventListener("click", (e) => {
@@ -1311,6 +1363,7 @@ $("back-to-list").addEventListener("click", (e) => {
 });
 
 function showList() {
+  setRoute("");
   listFilter = "all";
   $("problem-view").classList.add("hidden");
   $("pdf-view").classList.add("hidden");
@@ -1326,6 +1379,7 @@ function showList() {
 }
 
 function showPseudocode() {
+  setRoute("#pseudo");
   listFilter = "pseudo";
   $("problem-view").classList.add("hidden");
   $("pdf-view").classList.add("hidden");
@@ -1341,6 +1395,7 @@ function showPseudocode() {
 }
 
 function showPdfs() {
+  setRoute("#pdfs");
   listFilter = "all";
   $("problem-view").classList.add("hidden");
   $("list-view").classList.add("hidden");
@@ -1435,5 +1490,6 @@ $("auth-modal").addEventListener("click", (e) => {
   if (currentUser) {
     await loadUserProgress();
   }
-  loadProblems();
+  await loadProblems();
+  await applyRoute();
 })();

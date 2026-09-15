@@ -2917,7 +2917,7 @@ turn green; wrong picks show the right one.</p>
         },
         {
                 "q": "<b>213.</b> TCP maximum window = 65,535 bytes, link 1 Mbps, RTT 100 ms. Max utilization?",
-                "options": ["0.5", "0.52", "0.52", "1"],
+                "options": ["0.5", "0.52", "5.24", "1"],
                 "answer": 3
         },
         {
