@@ -644,6 +644,225 @@ PROBLEMS.extend(CODE_2026_PROBLEMS)
 PROBLEMS.extend(WEB_2026_PROBLEMS)
 PROBLEMS.append(QUIZ_WEB_MCQ_2026)
 PROBLEMS.append(QUIZ_SQL_2026)
+# ------------------------------------------------------------------ #
+# Custom: add two SQL problems from user attachments (movie rating/watch queries)
+# ------------------------------------------------------------------ #
+PROBLEMS.extend([
+    {
+        "id": 1001,
+        "slug": "movie-watch-details",
+        "title": "Movie Watch Details (Genre / Age / Rating / Duration)",
+        "difficulty": "Easy",
+        "topics": ["Database", "SQL"],
+        "judge": "server",
+        "languages": ["sql"],
+                "description": """
+<h3>Tables</h3>
+<pre>Movies(movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT)
+Users(user_id INTEGER PRIMARY KEY, user_name TEXT, age INTEGER)
+WatchHistory(watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER)
+Ratings(rating_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, rating REAL)</pre>
+<p>Write an SQL query to display the <b>movie_name</b>, <b>genre</b>, <b>user_name</b> and <b>rating</b>
+for movies watched by users where:</p>
+<ul>
+    <li>the movie's genre is <code>Action</code></li>
+    <li>the user's age is greater than <code>25</code></li>
+    <li>the rating is <code>&gt;= 4.0</code></li>
+    <li>the movie was watched for more than <code>60</code> minutes</li>
+</ul>
+<h3>Expected Output (sample)</h3>
+<pre>movie_name | genre  | user_name | rating
+Fast Chase | Action | Alice     | 4.5
+Night Raid  | Action | Carol     | 4.0</pre>
+""",
+        "hint": "Join Movies, Ratings, Users and WatchHistory. Filter by genre, age, rating and minutes_watched.",
+        "boilerplate": {"sql": "-- Write your SQLite query below\nSELECT"},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            _db(
+                "Sample database", False,
+                """
+CREATE TABLE Movies (movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT);
+CREATE TABLE Users (user_id INTEGER PRIMARY KEY, user_name TEXT, age INTEGER);
+CREATE TABLE WatchHistory (watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER);
+CREATE TABLE Ratings (rating_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, rating REAL);
+""",
+                {
+                    "Movies": [
+                        (1, "Fast Chase", "Action"),
+                        (2, "Slow Drama", "Drama"),
+                        (3, "Night Raid", "Action"),
+                    ],
+                    "Users": [
+                        (1, "Alice", 30),
+                        (2, "Bob", 24),
+                        (3, "Carol", 40),
+                    ],
+                    "WatchHistory": [
+                        (1, 1, 1, 120),
+                        (2, 2, 1, 55),
+                        (3, 3, 3, 75),
+                        (4, 1, 2, 90),
+                    ],
+                    "Ratings": [
+                        (1, 1, 1, 4.5),
+                        (2, 2, 1, 3.5),
+                        (3, 3, 3, 4.0),
+                        (4, 1, 2, 4.2),
+                    ],
+                },
+                """
+SELECT m.movie_name AS movie_name, m.genre AS genre, u.user_name AS user_name, r.rating AS rating
+FROM Movies m
+JOIN Ratings r ON r.movie_id = m.movie_id
+JOIN Users u ON u.user_id = r.user_id
+JOIN WatchHistory w ON w.user_id = u.user_id AND w.movie_id = m.movie_id
+WHERE m.genre = 'Action'
+  AND u.age > 25
+  AND r.rating >= 4.0
+  AND w.minutes_watched > 60
+ORDER BY m.movie_name, u.user_name
+""",
+            ),
+            _db(
+                "Hidden database", True,
+                """
+CREATE TABLE Movies (movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT);
+CREATE TABLE Users (user_id INTEGER PRIMARY KEY, user_name TEXT, age INTEGER);
+CREATE TABLE WatchHistory (watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER);
+CREATE TABLE Ratings (rating_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, rating REAL);
+""",
+                {
+                    "Movies": [
+                        (11, "Explosive Run", "Action"),
+                        (12, "Quiet Night", "Thriller"),
+                        (13, "Family Tales", "Drama"),
+                    ],
+                    "Users": [
+                        (21, "Dave", 28),
+                        (22, "Eve", 26),
+                        (23, "Frank", 22),
+                    ],
+                    "WatchHistory": [
+                        (11, 21, 11, 80),
+                        (12, 22, 11, 65),
+                        (13, 23, 12, 120),
+                    ],
+                    "Ratings": [
+                        (11, 21, 11, 4.2),
+                        (12, 22, 11, 3.9),
+                        (13, 23, 12, 4.8),
+                    ],
+                },
+                """
+SELECT m.movie_name AS movie_name, m.genre AS genre, u.user_name AS user_name, r.rating AS rating
+FROM Movies m
+JOIN Ratings r ON r.movie_id = m.movie_id
+JOIN Users u ON u.user_id = r.user_id
+JOIN WatchHistory w ON w.user_id = u.user_id AND w.movie_id = m.movie_id
+WHERE m.genre = 'Action'
+  AND u.age > 25
+  AND r.rating >= 4.0
+  AND w.minutes_watched > 60
+ORDER BY m.movie_name, u.user_name
+""",
+            ),
+        ],
+    },
+
+    {
+        "id": 1002,
+        "slug": "movie-watch-aggregates",
+        "title": "Movie Watch Aggregates (Count & Total Minutes)",
+        "difficulty": "Easy",
+        "topics": ["Database", "SQL"],
+        "judge": "server",
+        "languages": ["sql"],
+                "description": """
+<h3>Tables</h3>
+<pre>Movies(movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT)
+WatchHistory(watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER)</pre>
+<p>Write an SQL query to find the total number of times each movie was watched and the total watch minutes for that movie.</p>
+<p>Display only movies where:</p>
+<ul>
+    <li>The movie belongs to the <code>Action</code> or <code>Thriller</code> genre.</li>
+    <li>The movie was watched more than <code>5</code> times.</li>
+    <li>The total watch time is greater than <code>500</code> minutes.</li>
+</ul>
+<h3>Expected Output (sample)</h3>
+<pre>movie_name  | watch_count | total_minutes
+Thrill Ride | 8           | 825
+Fast Chase  | 6           | 520</pre>
+""",
+        "hint": "Aggregate WatchHistory grouped by movie_id, join Movies for genre, filter in HAVING for counts and sums.",
+        "boilerplate": {"sql": "-- Write your SQLite query below\nSELECT"},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            _db(
+                "Sample database", False,
+                """
+CREATE TABLE Movies (movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT);
+CREATE TABLE WatchHistory (watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER);
+""",
+                {
+                    "Movies": [
+                        (1, "Fast Chase", "Action"),
+                        (2, "Night Raid", "Action"),
+                        (3, "Thrill Ride", "Thriller"),
+                        (4, "Family Drama", "Drama"),
+                    ],
+                    "WatchHistory": [
+                        (1, 1, 1, 120),(2,2,1,90),(3,3,1,60),(4,4,1,80),(5,5,1,70),(6,6,1,100),
+                        (7,1,2,30),(8,2,2,40),(9,3,2,35),(10,4,2,25),(11,5,2,50),
+                        (12,1,3,120),(13,2,3,110),(14,3,3,100),(15,4,3,90),(16,5,3,95),(17,6,3,105),(18,7,3,125),(19,8,3,80)
+                    ],
+                },
+                """
+SELECT m.movie_name AS movie_name,
+       COUNT(*) AS watch_count,
+       SUM(w.minutes_watched) AS total_minutes
+FROM Movies m
+JOIN WatchHistory w ON w.movie_id = m.movie_id
+WHERE m.genre IN ('Action', 'Thriller')
+GROUP BY m.movie_id, m.movie_name
+HAVING COUNT(*) > 5 AND SUM(w.minutes_watched) > 500
+ORDER BY total_minutes DESC
+""",
+            ),
+            _db(
+                "Hidden database", True,
+                """
+CREATE TABLE Movies (movie_id INTEGER PRIMARY KEY, movie_name TEXT, genre TEXT);
+CREATE TABLE WatchHistory (watch_id INTEGER PRIMARY KEY, user_id INTEGER, movie_id INTEGER, minutes_watched INTEGER);
+""",
+                {
+                    "Movies": [
+                        (11, "Explosive Run", "Action"),
+                        (12, "Dark Alley", "Thriller"),
+                        (13, "Slow Story", "Drama"),
+                    ],
+                    "WatchHistory": [
+                        (11,1,11,60),(12,2,11,70),(13,3,11,90),(14,4,11,80),(15,5,11,75),(16,6,11,95),(17,7,11,85),
+                        (18,1,12,90),(19,2,12,60),(20,3,12,55),(21,4,12,80),(22,5,12,75),(23,6,12,65),
+                    ],
+                },
+                """
+SELECT m.movie_name AS movie_name,
+       COUNT(*) AS watch_count,
+       SUM(w.minutes_watched) AS total_minutes
+FROM Movies m
+JOIN WatchHistory w ON w.movie_id = m.movie_id
+WHERE m.genre IN ('Action', 'Thriller')
+GROUP BY m.movie_id, m.movie_name
+HAVING COUNT(*) > 5 AND SUM(w.minutes_watched) > 500
+ORDER BY total_minutes DESC
+""",
+            ),
+        ],
+    },
+])
 PROBLEMS.sort(key=lambda p: p["id"])
 
 
