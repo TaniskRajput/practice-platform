@@ -1375,6 +1375,124 @@ initializeTheme();
             },
         ],
     },
+
+    # ------------------------------------------------------------------ #
+    # 54. Product Rating System with Star Icons — KN Academy (adapted)
+    # Original task had HTML/CSS/JS tabs; this platform's runner is
+    # JavaScript-only, so the base markup and the gold .filled style are
+    # already in the page and the candidate implements the behaviour.
+    # ------------------------------------------------------------------ #
+    {
+        "id": 54,
+        "slug": "product-rating-stars",
+        "title": "Product Rating System with Star Icons",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "DOM Manipulation", "Events", "CSS Classes"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab (Cognizant/Accenture style). Adapted from the
+original HTML/CSS/JS task: the product card and the <code>.filled</code> gold styling are
+already in the page, so only the JavaScript behaviour is missing.</p>
+<p>The card renders an empty rating container:</p>
+<pre>&lt;div class="product"&gt;
+  &lt;img src="..." alt="Wireless Headphones"&gt;
+  &lt;h2&gt;Wireless Headphones&lt;/h2&gt;
+  &lt;p class="price"&gt;$59.99&lt;/p&gt;
+  &lt;div class="rating-stars" id="rating-stars"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+<p>Write JavaScript to fulfill the following specifications:</p>
+<ul>
+  <li><b>Stars:</b> add <b>five</b> star icons <code>&lt;i class="fa-star star"&gt;&lt;/i&gt;</code>
+      inside <code>.rating-stars</code> when the page loads.</li>
+  <li><b>Click:</b> clicking the <i>n</i>-th star calls <code>setRating(n)</code>, which adds the
+      class <code>filled</code> to stars 1 through <i>n</i> and removes it from every star after
+      <i>n</i>.</li>
+  <li><b>Immediate:</b> the display updates on every click — no reload and no form submit.</li>
+</ul>
+<p>The <code>filled</code> class is already styled gold (<code>#ffd700</code>) in the page; you only
+toggle it.</p>
+""",
+        "hint": "Create the icons in a loop: for each index i build an <i> with classes "
+                "'fa-star star', append it to #rating-stars and set its onclick to call "
+                "setRating(i + 1). In setRating, loop over all stars and toggle the 'filled' "
+                "class with classList.toggle('filled', index < rating).",
+        "boilerplate": {
+            "javascript": """function setRating(rating) {
+  // TODO: add .filled to stars 1..rating and remove it from the rest
+}
+
+function initRating() {
+  const starsBox = document.getElementById('rating-stars');
+
+  // TODO: create five <i class="fa-star star"></i> icons inside starsBox,
+  // each one calling setRating with its 1-based position
+}
+
+initRating();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_style": """
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justify-content: center;
+       padding-top: 60px; background: #fafafa; margin: 0; }
+.product { text-align: center; background: #fff; border: 1px solid #ddd; border-radius: 14px;
+           padding: 30px 40px; box-shadow: 0 4px 18px rgba(0,0,0,.08); width: 280px; }
+.product img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; }
+.product h2 { font-size: 18px; margin: 14px 0 4px; color: #222; }
+.product .price { color: #555; margin: 0 0 14px; }
+.rating-stars { display: flex; justify-content: center; gap: 6px; font-size: 28px; }
+.rating-stars .star { color: #ccc; cursor: pointer; }
+.rating-stars .star.filled { color: #ffd700; }
+""",
+        "browser_html": """<div class="product">
+  <img src="https://placehold.co/120x120?text=Product" alt="Wireless Headphones">
+  <h2>Wireless Headphones</h2>
+  <p class="price">$59.99</p>
+  <div class="rating-stars" id="rating-stars"></div>
+</div>""",
+        "browser_tests": [
+            {
+                "name": "Five stars rendered, none filled on load",
+                "hidden": False,
+                "steps": [],
+                "expect": {"stars": 5, "filled": 0},
+            },
+            {
+                "name": "Clicking the 3rd star fills three stars",
+                "hidden": False,
+                "steps": [{"starClick": 3}],
+                "expect": {"filled": 3},
+            },
+            {
+                "name": "Clicking the 1st star fills only one",
+                "hidden": False,
+                "steps": [{"starClick": 1}],
+                "expect": {"filled": 1},
+            },
+            {
+                "name": "Clicking the 5th star fills all five",
+                "hidden": False,
+                "steps": [{"starClick": 5}],
+                "expect": {"filled": 5},
+            },
+            {
+                "name": "Filled stars are gold (#ffd700)",
+                "hidden": True,
+                "steps": [{"starClick": 4}],
+                "expect": {"starColor": {"index": 4, "value": "rgb(255, 215, 0)"}},
+            },
+            {
+                "name": "Choosing a lower rating unfills the higher stars",
+                "hidden": True,
+                "steps": [{"starClick": 5}, {"starClick": 2}],
+                "expect": {"filled": 2},
+            },
+        ],
+    },
 ]
 
 

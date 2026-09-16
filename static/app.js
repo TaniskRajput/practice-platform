@@ -861,6 +861,9 @@ function counterPreviewDoc(userCode, tests) {
             var rows = document.querySelectorAll('#cartBody tr');
             var btns = rows[s.rowBtn.row].querySelectorAll('button.btn');
             btns[s.rowBtn.which].click();
+          } else if (s.starClick !== undefined) {
+            var starEls = document.querySelectorAll('.rating-stars .star');
+            if (starEls[s.starClick - 1]) starEls[s.starClick - 1].click();
           }
         }
 
@@ -937,6 +940,24 @@ function counterPreviewDoc(userCode, tests) {
             ok = ok && same;
             parts.push('visible = [' + vis.join(', ') + '] (expected [' + e.visible.join(', ') + '])');
           }
+          if (e.stars !== undefined) {
+            var starCount = document.querySelectorAll('.rating-stars .star').length;
+            ok = ok && (starCount === e.stars);
+            parts.push('stars = ' + starCount + ' (expected ' + e.stars + ')');
+          }
+          if (e.filled !== undefined) {
+            var filledCount = document.querySelectorAll('.rating-stars .star.filled').length;
+            ok = ok && (filledCount === e.filled);
+            parts.push('filled stars = ' + filledCount + ' (expected ' + e.filled + ')');
+          }
+          if (e.starColor !== undefined) {
+            var colorEls = document.querySelectorAll('.rating-stars .star');
+            var colorEl = colorEls[e.starColor.index - 1];
+            var starCol = colorEl ? getComputedStyle(colorEl).color : '(missing)';
+            ok = ok && (starCol === e.starColor.value);
+            parts.push('star ' + e.starColor.index + ' color = ' + starCol +
+              ' (expected ' + e.starColor.value + ')');
+          }
           return { ok: ok, actual: parts.join('; ') };
         }
 
@@ -955,6 +976,9 @@ function counterPreviewDoc(userCode, tests) {
             if (t.expect.style2 !== undefined) expectedParts.push(t.expect.style2.selector + ' ' + t.expect.style2.property + ' = ' + t.expect.style2.value);
             if (t.expect.storage !== undefined) expectedParts.push('localStorage.' + t.expect.storage.key + ' = ' + t.expect.storage.value);
             if (t.expect.visible !== undefined) expectedParts.push('visible = [' + t.expect.visible.join(', ') + ']');
+            if (t.expect.stars !== undefined) expectedParts.push('stars = ' + t.expect.stars);
+            if (t.expect.filled !== undefined) expectedParts.push('filled stars = ' + t.expect.filled);
+            if (t.expect.starColor !== undefined) expectedParts.push('star ' + t.expect.starColor.index + ' color = ' + t.expect.starColor.value);
             results.push({ name: t.name, hidden: t.hidden, pass: r.ok,
               expected: expectedParts.join('; '),
               actual: r.actual });
