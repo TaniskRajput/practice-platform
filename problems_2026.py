@@ -1493,6 +1493,132 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justif
             },
         ],
     },
+
+    # ------------------------------------------------------------------ #
+    # 55. iPod Interface — KN Academy (adapted)
+    # Original task had HTML/CSS/JS tabs; this platform's runner is
+    # JavaScript-only, so the iPod markup and styles are already in the
+    # page and the candidate implements the three objectives in JS.
+    # ------------------------------------------------------------------ #
+    {
+        "id": 55,
+        "slug": "ipod-interface",
+        "title": "iPod Interface — Add Next Button & Wire Actions",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "DOM Manipulation", "Events", "CSS Styling"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab (Cognizant/Accenture style). Adapted from the
+original HTML/CSS/JS task: the iPod markup and the base styles are already in the page, so the
+three objectives are done in JavaScript.</p>
+<p>The partially built iPod looks like this:</p>
+<pre>&lt;div class="ipod" id="ipod"&gt;
+  &lt;div class="screen"&gt;&lt;p id="screen-text"&gt;Ready&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="controls" id="controls"&gt;
+    &lt;button class="nav-btn" id="menu-btn"&gt;Menu&lt;/button&gt;
+    &lt;button class="nav-btn" id="prev-btn"&gt;&amp;#9664;&amp;#9664;&lt;/button&gt;
+    &lt;button class="nav-btn" id="play-btn"&gt;&amp;#9654;&amp;#10074;&amp;#10074;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+<p>Finish the interface in JavaScript so that:</p>
+<ul>
+  <li><b>Next button:</b> a new <code>&lt;button id="next-btn" class="nav-btn"&gt;Next&lt;/button&gt;</code>
+      is added to <code>#controls</code>.</li>
+  <li><b>Pink body:</b> the iPod's background (<code>#ipod</code>) becomes <b>pink</b>
+      (<code>#ffc0cb</code>).</li>
+  <li><b>Action text:</b> clicking any of the four buttons writes its action into
+      <code>#screen-text</code>: <code>#menu-btn</code> &rarr; <code>Menu</code>,
+      <code>#prev-btn</code> &rarr; <code>Previous</code>, <code>#play-btn</code> &rarr;
+      <code>Play/Pause</code>, <code>#next-btn</code> &rarr; <code>Next</code>.</li>
+</ul>
+<p>Keep the existing ids and classes unchanged — the grader and the JavaScript rely on them.</p>
+""",
+        "hint": "Create the button with document.createElement('button'), set its id to 'next-btn', "
+                "its className to 'nav-btn' and its textContent to 'Next', then append it to "
+                "#controls. Set the body colour with document.getElementById('ipod').style"
+                ".backgroundColor = 'pink'. For the actions, one click listener per button that "
+                "writes the matching label into #screen-text is the simplest approach.",
+        "boilerplate": {
+            "javascript": """function initIpod() {
+  const ipod = document.getElementById('ipod');
+  const controls = document.getElementById('controls');
+  const screen = document.getElementById('screen-text');
+
+  // TODO 1: add a <button id="next-btn" class="nav-btn">Next</button> to #controls
+
+  // TODO 2: set the iPod's background colour to pink
+
+  // TODO 3: make every button write its action text into #screen-text:
+  //         #menu-btn -> "Menu", #prev-btn -> "Previous",
+  //         #play-btn -> "Play/Pause", #next-btn -> "Next"
+}
+
+initIpod();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_style": """
+body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justify-content: center;
+       padding-top: 60px; background: #fafafa; margin: 0; }
+.ipod { width: 260px; background: #e8e8e8; border: 1px solid #ccc; border-radius: 22px;
+        padding: 22px; box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+.ipod .screen { background: #fff; border: 1px solid #bbb; border-radius: 8px; height: 90px;
+                display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.ipod .screen p { margin: 0; font-size: 16px; color: #222; }
+.ipod .controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ipod .nav-btn { min-width: 64px; padding: 8px 10px; font-size: 13px; border-radius: 8px;
+                 border: 1px solid #bbb; background: #fff; cursor: pointer; }
+.ipod .nav-btn:hover { background: #f0f0f0; }
+""",
+        "browser_html": """<div class="ipod" id="ipod">
+  <div class="screen"><p id="screen-text">Ready</p></div>
+  <div class="controls" id="controls">
+    <button class="nav-btn" id="menu-btn">Menu</button>
+    <button class="nav-btn" id="prev-btn">&#9664;&#9664;</button>
+    <button class="nav-btn" id="play-btn">&#9654;&#10074;&#10074;</button>
+  </div>
+</div>""",
+        "browser_tests": [
+            {
+                "name": "Next button added with the right id and label",
+                "hidden": False,
+                "steps": [],
+                "expect": {"exists": {"selector": "#next-btn", "value": True, "text": "Next"}},
+            },
+            {
+                "name": "iPod body is pink",
+                "hidden": False,
+                "steps": [],
+                "expect": {"css": {"selector": "#ipod", "property": "backgroundColor", "value": "rgb(255, 192, 203)"}},
+            },
+            {
+                "name": "Menu button shows its action text",
+                "hidden": False,
+                "steps": [{"click": "menu-btn"}],
+                "expect": {"text": {"id": "screen-text", "value": "Menu"}},
+            },
+            {
+                "name": "Next button shows its action text",
+                "hidden": False,
+                "steps": [{"click": "next-btn"}],
+                "expect": {"text": {"id": "screen-text", "value": "Next"}},
+            },
+            {
+                "name": "Previous button shows its action text",
+                "hidden": True,
+                "steps": [{"click": "prev-btn"}],
+                "expect": {"text": {"id": "screen-text", "value": "Previous"}},
+            },
+            {
+                "name": "Play button shows its action text",
+                "hidden": True,
+                "steps": [{"click": "play-btn"}],
+                "expect": {"text": {"id": "screen-text", "value": "Play/Pause"}},
+            },
+        ],
+    },
 ]
 
 

@@ -958,6 +958,25 @@ function counterPreviewDoc(userCode, tests) {
             parts.push('star ' + e.starColor.index + ' color = ' + starCol +
               ' (expected ' + e.starColor.value + ')');
           }
+          if (e.exists !== undefined) {
+            var exEl = document.querySelector(e.exists.selector);
+            var present = !!exEl;
+            ok = ok && (present === e.exists.value);
+            parts.push('exists ' + e.exists.selector + ' = ' + present +
+              ' (expected ' + e.exists.value + ')');
+            if (present && e.exists.text !== undefined) {
+              var exText = exEl.textContent.trim();
+              ok = ok && (exText === e.exists.text);
+              parts.push('its text = "' + exText + '" (expected "' + e.exists.text + '")');
+            }
+          }
+          if (e.css !== undefined) {
+            var cssEl = document.querySelector(e.css.selector);
+            var cssVal = cssEl ? getComputedStyle(cssEl)[e.css.property] : '(missing)';
+            ok = ok && (cssVal === e.css.value);
+            parts.push(e.css.selector + ' ' + e.css.property + ' = ' + cssVal +
+              ' (expected ' + e.css.value + ')');
+          }
           return { ok: ok, actual: parts.join('; ') };
         }
 
@@ -979,6 +998,8 @@ function counterPreviewDoc(userCode, tests) {
             if (t.expect.stars !== undefined) expectedParts.push('stars = ' + t.expect.stars);
             if (t.expect.filled !== undefined) expectedParts.push('filled stars = ' + t.expect.filled);
             if (t.expect.starColor !== undefined) expectedParts.push('star ' + t.expect.starColor.index + ' color = ' + t.expect.starColor.value);
+            if (t.expect.exists !== undefined) expectedParts.push('exists ' + t.expect.exists.selector + ' = ' + t.expect.exists.value + (t.expect.exists.text !== undefined ? ' text = "' + t.expect.exists.text + '"' : ''));
+            if (t.expect.css !== undefined) expectedParts.push(t.expect.css.selector + ' ' + t.expect.css.property + ' = ' + t.expect.css.value);
             results.push({ name: t.name, hidden: t.hidden, pass: r.ok,
               expected: expectedParts.join('; '),
               actual: r.actual });
