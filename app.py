@@ -8,6 +8,7 @@ import tempfile
 from datetime import datetime
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
+from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,6 +32,21 @@ login_manager = LoginManager(app)
 @login_manager.unauthorized_handler
 def unauthorized():
     return jsonify({"error": "Unauthorized"}), 401
+
+
+# Any unhandled exception on an /api/* route would otherwise fall through to
+# Flask's default HTML error page, which breaks the frontend's res.json()
+# calls with "Unexpected token '<' ... is not valid JSON".
+@app.errorhandler(Exception)
+def handle_api_exception(e):
+    if isinstance(e, HTTPException):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": e.description}), e.code
+        return e
+    if request.path.startswith("/api/"):
+        app.logger.exception("Unhandled error on %s", request.path)
+        return jsonify({"error": str(e) or e.__class__.__name__}), 500
+    raise e
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROBLEMS_BY_ID = {p["id"]: p for p in PROBLEMS}
@@ -695,6 +711,8 @@ def do_judge(payload, submit):
                 outcome = judge_cpp(code, [t], workdir)
         except subprocess.TimeoutExpired:
             outcome = {"timeout": True}
+        except Exception as e:
+            outcome = {"runtime_error": f"Judge error: {e}"}
         finally:
             shutil.rmtree(workdir, ignore_errors=True)
         
