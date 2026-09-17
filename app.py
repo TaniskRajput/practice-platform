@@ -575,9 +575,44 @@ def record_submission():
     
     db.session.add(submission)
     db.session.commit()
-    
+
     return jsonify({"ok": True, "submission_id": submission.id})
 
+
+@app.route("/api/user/import-local-progress", methods=["POST"])
+@login_required
+def import_local_progress():
+    """One-time import of a browser's pre-login localStorage progress into
+    the logged-in account, so solved marks made before registering aren't
+    stranded outside the DB-backed history."""
+    data = request.get_json(force=True)
+    entries = data.get("problems", [])
+
+    already_solved = {
+        pid for (pid,) in db.session.query(Submission.problem_id).filter(
+            Submission.user_id == current_user.id,
+            Submission.passed == True
+        ).distinct()
+    }
+
+    imported = 0
+    for entry in entries:
+        pid = entry.get("problem_id")
+        if pid is None or pid in already_solved:
+            continue
+        db.session.add(Submission(
+            user_id=current_user.id,
+            problem_id=pid,
+            language=entry.get("language") or "unknown",
+            code=entry.get("code") or "",
+            passed=True,
+            verdict="Imported from local progress",
+        ))
+        already_solved.add(pid)
+        imported += 1
+
+    db.session.commit()
+    return jsonify({"ok": True, "imported": imported})
 
 
 @app.route("/api/pdfs")

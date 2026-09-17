@@ -118,6 +118,43 @@ function updateUserMenu() {
   }
 }
 
+async function syncLocalProgressToServer() {
+  if (!currentUser) return;
+  const flagKey = `pc_synced_${currentUser.user_id}`;
+  if (localStorage.getItem(flagKey)) return;
+
+  let solved;
+  try {
+    solved = JSON.parse(localStorage.getItem("pc_solved") || "{}");
+  } catch {
+    solved = {};
+  }
+  const pids = Object.keys(solved).filter((pid) => solved[pid]);
+  if (!pids.length) {
+    localStorage.setItem(flagKey, "1");
+    return;
+  }
+
+  const problems = pids.map((pid) => {
+    const lang = localStorage.getItem(`pc_lang_${pid}`) || "";
+    const code = lang
+      ? localStorage.getItem(`pc_code_${pid}_${lang}`) || ""
+      : "";
+    return { problem_id: +pid, language: lang, code };
+  });
+
+  try {
+    await fetch("/api/user/import-local-progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ problems }),
+    });
+    localStorage.setItem(flagKey, "1");
+  } catch (e) {
+    console.error("Failed to sync local progress:", e);
+  }
+}
+
 async function loadUserProgress() {
   if (!currentUser) return;
 
@@ -1546,6 +1583,7 @@ $("auth-form").addEventListener("submit", async (e) => {
 
   if (success) {
     closeAuthModal();
+    await syncLocalProgressToServer();
     await loadUserProgress();
     updateUserMenu();
     renderList();
@@ -1564,6 +1602,7 @@ $("auth-modal").addEventListener("click", (e) => {
   await auth.checkAuth();
   updateUserMenu();
   if (currentUser) {
+    await syncLocalProgressToServer();
     await loadUserProgress();
   }
   await loadProblems();
