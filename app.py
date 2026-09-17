@@ -140,6 +140,21 @@ def get_problem(pid):
     return problem
 
 
+def problem_section(p):
+    """Group problems for the list view: SQL / Coding / Web / Pseudocode / General."""
+    topics = set(p["topics"])
+    judge = p["judge"]
+    if "SQL" in topics or "Database" in topics:
+        return "SQL"
+    if judge == "browser" or (topics & {"HTML", "CSS", "JavaScript"}):
+        return "Web"
+    if "Pseudocode" in topics:
+        return "Pseudocode"
+    if judge in ("server", "compile", "runtime"):
+        return "Coding"
+    return "General MCQs"
+
+
 def serialize_problem_meta(p):
     return {
         "id": p["id"],
@@ -148,6 +163,7 @@ def serialize_problem_meta(p):
         "difficulty": p["difficulty"],
         "topics": p["topics"],
         "judge": p["judge"],
+        "section": problem_section(p),
     }
 
 

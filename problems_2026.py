@@ -1619,6 +1619,654 @@ body { font-family: -apple-system, "Segoe UI", sans-serif; display: flex; justif
             },
         ],
     },
+
+    # ------------------------------------------------------------------ #
+    # 58. Grade Calculator & Filter — KN Academy Web Lab 2
+    # ------------------------------------------------------------------ #
+    {
+        "id": 58,
+        "slug": "grade-calculator-filter",
+        "title": "Grade Calculator with Pass/Fail Filter",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "DOM Manipulation", "Forms"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab 2 (Cognizant GenC / Digital UI style)</p>
+<p>Build the behaviour for a student grade sheet with the following HTML:</p>
+<pre>&lt;input type="text"   id="sName"  placeholder="Student Name"&gt;
+&lt;input type="number" id="sMarks" placeholder="Marks (0-100)"&gt;
+&lt;button id="sAdd"&gt;Add Student&lt;/button&gt;
+&lt;p id="sError"&gt;&lt;/p&gt;
+
+&lt;select id="sFilter"&gt;
+  &lt;option value="all"&gt;Show All&lt;/option&gt;
+  &lt;option value="pass"&gt;Pass Only&lt;/option&gt;
+  &lt;option value="fail"&gt;Fail Only&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Marks&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody id="sBody"&gt;&lt;/tbody&gt;
+&lt;/table&gt;</pre>
+<p>Write JavaScript to fulfill the following specifications:</p>
+<ul>
+  <li><b>Validation:</b> when <code>#sAdd</code> is clicked, reject the entry if the name is empty
+      (after trimming), the marks box is empty, or the marks fall outside
+      <code>0&ndash;100</code>. On rejection set <code>#sError</code> to exactly
+      <code>Enter a valid name and marks between 0 and 100</code> and add <b>no</b> row.</li>
+  <li><b>Row creation:</b> on a valid entry append one <code>&lt;tr&gt;</code> to
+      <code>#sBody</code> holding exactly three <code>&lt;td&gt;</code> cells &mdash; name, marks,
+      status &mdash; then clear <code>#sError</code> back to an empty string and clear both inputs.</li>
+  <li><b>Classification:</b> the status cell reads <code>Pass</code> when marks are
+      <code>&gt;= 40</code> and <code>Fail</code> when marks are <code>&lt; 40</code>
+      (so 40 itself is a pass).</li>
+  <li><b>Filtering:</b> when <code>#sFilter</code> changes, <code>all</code> shows every row,
+      <code>pass</code> shows only passing rows and <code>fail</code> only failing rows. Hide a row
+      with <code>row.style.display = 'none'</code> and show it with
+      <code>row.style.display = ''</code>.</li>
+  <li><b>Stays consistent:</b> rows added later must respect the filter that is currently selected.</li>
+</ul>
+<p>Use the <b>Preview</b> tab to try the sheet live. Submitting runs automated tests that type into
+the inputs and change the dropdown on a fresh page.</p>
+""",
+        "hint": "Keep an addStudent() that validates first and returns early after writing #sError. "
+                "Build the row with document.createElement('tr') and three <td>s. Keep a separate "
+                "applyFilter() that loops '#sBody tr', reads the status cell text, and sets "
+                "row.style.display to '' or 'none' — call it from the select's 'change' handler and "
+                "at the end of addStudent() so new rows obey the active filter.",
+        "boilerplate": {
+            "javascript": """function initializeGradeSheet() {
+  const nameInput = document.getElementById('sName');
+  const marksInput = document.getElementById('sMarks');
+  const addBtn = document.getElementById('sAdd');
+  const errorEl = document.getElementById('sError');
+  const filterSel = document.getElementById('sFilter');
+  const body = document.getElementById('sBody');
+
+  // TODO: validate and add rows, classify Pass/Fail, and filter on dropdown change
+}
+
+initializeGradeSheet();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_html": """<div class="form-row">
+  <input type="text" id="sName" placeholder="Student Name">
+  <input type="number" id="sMarks" placeholder="Marks (0-100)">
+  <button id="sAdd">Add Student</button>
+</div>
+<p id="sError"></p>
+<select id="sFilter">
+  <option value="all">Show All</option>
+  <option value="pass">Pass Only</option>
+  <option value="fail">Fail Only</option>
+</select>
+<table>
+  <thead><tr><th>Name</th><th>Marks</th><th>Status</th></tr></thead>
+  <tbody id="sBody"></tbody>
+</table>""",
+        "browser_style": """
+    body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+    .form-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    input, select { background: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 8px 10px; border-radius: 6px; }
+    button { background: #0284c7; border: none; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button:hover { background: #0369a1; }
+    #sError { color: #f87171; font-size: 13px; min-height: 18px; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid #334155; padding: 8px 10px; text-align: left; font-size: 14px; }
+    th { background: #1e293b; color: #38bdf8; text-transform: uppercase; font-size: 12px; letter-spacing: .04em; }
+""",
+        "browser_tests": [
+            {
+                "name": "Valid entry is added and classified as Pass",
+                "hidden": False,
+                "steps": [
+                    {"type": "sName", "value": "Asha"},
+                    {"type": "sMarks", "value": "78"},
+                    {"click": "sAdd"},
+                ],
+                "expect": {
+                    "style": {"selector": "#sBody tr:nth-child(1) td:nth-child(1)", "property": "text", "value": "Asha"},
+                    "style2": {"selector": "#sBody tr:nth-child(1) td:nth-child(3)", "property": "text", "value": "Pass"},
+                },
+            },
+            {
+                "name": "Marks below 40 are classified as Fail",
+                "hidden": False,
+                "steps": [
+                    {"type": "sName", "value": "Ravi"},
+                    {"type": "sMarks", "value": "32"},
+                    {"click": "sAdd"},
+                ],
+                "expect": {
+                    "style": {"selector": "#sBody tr:nth-child(2) td:nth-child(2)", "property": "text", "value": "32"},
+                    "style2": {"selector": "#sBody tr:nth-child(2) td:nth-child(3)", "property": "text", "value": "Fail"},
+                },
+            },
+            {
+                "name": "Empty name and out-of-range marks are rejected",
+                "hidden": False,
+                "steps": [
+                    {"type": "sName", "value": ""},
+                    {"type": "sMarks", "value": "150"},
+                    {"click": "sAdd"},
+                ],
+                "expect": {
+                    "text": {"id": "sError", "value": "Enter a valid name and marks between 0 and 100"},
+                    "style": {"selector": "#sBody tr:nth-child(3)", "property": "text", "value": "(missing)"},
+                },
+            },
+            {
+                "name": "40 is a Pass and a valid entry clears the error",
+                "hidden": True,
+                "steps": [
+                    {"type": "sName", "value": "Meera"},
+                    {"type": "sMarks", "value": "40"},
+                    {"click": "sAdd"},
+                ],
+                "expect": {
+                    "text": {"id": "sError", "value": ""},
+                    "style": {"selector": "#sBody tr:nth-child(3) td:nth-child(3)", "property": "text", "value": "Pass"},
+                },
+            },
+            {
+                "name": "Pass Only hides the failing row",
+                "hidden": True,
+                "steps": [{"select": {"id": "sFilter", "value": "pass"}}],
+                "expect": {
+                    "style": {"selector": "#sBody tr:nth-child(2)", "property": "display", "value": "none"},
+                    "style2": {"selector": "#sBody tr:nth-child(1)", "property": "display", "value": ""},
+                },
+            },
+            {
+                "name": "Fail Only shows just the failing row",
+                "hidden": True,
+                "steps": [{"select": {"id": "sFilter", "value": "fail"}}],
+                "expect": {
+                    "style": {"selector": "#sBody tr:nth-child(1)", "property": "display", "value": "none"},
+                    "style2": {"selector": "#sBody tr:nth-child(2)", "property": "display", "value": ""},
+                },
+            },
+            {
+                "name": "Show All restores every row",
+                "hidden": True,
+                "steps": [{"select": {"id": "sFilter", "value": "all"}}],
+                "expect": {
+                    "style": {"selector": "#sBody tr:nth-child(1)", "property": "display", "value": ""},
+                    "style2": {"selector": "#sBody tr:nth-child(2)", "property": "display", "value": ""},
+                },
+            },
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 59. Password Validator — KN Academy Web Lab 3
+    # ------------------------------------------------------------------ #
+    {
+        "id": 59,
+        "slug": "password-strength-validator",
+        "title": "Password Strength & Confirm-Match Validator",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "Forms", "Regular Expressions"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab 3 (Cognizant GenC / Digital UI style)</p>
+<p>Build the behaviour for a registration password box with the following HTML:</p>
+<pre>&lt;input type="password" id="p1" placeholder="Password"&gt;
+&lt;input type="password" id="p2" placeholder="Confirm Password"&gt;
+&lt;p id="pStrength"&gt;&lt;/p&gt;
+&lt;p id="pMatch"&gt;&lt;/p&gt;
+&lt;button id="pSub" disabled&gt;Submit Registration&lt;/button&gt;</pre>
+<p>Re-evaluate everything on every <code>input</code> event in <b>either</b> box, and fulfill the
+following specifications:</p>
+<ul>
+  <li><b>Strength:</b> judge the value of <code>#p1</code> and write exactly
+      <code>Weak</code>, <code>Medium</code> or <code>Strong</code> into <code>#pStrength</code>:
+    <ul>
+      <li><code>Weak</code> &mdash; fewer than 6 characters.</li>
+      <li><code>Strong</code> &mdash; at least 8 characters <i>and</i> containing a lowercase letter,
+          an uppercase letter, a digit and one special character from
+          <code>!@#$%^&amp;*</code>.</li>
+      <li><code>Medium</code> &mdash; anything else.</li>
+    </ul>
+  </li>
+  <li><b>Border colour:</b> set <code>#p1</code>'s inline
+      <code>style.borderColor</code> to <code>red</code> for Weak, <code>orange</code> for Medium and
+      <code>green</code> for Strong.</li>
+  <li><b>Empty password:</b> when <code>#p1</code> is empty, <code>#pStrength</code> is an empty
+      string and the border colour is reset to <code>''</code>.</li>
+  <li><b>Match message:</b> <code>#pMatch</code> reads <code>Passwords match</code> when both boxes
+      are non-empty and identical, <code>Passwords do not match</code> when <code>#p2</code> is
+      non-empty but different, and is empty while <code>#p2</code> is empty.</li>
+  <li><b>Submit gate:</b> <code>#pSub</code> is enabled <i>only</i> when both boxes are non-empty and
+      identical &mdash; it must go straight back to disabled if either box is edited apart again.</li>
+</ul>
+<p>Use the <b>Preview</b> tab to type into the boxes. Submitting runs automated tests that type into
+both fields on a fresh page.</p>
+""",
+        "hint": "Write one valPass() that reads both values and runs on 'input' for both boxes. "
+                "Test the four character classes with regexes (/[a-z]/, /[A-Z]/, /[0-9]/, "
+                "/[!@#$%^&*]/) and check .length for the tiers. Set p1.style.borderColor from the "
+                "tier, and finish with pSub.disabled = !(v1 && v1 === v2).",
+        "boilerplate": {
+            "javascript": """function initializePasswordBox() {
+  const p1 = document.getElementById('p1');
+  const p2 = document.getElementById('p2');
+  const strengthEl = document.getElementById('pStrength');
+  const matchEl = document.getElementById('pMatch');
+  const submitBtn = document.getElementById('pSub');
+
+  // TODO: rate strength, colour the border, and enable Submit only when the two match
+}
+
+initializePasswordBox();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_html": """<div class="pw-box">
+  <input type="password" id="p1" placeholder="Password">
+  <input type="password" id="p2" placeholder="Confirm Password">
+  <p id="pStrength"></p>
+  <p id="pMatch"></p>
+  <button id="pSub" disabled>Submit Registration</button>
+</div>""",
+        "browser_style": """
+    body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; display: flex; justify-content: center; }
+    .pw-box { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 24px; width: 320px; }
+    input { width: 100%; background: #0f172a; border: 2px solid #334155; color: #f8fafc; padding: 10px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 14px; }
+    #pStrength { font-size: 13px; font-weight: 700; min-height: 18px; margin-bottom: 4px; }
+    #pMatch { font-size: 13px; color: #94a3b8; min-height: 18px; margin-bottom: 12px; }
+    button { width: 100%; background: #0284c7; border: none; color: #fff; padding: 11px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+""",
+        "browser_tests": [
+            {
+                "name": "Short password is Weak with a red border",
+                "hidden": False,
+                "steps": [{"type": "p1", "value": "abc"}],
+                "expect": {
+                    "text": {"id": "pStrength", "value": "Weak"},
+                    "style": {"selector": "#p1", "property": "borderColor", "value": "red"},
+                },
+            },
+            {
+                "name": "Letters and digits only rate Medium with an orange border",
+                "hidden": False,
+                "steps": [{"type": "p1", "value": "abcdef1"}],
+                "expect": {
+                    "text": {"id": "pStrength", "value": "Medium"},
+                    "style": {"selector": "#p1", "property": "borderColor", "value": "orange"},
+                },
+            },
+            {
+                "name": "All four character classes at length 8 rate Strong with a green border",
+                "hidden": False,
+                "steps": [{"type": "p1", "value": "Abcdef1!"}],
+                "expect": {
+                    "text": {"id": "pStrength", "value": "Strong"},
+                    "style": {"selector": "#p1", "property": "borderColor", "value": "green"},
+                },
+            },
+            {
+                "name": "A mismatched confirmation keeps Submit disabled",
+                "hidden": False,
+                "steps": [{"type": "p2", "value": "Abcdef1"}],
+                "expect": {
+                    "text": {"id": "pMatch", "value": "Passwords do not match"},
+                    "style": {"selector": "#pSub", "property": "disabled", "value": "true"},
+                },
+            },
+            {
+                "name": "Matching confirmation enables Submit",
+                "hidden": True,
+                "steps": [{"type": "p2", "value": "Abcdef1!"}],
+                "expect": {
+                    "text": {"id": "pMatch", "value": "Passwords match"},
+                    "style": {"selector": "#pSub", "property": "disabled", "value": "false"},
+                },
+            },
+            {
+                "name": "Editing the password apart again re-disables Submit",
+                "hidden": True,
+                "steps": [{"type": "p1", "value": "Abcdef1!x"}],
+                "expect": {
+                    "text": {"id": "pMatch", "value": "Passwords do not match"},
+                    "style": {"selector": "#pSub", "property": "disabled", "value": "true"},
+                },
+            },
+            {
+                "name": "Clearing the password resets the strength label and border",
+                "hidden": True,
+                "steps": [{"type": "p1", "value": ""}],
+                "expect": {
+                    "text": {"id": "pStrength", "value": ""},
+                    "style": {"selector": "#p1", "property": "borderColor", "value": ""},
+                },
+            },
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 60. Multi-Step Quiz — KN Academy Web Lab 4
+    # ------------------------------------------------------------------ #
+    {
+        "id": 60,
+        "slug": "multi-step-quiz",
+        "title": "Multi-Step Quiz with Scoring",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "DOM Manipulation", "Events"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab 4 (Cognizant GenC / Digital UI style)</p>
+<p>Build the behaviour for a three-step quiz wizard with the following HTML:</p>
+<pre>&lt;div class="q-step" id="q1"&gt;
+  &lt;p&gt;Q1: Is JavaScript single-threaded?&lt;/p&gt;
+  &lt;label&gt;&lt;input type="radio" name="q1" value="yes" id="q1-yes"&gt; Yes&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="q1" value="no"  id="q1-no"&gt; No&lt;/label&gt;
+&lt;/div&gt;
+&lt;!-- #q2 and #q3 follow the same shape, both starting display:none --&gt;
+
+&lt;button id="qPrev" disabled&gt;Prev&lt;/button&gt;
+&lt;button id="qNext"&gt;Next&lt;/button&gt;
+&lt;h4 id="qScore"&gt;&lt;/h4&gt;</pre>
+<p>Write JavaScript to fulfill the following specifications:</p>
+<ul>
+  <li><b>One step at a time:</b> exactly one <code>.q-step</code> is shown. Set the current step to
+      <code>display:'block'</code> and every other step to <code>display:'none'</code>.
+      Step&nbsp;1 is showing on load.</li>
+  <li><b>Prev state:</b> <code>#qPrev</code> is disabled on step&nbsp;1 and enabled on every other
+      step. Clicking it moves back one step.</li>
+  <li><b>Next label:</b> <code>#qNext</code> reads <code>Next</code> on steps 1 and 2, and
+      <code>Submit</code> on the last step.</li>
+  <li><b>Scoring:</b> clicking Next on the last step grades the quiz. The correct answers are
+      Q1&nbsp;<code>yes</code>, Q2&nbsp;<code>yes</code>, Q3&nbsp;<code>no</code>. Write
+      <code>You scored X / 3</code> into <code>#qScore</code>, where <code>X</code> is the number
+      correct &mdash; an unanswered question simply scores nothing.</li>
+  <li><b>After submitting:</b> hide every <code>.q-step</code> and disable both nav buttons, so only
+      the score remains.</li>
+  <li><b>Answers survive navigation:</b> moving back and forth must not clear a chosen radio.</li>
+</ul>
+<p>Use the <b>Preview</b> tab to walk through the quiz. Submitting runs automated tests that click
+the radios and the nav buttons on a fresh page.</p>
+""",
+        "hint": "Track the current index in one variable and write a render() that loops the "
+                "'.q-step' nodes setting display, then sets qPrev.disabled = (i === 0) and "
+                "qNext.textContent = (i === last ? 'Submit' : 'Next'). In the Next handler, if you "
+                "are on the last step grade with document.querySelector('input[name=\\\"q1\\\"]:checked') "
+                "instead of advancing. Do not rebuild the radios — re-rendering them would wipe the answers.",
+        "boilerplate": {
+            "javascript": """function initializeQuiz() {
+  const steps = document.querySelectorAll('.q-step');
+  const prevBtn = document.getElementById('qPrev');
+  const nextBtn = document.getElementById('qNext');
+  const scoreEl = document.getElementById('qScore');
+  const answerKey = { q1: 'yes', q2: 'yes', q3: 'no' };
+  let index = 0;
+
+  // TODO: show one step at a time, manage the buttons, and score on the final Next
+}
+
+initializeQuiz();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_html": """<div class="quiz">
+  <div class="q-step" id="q1">
+    <p>Q1: Is JavaScript single-threaded?</p>
+    <label><input type="radio" name="q1" value="yes" id="q1-yes"> Yes</label>
+    <label><input type="radio" name="q1" value="no" id="q1-no"> No</label>
+  </div>
+  <div class="q-step" id="q2" style="display:none">
+    <p>Q2: Does CSS stand for Cascading Style Sheets?</p>
+    <label><input type="radio" name="q2" value="yes" id="q2-yes"> Yes</label>
+    <label><input type="radio" name="q2" value="no" id="q2-no"> No</label>
+  </div>
+  <div class="q-step" id="q3" style="display:none">
+    <p>Q3: Is HTML a programming language?</p>
+    <label><input type="radio" name="q3" value="yes" id="q3-yes"> Yes</label>
+    <label><input type="radio" name="q3" value="no" id="q3-no"> No</label>
+  </div>
+  <div class="nav-btns">
+    <button id="qPrev" disabled>Prev</button>
+    <button id="qNext">Next</button>
+  </div>
+  <h4 id="qScore"></h4>
+</div>""",
+        "browser_style": """
+    body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; }
+    .quiz { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 22px; max-width: 460px; margin: 0 auto; }
+    .q-step p { font-weight: 600; margin-bottom: 12px; font-size: 15px; }
+    .q-step label { display: block; margin-bottom: 8px; font-size: 14px; color: #cbd5e1; cursor: pointer; }
+    .nav-btns { display: flex; gap: 10px; margin-top: 18px; }
+    button { background: #0284c7; border: none; color: #fff; padding: 9px 22px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+    #qScore { margin-top: 18px; color: #38bdf8; min-height: 22px; }
+""",
+        "browser_tests": [
+            {
+                "name": "On load only step 1 is visible",
+                "hidden": False,
+                "steps": [],
+                "expect": {
+                    "style": {"selector": "#q1", "property": "display", "value": "block"},
+                    "style2": {"selector": "#q2", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Prev is disabled on step 1 and Next reads 'Next'",
+                "hidden": False,
+                "steps": [],
+                "expect": {
+                    "style": {"selector": "#qPrev", "property": "disabled", "value": "true"},
+                    "style2": {"selector": "#qNext", "property": "text", "value": "Next"},
+                },
+            },
+            {
+                "name": "Next advances to step 2 and enables Prev",
+                "hidden": False,
+                "steps": [{"click": "q1-yes"}, {"click": "qNext"}],
+                "expect": {
+                    "style": {"selector": "#q2", "property": "display", "value": "block"},
+                    "style2": {"selector": "#qPrev", "property": "disabled", "value": "false"},
+                },
+            },
+            {
+                "name": "Prev returns to step 1",
+                "hidden": True,
+                "steps": [{"click": "qPrev"}],
+                "expect": {
+                    "style": {"selector": "#q1", "property": "display", "value": "block"},
+                    "style2": {"selector": "#q2", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Next reads 'Submit' on the last step",
+                "hidden": True,
+                "steps": [
+                    {"click": "qNext"},
+                    {"click": "q2-yes"},
+                    {"click": "qNext"},
+                ],
+                "expect": {
+                    "style": {"selector": "#q3", "property": "display", "value": "block"},
+                    "style2": {"selector": "#qNext", "property": "text", "value": "Submit"},
+                },
+            },
+            {
+                "name": "Submitting scores the kept answers (3 / 3)",
+                "hidden": True,
+                "steps": [{"click": "q3-no"}, {"click": "qNext"}],
+                "expect": {"text": {"id": "qScore", "value": "You scored 3 / 3"}},
+            },
+            {
+                "name": "After submitting the steps are hidden",
+                "hidden": True,
+                "steps": [],
+                "expect": {
+                    "style": {"selector": "#q1", "property": "display", "value": "none"},
+                    "style2": {"selector": "#q3", "property": "display", "value": "none"},
+                },
+            },
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 61. Product Grid Filter — KN Academy Web Lab 5
+    # ------------------------------------------------------------------ #
+    {
+        "id": 61,
+        "slug": "product-grid-filter",
+        "title": "Product Grid Search & Category Filter",
+        "difficulty": "Medium",
+        "topics": ["JavaScript", "DOM Manipulation", "Events"],
+        "judge": "browser",
+        "languages": ["javascript"],
+        "description": """
+<p class="text-muted">KN Academy — Web Lab 5 (Cognizant GenC / Digital UI style)</p>
+<p>Build the behaviour for a filterable product grid with the following HTML:</p>
+<pre>&lt;input type="text" id="pSearch" placeholder="Search product..."&gt;
+
+&lt;div class="categories" id="pCats"&gt;
+  &lt;label&gt;&lt;input type="radio" name="pCat" value="all"  id="cat-all" checked&gt; All&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="pCat" value="tech" id="cat-tech"&gt; Tech&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="pCat" value="book" id="cat-book"&gt; Books&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="grid" id="pGrid"&gt;
+  &lt;div class="pCard" data-cat="tech"&gt;Laptop&lt;/div&gt;
+  &lt;div class="pCard" data-cat="book"&gt;JS Handbook&lt;/div&gt;
+  &lt;div class="pCard" data-cat="tech"&gt;Wireless Mouse&lt;/div&gt;
+  &lt;div class="pCard" data-cat="book"&gt;Clean Code&lt;/div&gt;
+&lt;/div&gt;</pre>
+<p>Write JavaScript to fulfill the following specifications:</p>
+<ul>
+  <li><b>Both filters at once:</b> a card is visible only when it satisfies <i>both</i> the search
+      box and the selected category. Show a card with
+      <code>card.style.display = 'block'</code> and hide it with <code>'none'</code>.</li>
+  <li><b>Text search:</b> the card's title must <i>contain</i> the search text as a substring &mdash;
+      an empty search box matches every card.</li>
+  <li><b>Case-insensitive:</b> matching ignores case, so <code>laptop</code>, <code>CoDe</code> and
+      <code>MOUSE</code> all find their products.</li>
+  <li><b>Category:</b> the <code>all</code> radio matches every card; otherwise the card's
+      <code>data-cat</code> must equal the selected value. Re-filter on the radios'
+      <code>change</code> event and on the search box's <code>input</code> event.</li>
+  <li><b>Initial state:</b> run the filter once on load so every card starts with an explicit
+      <code>display</code> of <code>block</code>.</li>
+</ul>
+<p>Use the <b>Preview</b> tab to search the grid live. Submitting runs automated tests that type in
+the search box and click the radios on a fresh page.</p>
+""",
+        "hint": "Write one filterGrid() and call it from both events plus once on load. Read the "
+                "query with .toLowerCase(), the category from "
+                "document.querySelector('input[name=\\\"pCat\\\"]:checked').value, then loop "
+                "'.pCard' testing card.textContent.toLowerCase().includes(query) && (cat === 'all' "
+                "|| card.dataset.cat === cat). Assign 'block' or 'none' from that one boolean.",
+        "boilerplate": {
+            "javascript": """function initializeGrid() {
+  const search = document.getElementById('pSearch');
+  const radios = document.querySelectorAll('input[name="pCat"]');
+  const cards = document.querySelectorAll('.pCard');
+
+  // TODO: filter by search text and category together, case-insensitively
+}
+
+initializeGrid();
+""",
+        },
+        "tests": [],
+        "samples": [],
+        "browser_html": """<input type="text" id="pSearch" placeholder="Search product...">
+<div class="categories" id="pCats">
+  <label><input type="radio" name="pCat" value="all" id="cat-all" checked> All</label>
+  <label><input type="radio" name="pCat" value="tech" id="cat-tech"> Tech</label>
+  <label><input type="radio" name="pCat" value="book" id="cat-book"> Books</label>
+</div>
+<div class="grid" id="pGrid">
+  <div class="pCard" data-cat="tech">Laptop</div>
+  <div class="pCard" data-cat="book">JS Handbook</div>
+  <div class="pCard" data-cat="tech">Wireless Mouse</div>
+  <div class="pCard" data-cat="book">Clean Code</div>
+</div>""",
+        "browser_style": """
+    body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0f172a; color: #f8fafc; padding: 24px; }
+    #pSearch { width: 100%; background: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 10px 12px; border-radius: 6px; font-size: 14px; }
+    .categories { display: flex; gap: 18px; margin: 14px 0; font-size: 14px; color: #cbd5e1; }
+    .categories label { cursor: pointer; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pCard { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 18px 14px; text-align: center; font-size: 14px; font-weight: 600; color: #e2e8f0; }
+""",
+        "browser_tests": [
+            {
+                "name": "On load every card is shown",
+                "hidden": False,
+                "steps": [],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(1)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(4)", "property": "display", "value": "block"},
+                },
+            },
+            {
+                "name": "Lower-case search finds a capitalised title",
+                "hidden": False,
+                "steps": [{"type": "pSearch", "value": "laptop"}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(1)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(2)", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Mixed-case partial search matches mid-title",
+                "hidden": False,
+                "steps": [{"type": "pSearch", "value": "CoDe"}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(4)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(1)", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Category radio filters on its own",
+                "hidden": True,
+                "steps": [{"type": "pSearch", "value": ""}, {"click": "cat-tech"}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(1)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(2)", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Search and category apply together",
+                "hidden": True,
+                "steps": [{"type": "pSearch", "value": "mouse"}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(3)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(1)", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "A contradictory combination hides everything",
+                "hidden": True,
+                "steps": [{"click": "cat-book"}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(2)", "property": "display", "value": "none"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(4)", "property": "display", "value": "none"},
+                },
+            },
+            {
+                "name": "Clearing the search leaves the whole Books category",
+                "hidden": True,
+                "steps": [{"type": "pSearch", "value": ""}],
+                "expect": {
+                    "style": {"selector": "#pGrid .pCard:nth-child(2)", "property": "display", "value": "block"},
+                    "style2": {"selector": "#pGrid .pCard:nth-child(3)", "property": "display", "value": "none"},
+                },
+            },
+        ],
+    },
 ]
 
 

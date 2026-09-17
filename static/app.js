@@ -843,6 +843,7 @@ function counterPreviewDoc(userCode, tests) {
           if (!el) return '(missing)';
           if (prop === 'className') return el.className;
           if (prop === 'disabled') return String(el.disabled);
+          if (prop === 'text') return el.textContent.trim();
           return (el.style[prop] || '').toLowerCase();
         }
 
