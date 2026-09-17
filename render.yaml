@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: practice-platform
+    runtime: docker
+    plan: free
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:////tmp/practice.db

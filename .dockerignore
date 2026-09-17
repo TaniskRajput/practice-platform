@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+server.log
+tunnel.log
+venv/
+instance/
+.git/
+extracted/downloaded/*.pdf
