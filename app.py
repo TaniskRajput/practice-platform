@@ -166,6 +166,8 @@ def problem_section(p):
     """Group problems for the list view: SQL / Coding / Web / Pseudocode / General."""
     topics = set(p["topics"])
     judge = p["judge"]
+    if "Accenture PDF Set" in topics:
+        return "Accenture Coding (Important)"
     if "SQL" in topics or "Database" in topics:
         return "SQL"
     if judge == "browser" or (topics & {"HTML", "CSS", "JavaScript"}):
@@ -815,5 +817,6 @@ if __name__ == "__main__":
         extra_files=[
             "problems.py", "problems_pseudocode.py", "problems_2026.py",
             "problems_extra.py", "problems_extra_pdfbanks.py",
+            "problems_accenture_coding_pdf.py",
         ],
     )

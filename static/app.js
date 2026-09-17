@@ -255,8 +255,8 @@ async function loadProblems() {
   renderList();
 }
 
-const SECTION_ORDER = ["SQL", "Web", "Coding", "General MCQs", "Pseudocode"];
-const SECTION_LABELS = { "General MCQs": "MCQs" };
+const SECTION_ORDER = ["SQL", "Web", "Coding", "Accenture Coding (Important)", "General MCQs", "Pseudocode"];
+const SECTION_LABELS = { "General MCQs": "MCQs", "Accenture Coding (Important)": "⭐ Accenture Coding — Important" };
 
 function renderRow(p, solved, num) {
   const diffClass = p.difficulty.toLowerCase();
