@@ -218,30 +218,60 @@ async function loadProblems() {
   renderList();
 }
 
-function renderList() {
-  const solved = store.getSolved();
-  const shown = problems.filter(
-    (p) => listFilter === "all" || p.judge === "quiz",
-  );
-  let html = "";
-  shown.forEach((p, i) => {
-    if (i === 0 && listFilter === "pseudo") {
-      html += `<tr class="list-section-row"><td colspan="5" class="list-section">Pseudocode Quizzes</td></tr>`;
-    }
-    const diffClass = p.difficulty.toLowerCase();
-    const topics = p.topics
-      .map((t) => `<span class="topic-chip">${t}</span>`)
-      .join("");
-    html += `<tr data-id="${p.id}">
+const SECTION_ORDER = ["SQL", "Web", "Coding", "General MCQs", "Pseudocode"];
+const SECTION_LABELS = { "General MCQs": "MCQs" };
+
+function renderRow(p, solved) {
+  const diffClass = p.difficulty.toLowerCase();
+  const topics = p.topics
+    .map((t) => `<span class="topic-chip">${t}</span>`)
+    .join("");
+  return `<tr data-id="${p.id}">
       <td>${solved[p.id] ? '<span class="check">&#10003;</span>' : '<span class="check" style="color:var(--text-dim)">&mdash;</span>'}</td>
       <td style="color:var(--text-dim)">${p.id}</td>
       <td><b>${p.title}</b></td>
       <td><span class="diff ${diffClass}">${p.difficulty}</span></td>
       <td>${topics}</td>
     </tr>`;
-  });
+}
+
+function sectionHeaderRow(name) {
+  const label = SECTION_LABELS[name] || name;
+  return `<tr class="list-section-row"><td colspan="5" class="list-section">${label}</td></tr>`;
+}
+
+function renderList() {
+  const solved = store.getSolved();
+  const shown = problems.filter(
+    (p) => listFilter === "all" || p.judge === "quiz",
+  );
+  let html = "";
+
+  if (listFilter === "all") {
+    // Group into SQL / Web / Coding / MCQs / Pseudocode sections instead of
+    // one flat list, using the "section" field the backend already computes.
+    const bySection = {};
+    shown.forEach((p) => {
+      const sec = p.section || "General MCQs";
+      (bySection[sec] = bySection[sec] || []).push(p);
+    });
+    SECTION_ORDER.forEach((sec) => {
+      const list = bySection[sec];
+      if (!list || !list.length) return;
+      html += sectionHeaderRow(sec);
+      list.forEach((p) => {
+        html += renderRow(p, solved);
+      });
+    });
+  } else {
+    shown.forEach((p, i) => {
+      if (i === 0) html += sectionHeaderRow("Pseudocode Quizzes");
+      html += renderRow(p, solved);
+    });
+  }
+
   $("problem-rows").innerHTML = html;
-  document.querySelectorAll("#problem-rows tr").forEach((tr) => {
+  document.querySelectorAll("#problem-rows tr[data-id]").forEach((tr) => {
     tr.addEventListener("click", () => openProblem(+tr.dataset.id));
   });
   $("solved-counter").innerHTML =
