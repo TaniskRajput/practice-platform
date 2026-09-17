@@ -5,7 +5,7 @@ import shutil
 import sqlite3
 import subprocess
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from werkzeug.exceptions import HTTPException
@@ -23,6 +23,12 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-i
 default_database_url = "sqlite:////tmp/practice.db" if os.environ.get("VERCEL") else "sqlite:///practice.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", default_database_url)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Keep logins signed in indefinitely (a "remember me" cookie) so progress
+# stays tied to the DB-backed account instead of silently falling back to
+# the per-browser localStorage path whenever the session cookie expires.
+app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=3650)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=3650)
 
 # Database & Auth
 db = SQLAlchemy(app)
@@ -411,7 +417,7 @@ def register():
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
-    login_user(user)
+    login_user(user, remember=True)
 
     return jsonify({"ok": True, "user_id": user.id, "username": user.username})
 
@@ -429,7 +435,7 @@ def login():
     if not user or not user.check_password(password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    login_user(user)
+    login_user(user, remember=True)
     return jsonify({"ok": True, "user_id": user.id, "username": user.username})
 
 
