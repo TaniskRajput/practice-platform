@@ -5,12 +5,14 @@ const CM_MODES = {
   cpp: "text/x-c++src",
   sql: "text/x-sql",
   javascript: "javascript",
+  python: "text/x-python",
 };
 const LANG_LABELS = {
   java: "Java",
   cpp: "C++",
   sql: "MySQL-ish (SQLite)",
   javascript: "JavaScript",
+  python: "Python 3",
 };
 
 let problems = [];

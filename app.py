@@ -286,6 +286,27 @@ def judge_cpp(code, tests, workdir):
     return {"outputs": outputs}
 
 
+# ------------------------------------------------------------------ #
+# Python judge — user submits a complete script; each test case is fed
+# to stdin and stdout is compared. No compile step.
+# ------------------------------------------------------------------ #
+
+def judge_python(code, tests, workdir):
+    stdin = "\n".join(t["input"] for t in tests) + "\n"
+    src_file = os.path.join(workdir, "solution.py")
+    with open(src_file, "w") as f:
+        f.write(code)
+
+    run_res = subprocess.run(
+        ["python3", src_file],
+        cwd=workdir, input=stdin, capture_output=True, text=True, timeout=RUN_TIMEOUT,
+    )
+    if run_res.returncode != 0:
+        return {"runtime_error": (run_res.stderr or "Unknown runtime error").strip()[-2000:]}
+    outputs = run_res.stdout.strip().splitlines()
+    return {"outputs": outputs}
+
+
 def format_input(input_str):
     """Human-readable rendering of a test input: JSON matrices are shown as
     bracketed rows, stdin-style inputs are shown verbatim."""
@@ -730,8 +751,8 @@ def do_judge(payload, submit):
         }
         return judge_and_record(result, all_pass)
 
-    # ---------------- Java / C++ ---------------- #
-    if language not in ("java", "cpp"):
+    # ---------------- Java / C++ / Python ---------------- #
+    if language not in ("java", "cpp", "python"):
         return jsonify({"error": f"Unsupported language: {language}"}), 400
 
     tests = problem["tests"]
@@ -750,8 +771,10 @@ def do_judge(payload, submit):
         try:
             if language == "java":
                 outcome = judge_java(code, [t], workdir)
-            else:
+            elif language == "cpp":
                 outcome = judge_cpp(code, [t], workdir)
+            else:
+                outcome = judge_python(code, [t], workdir)
         except subprocess.TimeoutExpired:
             outcome = {"timeout": True}
         except Exception as e:
