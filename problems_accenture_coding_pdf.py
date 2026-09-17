@@ -7,6 +7,496 @@ program against each test's input and using its actual trimmed stdout as `expect
 
 T = "Accenture PDF Set"
 
+
+def db_entry(name, hidden, schema, seed, reference_query):
+    return {"name": name, "hidden": hidden, "schema": schema, "seed": seed, "reference_query": reference_query}
+
+SQL_BOILERPLATE = "-- Write your SQLite query below\nSELECT\nFROM\nWHERE"
+SQL_BOILERPLATE_GB = "-- Write your SQLite query below\nSELECT\nFROM\nWHERE\nGROUP BY"
+SQL_BOILERPLATE_GBHO = "-- Write your SQLite query below\nSELECT\nFROM\nWHERE\nGROUP BY\nHAVING\nORDER BY"
+SQL_BOILERPLATE_JOIN = "-- Write your SQLite query below\nSELECT\nFROM\nJOIN\nWHERE"
+SQL_BOILERPLATE_JOIN_ORDER = "-- Write your SQLite query below\nSELECT\nFROM\nJOIN\nWHERE\nORDER BY"
+
+# ---------------------------------------------------------------------------
+# Schema/seed/reference-query clusters for the 30 SQL problems (3068-3097)
+# sourced from "Accenture SQL.pdf". Verified directly against Python's
+# sqlite3 module before being wired into problem dicts below.
+# ---------------------------------------------------------------------------
+# =========================================================================
+# CLUSTER: Banking (Q1, Q2, Q12, Q13)
+# =========================================================================
+BANK_SCHEMA = """
+CREATE TABLE customer (customer_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, contact TEXT, email TEXT);
+CREATE TABLE branch (branch_id INTEGER PRIMARY KEY, name TEXT, address TEXT, contact TEXT);
+CREATE TABLE account_type (account_type_id INTEGER PRIMARY KEY, account_type_name TEXT);
+CREATE TABLE account (account_id INTEGER PRIMARY KEY, customer_id INTEGER, branch_id INTEGER, account_type_id INTEGER, balance REAL);
+CREATE TABLE account_transaction (transaction_id INTEGER PRIMARY KEY, account_id INTEGER, transaction_date TEXT, amount REAL, transaction_type TEXT);
+CREATE TABLE loan (loan_id INTEGER PRIMARY KEY, account_id INTEGER, loan_amount REAL, loan_date TEXT, due_date TEXT);
+"""
+
+BANK_VIS = {
+    "account_type": [(1,'Savings'),(2,'Salary'),(3,'Current'),(4,'Fixed Deposit')],
+    "branch": [(1,'MG Road','12 MG Rd, Blr','080-1111'),(2,'Koramangala','5th Blk, Blr','080-2222')],
+    "customer": [(1,'Alice','Smith','9990001111','alice@x.com'),(2,'Bob','Johnson','9990002222','bob@x.com'),
+                 (3,'Carol','White','9990003333','carol@x.com'),(4,'David','Brown','9990004444','david@x.com'),
+                 (5,'Emma','Davis','9990005555','emma@x.com')],
+    "account": [(101,1,1,1,75000.00),(102,2,1,3,20000.00),(103,3,2,2,60000.00),
+                (104,4,2,4,90000.00),(105,5,1,1,30000.00),(106,1,2,3,55000.00)],
+    "account_transaction": [
+        (1001,101,'2025-01-05',15000.00,'Debit'),
+        (1002,101,'2025-02-10',60000.00,'Debit'),
+        (1003,102,'2025-01-15',5000.00,'Debit'),
+        (1004,103,'2025-03-01',25000.00,'Credit'),
+        (1005,103,'2025-03-05',12000.00,'Debit'),
+        (1006,104,'2025-04-01',9999.00,'Debit'),
+        (1007,105,'2025-05-01',49999.00,'Debit'),
+        (1008,106,'2025-06-01',50000.00,'Debit'),
+        (1009,102,'2025-07-01',30000.00,'Debit'),
+    ],
+    "loan": [(1,101,200000.00,'2024-01-01','2029-01-01'),(2,103,150000.00,'2024-06-01','2027-06-01')],
+}
+
+BANK_HID = {
+    "account_type": [(1,'Savings'),(2,'Salary'),(3,'Current'),(4,'Fixed Deposit')],
+    "branch": [(1,'Andheri','1 And Rd, Mum','022-1111'),(2,'Powai','2 Pow Rd, Mum','022-2222')],
+    "customer": [(11,'Frank','Moore','8880001111','frank@x.com'),(12,'Grace','Lee','8880002222','grace@x.com'),
+                 (13,'Henry','Walker','8880003333','henry@x.com'),(14,'Ivy','Clark','8880004444','ivy@x.com'),
+                 (15,'Jack','Hall','8880005555','jack@x.com')],
+    "account": [(201,11,1,1,48000.00),(202,12,1,2,52000.00),(203,13,2,3,80000.00),
+                (204,14,2,4,45000.00),(205,15,1,1,95000.00),(206,12,2,3,15000.00)],
+    "account_transaction": [
+        (2001,201,'2025-01-01',11000.00,'Debit'),
+        (2002,201,'2025-01-02',49000.00,'Debit'),
+        (2003,202,'2025-02-01',10000.00,'Debit'),
+        (2004,203,'2025-02-02',20000.00,'Credit'),
+        (2005,203,'2025-03-01',35000.00,'Debit'),
+        (2006,204,'2025-04-01',5000.00,'Debit'),
+        (2007,205,'2025-05-01',50000.00,'Debit'),
+        (2008,206,'2025-06-01',12345.00,'Debit'),
+    ],
+    "loan": [(11,201,100000.00,'2023-01-01','2028-01-01')],
+}
+
+Q1 = "SELECT transaction_id AS TRANSACTION_ID, amount AS AMOUNT, transaction_type AS TRANSACTION_TYPE FROM account_transaction WHERE transaction_type = 'Debit' AND amount > 10000 AND amount < 50000 ORDER BY transaction_id;"
+Q2 = "SELECT c.first_name AS FIRST_NAME, c.contact AS CONTACT, a.balance AS BALANCE FROM customer c JOIN account a ON c.customer_id = a.customer_id JOIN account_type at ON a.account_type_id = at.account_type_id WHERE at.account_type_name LIKE 'Sa%' ORDER BY c.first_name, a.account_id;"
+Q12 = "SELECT account_type_id AS Account_Type_ID, AVG(balance) AS Average FROM account GROUP BY account_type_id HAVING AVG(balance) >= 50000 ORDER BY account_type_id;"
+Q13 = "SELECT c.first_name AS FIRST_NAME, c.last_name AS LAST_NAME, a.account_id AS ACCOUNT_ID FROM customer c JOIN account a ON c.customer_id = a.customer_id WHERE a.balance >= 50000 ORDER BY c.first_name, a.account_id;"
+
+# =========================================================================
+# CLUSTER: HR/Payroll (Q3, Q4, Q9, Q10, Q11)
+# =========================================================================
+HR_SCHEMA = """
+CREATE TABLE department_info (deptid INTEGER PRIMARY KEY, deptname TEXT, location TEXT);
+CREATE TABLE salary_info (employee_category TEXT PRIMARY KEY, basic REAL, travelling_allowance REAL, dearness_allowance REAL, house_rent_allowance REAL, location_allowance REAL, provident_fund REAL, medical_allowance REAL, proftax REAL, insurance REAL);
+CREATE TABLE emp_info (empid INTEGER PRIMARY KEY, empname TEXT, deptid INTEGER, joining_dt TEXT, dob TEXT, yrs_of_exp INTEGER, employee_category TEXT);
+CREATE TABLE emp_payroll (transno INTEGER PRIMARY KEY, empid INTEGER, month TEXT, year INTEGER, totalearning REAL, netpay REAL);
+CREATE TABLE emp_leave_info (leaveid INTEGER PRIMARY KEY, empid INTEGER, from_date TEXT, to_date TEXT, total_leaves INTEGER, leave_type TEXT);
+"""
+
+HR_VIS = {
+    "department_info": [(1,'HR','BANGALORE'),(2,'Finance','MUMBAI'),(3,'Engineering','COCHIN'),(4,'Sales','DELHI')],
+    "salary_info": [
+        ('A',8000,500,1000,2500,300,800,200,100,150),
+        ('B',6000,400,800,1800,250,600,150,80,120),
+        ('C',4000,300,600,1200,200,400,100,60,90),
+        ('D',12000,700,1400,3000,400,1200,300,150,200),
+    ],
+    "emp_info": [
+        (1,'Alice Rao',1,'1998-05-10','1975-01-01',12,'D'),
+        (2,'Bob Nair',1,'2003-03-15','1980-02-02',8,'A'),
+        (3,'Carol Iyer',2,'2010-07-01','1985-03-03',15,'D'),
+        (4,'David Menon',3,'2015-09-09','1990-04-04',3,'B'),
+        (5,'Emma Pillai',3,'2005-01-01','1992-05-05',6,'C'),
+        (6,'Farhan Khan',4,'2000-01-01','1978-06-06',20,'D'),
+        (7,'Gita Shah',1,'2012-11-11','1988-07-07',9,'B'),
+    ],
+    "emp_payroll": [
+        (1,1,'Aug',2025,13000,11500),(2,2,'Aug',2025,9000,8000),(3,3,'Aug',2025,13500,12000),
+        (4,4,'Aug',2025,7000,6200),(5,5,'Aug',2025,5000,4400),(6,6,'Aug',2025,13800,12300),
+        (7,7,'Aug',2025,7200,6400),
+    ],
+    "emp_leave_info": [
+        (1,1,'2025-01-01','2025-01-05',5,'CL'),
+        (2,2,'2025-02-01','2025-02-15',12,'CL'),
+        (3,3,'2025-03-01','2025-03-20',15,'ML'),
+        (4,4,'2025-04-01','2025-04-10',8,'SL'),
+        (5,5,'2025-05-01','2025-05-25',20,'ML'),
+        (6,6,'2025-06-01','2025-06-03',3,'CL'),
+        (7,7,'2025-07-01','2025-07-20',11,'CL'),
+    ],
+}
+
+HR_HID = {
+    "department_info": [(1,'HR','BANGALORE'),(2,'IT','PUNE'),(3,'Support','COCHIN'),(4,'Ops','CHENNAI')],
+    "salary_info": [
+        ('A',7000,450,900,2200,280,700,180,90,130),
+        ('B',5500,380,750,1700,240,550,140,75,110),
+        ('C',4500,320,650,1300,210,420,105,65,95),
+        ('D',11000,680,1350,2800,390,1150,290,145,195),
+    ],
+    "emp_info": [
+        (21,'Karan Mehta',1,'1999-06-01','1976-01-01',14,'D'),
+        (22,'Lakshmi Rao',1,'2004-04-04','1981-02-02',7,'B'),
+        (23,'Manoj Kumar',2,'2011-11-11','1986-03-03',10,'A'),
+        (24,'Neha Verma',3,'2016-01-01','1991-04-04',2,'D'),
+        (25,'Omkar Joshi',3,'2006-06-06','1993-05-05',9,'C'),
+        (26,'Priya Nambiar',4,'1998-01-01','1979-06-06',18,'D'),
+        (27,'Rahul Bose',1,'2013-09-09','1989-07-07',6,'A'),
+    ],
+    "emp_payroll": [
+        (21,21,'Aug',2025,12500,11000),(22,22,'Aug',2025,8200,7300),(23,23,'Aug',2025,10800,9600),
+        (24,24,'Aug',2025,13200,11800),(25,25,'Aug',2025,5600,4900),(26,26,'Aug',2025,13000,11600),
+        (27,27,'Aug',2025,8400,7500),
+    ],
+    "emp_leave_info": [
+        (21,21,'2025-01-01','2025-01-04',4,'CL'),
+        (22,22,'2025-02-01','2025-02-20',18,'ML'),
+        (23,23,'2025-03-01','2025-03-25',22,'CL'),
+        (24,24,'2025-04-01','2025-04-06',5,'SL'),
+        (25,25,'2025-05-01','2025-05-14',13,'ML'),
+        (26,26,'2025-06-01','2025-06-02',2,'CL'),
+        (27,27,'2025-07-01','2025-07-12',11,'CL'),
+    ],
+}
+
+Q3 = "SELECT emp_info.empid AS EMPID, emp_info.empname AS EMPNAME, salary_info.basic AS BASIC, emp_payroll.netpay AS NETPAY FROM emp_info JOIN salary_info ON emp_info.employee_category = salary_info.employee_category JOIN emp_payroll ON emp_info.empid = emp_payroll.empid WHERE salary_info.basic > 5000 ORDER BY emp_info.empid;"
+Q4 = "SELECT empid AS \"Employee ID\", empname AS \"Employee Name\" FROM emp_info WHERE yrs_of_exp > 5 AND joining_dt > '2001-01-01' ORDER BY empid;"
+Q9 = "SELECT empid AS EMPID, leave_type AS LEAVE_TYPE, total_leaves AS TOTAL_LEAVES FROM emp_leave_info WHERE total_leaves > 10 AND leave_type IN ('CL','ML') ORDER BY empid;"
+Q10 = "SELECT ei.empid AS EMPID, ei.empname AS EMPNAME, di.deptname AS DEPTNAME, si.basic AS BASIC FROM emp_info ei JOIN department_info di ON ei.deptid = di.deptid JOIN salary_info si ON ei.employee_category = si.employee_category WHERE di.deptname = 'HR' ORDER BY ei.empid;"
+Q11 = "SELECT ei.empid AS EMPID, ei.empname AS EMPNAME, di.deptname AS DEPTNAME, si.house_rent_allowance AS HOUSE_RENT_ALLOWANCE FROM emp_info ei JOIN department_info di ON ei.deptid = di.deptid JOIN salary_info si ON ei.employee_category = si.employee_category WHERE di.location IN ('BANGALORE','COCHIN') ORDER BY ei.empid;"
+
+# =========================================================================
+# CLUSTER: School (Q5, Q18)
+# =========================================================================
+SCHOOL_SCHEMA = """
+CREATE TABLE department (dept_id INTEGER PRIMARY KEY, name TEXT);
+CREATE TABLE instructor (instructor_id INTEGER PRIMARY KEY, last_name TEXT, first_name TEXT, type TEXT, dept_id INTEGER);
+CREATE TABLE course (course_id INTEGER PRIMARY KEY, name TEXT, type TEXT, term TEXT);
+CREATE TABLE schedule (schedule_id INTEGER PRIMARY KEY, day TEXT, starttime TEXT, endtime TEXT);
+CREATE TABLE section (section_id INTEGER PRIMARY KEY, course_id INTEGER, schedule_id INTEGER, instructor_id INTEGER, name TEXT);
+CREATE TABLE student (student_id INTEGER PRIMARY KEY, last_name TEXT, first_name TEXT, email TEXT, phone TEXT);
+CREATE TABLE registration (reg_id INTEGER PRIMARY KEY, reg_year INTEGER, reg_date TEXT, student_id INTEGER, section_id INTEGER, midterm_grade INTEGER, finalterm_grade INTEGER);
+"""
+
+SCHOOL_VIS = {
+    "department": [(1,'Computer Science'),(2,'Mathematics')],
+    "instructor": [(1,'Smith','John','Full-time',1),(2,'Doe','Jane','Part-time',2)],
+    "course": [(1,'Database Systems','Lecture','Fall'),(2,'Calculus I','Lecture','Fall'),(3,'Data Structures','Lecture','Spring')],
+    "schedule": [(1,'wed','09:00','10:30'),(2,'mon','11:00','12:30'),(3,'wed','14:00','15:30'),(4,'fri','10:00','11:30')],
+    "section": [(1,1,1,1,'A'),(2,2,2,2,'A'),(3,3,3,1,'B'),(4,1,4,1,'C')],
+    "student": [(1,'Kumar','Aditi','aditi@x.com','111'),(2,'Rao','Bala','bala@x.com','222'),
+                (3,'Nair','Chitra','chitra@x.com','333'),(4,'Iyer','Deepak','deepak@x.com','444')],
+    "registration": [(1,2012,'2012-08-15',1,1,80,85),(2,2013,'2013-08-20',2,1,70,75),
+                      (3,2012,'2012-01-10',3,2,90,92),(4,2014,'2014-09-01',4,3,60,65)],
+}
+
+SCHOOL_HID = {
+    "department": [(1,'Physics'),(2,'Chemistry')],
+    "instructor": [(1,'Brown','Alan','Full-time',1),(2,'Green','Betty','Part-time',2)],
+    "course": [(1,'Quantum Mechanics','Lecture','Fall'),(2,'Organic Chemistry','Lecture','Fall'),(3,'Thermodynamics','Lecture','Spring')],
+    "schedule": [(1,'wed','10:00','11:30'),(2,'tue','09:00','10:30'),(3,'wed','13:00','14:30'),(4,'thu','15:00','16:30')],
+    "section": [(1,1,1,1,'A'),(2,2,2,2,'A'),(3,3,3,1,'B'),(4,2,4,2,'C')],
+    "student": [(11,'Patel','Esha','esha@x.com','555'),(12,'Shah','Farid','farid@x.com','666'),
+                (13,'Joshi','Gauri','gauri@x.com','777'),(14,'Desai','Hemant','hemant@x.com','888')],
+    "registration": [(11,2012,'2012-03-01',11,1,80,85),(12,2012,'2012-11-11',12,2,70,75),
+                      (13,2015,'2015-01-01',13,3,90,92),(14,2011,'2011-05-05',14,1,60,65)],
+}
+
+Q5 = "SELECT c.course_id AS \"Course ID\", c.name AS \"Course Name\", s.day AS \"Day\", s.starttime AS \"Start Time\" FROM course c JOIN section sec ON c.course_id = sec.course_id JOIN schedule s ON sec.schedule_id = s.schedule_id WHERE s.day = 'wed' ORDER BY c.course_id, sec.section_id;"
+Q18 = "SELECT s.last_name AS last_name FROM student s JOIN registration r ON s.student_id = r.student_id WHERE r.reg_date LIKE '2012%' ORDER BY s.last_name;"
+
+# =========================================================================
+# CLUSTER: Trains (Q8, Q22)
+# =========================================================================
+TRAIN_SCHEMA = """
+CREATE TABLE train_type_tbl (train_type TEXT PRIMARY KEY, type_description TEXT);
+CREATE TABLE train_stations_tbl (station_id TEXT PRIMARY KEY, station_name TEXT);
+CREATE TABLE train_details_tbl (train_id TEXT PRIMARY KEY, train_name TEXT, train_type TEXT, train_time TEXT, train_from TEXT, train_to TEXT, train_speed INTEGER);
+"""
+
+TRAIN_VIS = {
+    "train_type_tbl": [('EXP','Express'),('SF','Superfast'),('PASS','Passenger')],
+    "train_stations_tbl": [('ST01','MUMBAI'),('ST02','PUNE'),('ST03','DELHI'),('ST04','CHENNAI')],
+    "train_details_tbl": [
+        ('T001','Mumbai Express','EXP','06:00','ST01','ST02',80),
+        ('T002','Deccan Queen','SF','07:00','ST01','ST02',95),
+        ('T003','Chennai Mail','PASS','08:00','ST03','ST04',40),
+        ('T004','Malwa Express','EXP','09:00','ST03','ST01',45),
+        ('T005','Mysore Express','SF','10:00','ST04','ST02',30),
+        ('T006','Local Passenger','PASS','11:00','ST02','ST01',20),
+    ],
+}
+
+TRAIN_HID = {
+    "train_type_tbl": [('EXP','Express'),('SF','Superfast'),('PASS','Passenger')],
+    "train_stations_tbl": [('ST01','PUNE'),('ST02','NAGPUR'),('ST03','GOA'),('ST04','KOLHAPUR')],
+    "train_details_tbl": [
+        ('T101','Mahalaxmi Express','EXP','05:00','ST02','ST01',70),
+        ('T102','Konkan Kanya','SF','06:30','ST02','ST03',55),
+        ('T103','Milind Superfast','SF','07:15','ST04','ST02',35),
+        ('T104','Marathwada Express','EXP','08:45','ST03','ST01',48),
+        ('T105','Goa Express','PASS','09:30','ST01','ST03',25),
+    ],
+}
+
+Q8 = "SELECT td.train_id, td.train_name FROM train_details_tbl td JOIN train_stations_tbl ts ON td.train_to = ts.station_id WHERE td.train_name LIKE 'M%' AND ts.station_name = 'PUNE' ORDER BY td.train_id;"
+Q22 = "SELECT train_name AS TRAIN_NAME, train_type AS TRAIN_TYPE FROM train_details_tbl WHERE train_speed < 50 ORDER BY train_id;"
+
+# =========================================================================
+# CLUSTER: Simple flights (Q16, Q17)
+# =========================================================================
+SFLIGHT_SCHEMA = """
+CREATE TABLE Airline (airline_id INTEGER PRIMARY KEY, name TEXT, country TEXT);
+CREATE TABLE Airplane (airplane_id INTEGER PRIMARY KEY, airline_id INTEGER, model TEXT, manufacturer TEXT, modelnumber TEXT, capacity INTEGER);
+CREATE TABLE Flight (flight_id INTEGER PRIMARY KEY, airplane_id INTEGER, departure_date TEXT, departure_time TEXT, origin TEXT, destination TEXT);
+"""
+
+SFLIGHT_VIS = {
+    "Airline": [(1,'Singapore Airlines','Singapore'),(2,'Emirates','UAE'),(3,'Qantas','Australia')],
+    "Airplane": [(1,1,'A350','Airbus','A350-900',300),(2,1,'B777','Boeing','777-300ER',350),
+                 (3,2,'A380','Airbus','A380-800',500),(4,3,'B787','Boeing','787-9',290)],
+    "Flight": [(1,1,'2025-01-10','08:00','SIN','LHR'),(2,2,'2025-01-11','09:30','SIN','SYD'),
+               (3,3,'2025-02-01','10:00','DXB','JFK'),(4,4,'2025-03-01','11:00','SYD','LAX')],
+}
+
+SFLIGHT_HID = {
+    "Airline": [(1,'Singapore Airlines','Singapore'),(2,'Cathay Pacific','Hong Kong'),(3,'Lufthansa','Germany')],
+    "Airplane": [(1,1,'A320','Airbus','A320-200',180),(2,2,'B747','Boeing','747-8',410),
+                 (3,3,'A340','Airbus','A340-600',380),(4,1,'B737','Boeing','737-800',160)],
+    "Flight": [(1,1,'2025-04-01','06:00','SIN','HKG'),(2,2,'2025-04-02','07:00','HKG','SIN'),
+               (3,3,'2025-05-01','12:00','FRA','JFK'),(4,4,'2025-05-05','13:30','SIN','KUL')],
+}
+
+Q16 = "SELECT f.flight_id AS Flight_ID, f.departure_date AS Departure_date, f.departure_time AS Departure_Time FROM Flight f JOIN Airplane a ON f.airplane_id = a.airplane_id JOIN Airline al ON a.airline_id = al.airline_id WHERE al.name = 'Singapore Airlines' ORDER BY f.flight_id;"
+Q17 = "SELECT airplane_id AS AIRPLANE_ID, modelnumber AS MODELNUMBER FROM Airplane WHERE manufacturer = 'Airbus' ORDER BY airplane_id;"
+
+# =========================================================================
+# CLUSTER: Flight crew/booking (Q19, Q20, Q23)
+# =========================================================================
+CREW_SCHEMA = """
+CREATE TABLE flight (flight_id TEXT PRIMARY KEY, airplane_id TEXT, departure_date TEXT, departure_time TEXT, arrival_date TEXT, arrival_time TEXT, flight_from TEXT, flight_to TEXT);
+CREATE TABLE cabincrew (cabincrew_id INTEGER PRIMARY KEY, flight_id TEXT, first_name TEXT, last_name TEXT, contact TEXT);
+CREATE TABLE passenger (passenger_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, email TEXT, contact TEXT);
+CREATE TABLE boardingpass (boardingpass_id INTEGER PRIMARY KEY, flight_id TEXT, passenger_id INTEGER, gate TEXT, baggage INTEGER, meal TEXT);
+"""
+
+CREW_VIS = {
+    "flight": [
+        ('1','A1','2024-02-10','08:00','2024-02-11','20:00','Singapore','Paris'),
+        ('2','A2','2024-02-11','09:00','2024-02-11','21:00','Tokyo','Paris'),
+        ('3','A3','2024-02-11','10:00','2024-02-11','22:00','Sydney','London'),
+        ('4','A4','2024-02-09','11:00','2024-02-11','19:00','Hong Kong','Dubai'),
+        ('11','A5','2024-03-01','12:00','2024-03-02','23:00','Singapore','Paris'),
+    ],
+    "cabincrew": [
+        (1,'1','Anna','Lee','111'),(2,'2','Ben','Tan','222'),(3,'1','Alex','Wong','333'),
+        (4,'3','Amy','Chan','444'),(5,'11','Aiden','Kim','555'),(6,'4','Brian','Ong','666'),
+    ],
+    "passenger": [
+        (101,'Anna','Lee','anna@x.com','111'),(102,'Ben','Tan','ben@x.com','222'),
+        (103,'Chloe','Ng','chloe@x.com','333'),(104,'Derek','Goh','derek@x.com','444'),
+        (105,'Ella','Fox','ella@x.com','555'),(106,'Felix','Ong','felix@x.com','666'),
+        (107,'Grace','Kim','grace@x.com','777'),(108,'Hannah','Lim','hannah@x.com','888'),
+    ],
+    "boardingpass": [
+        (1,'1',101,'A1',2,'Vegetarian'),(2,'1',102,'A2',1,'Non-Veg'),(3,'2',103,'B1',3,'Vegetarian'),
+        (4,'3',104,'C1',1,'Vegetarian'),(5,'4',105,'D1',2,'Vegetarian'),(6,'4',106,'D2',1,'Non-Veg'),
+        (7,'11',107,'E1',2,'Vegetarian'),(8,'4',108,'D3',1,'Vegetarian'),
+    ],
+}
+
+CREW_HID = {
+    "flight": [
+        ('5','B1','2024-02-10','07:00','2024-02-11','18:00','Bangkok','Paris'),
+        ('6','B2','2024-02-11','08:30','2024-02-11','19:30','Seoul','Paris'),
+        ('7','B3','2024-02-11','09:15','2024-02-11','20:15','Cairo','Rome'),
+        ('4','B4','2024-02-09','10:00','2024-02-11','17:00','Hong Kong','Doha'),
+        ('21','B5','2024-06-01','11:00','2024-06-02','22:00','Bangkok','Paris'),
+        ('31','B6','2024-07-01','12:00','2024-07-02','23:00','Seoul','Tokyo'),
+    ],
+    "cabincrew": [
+        (1,'5','Aria','Sato','111'),(2,'21','Aaron','Lim','222'),(3,'31','Bella','Cruz','333'),
+        (4,'31','Amit','Shah','444'),(5,'4','Ana','Cruz','555'),(6,'6','Chris','Wong','666'),
+    ],
+    "passenger": [
+        (201,'Ivy','Chan','ivy@x.com','111'),(202,'Jack','Tan','jack@x.com','222'),
+        (203,'Kira','Lee','kira@x.com','333'),(204,'Leo','Ng','leo@x.com','444'),
+        (205,'Mia','Park','mia@x.com','555'),(206,'Noah','Kim','noah@x.com','666'),
+    ],
+    "boardingpass": [
+        (1,'5',201,'A1',2,'Vegetarian'),(2,'5',202,'A2',3,'Non-Veg'),(3,'6',203,'B1',1,'Vegetarian'),
+        (4,'7',204,'C1',2,'Vegetarian'),(5,'4',205,'D1',1,'Vegetarian'),(6,'4',206,'D2',2,'Non-Veg'),
+    ],
+}
+
+Q19 = "SELECT c.cabincrew_id AS CabinCrew_ID, c.first_name AS First_Name, c.last_name AS Last_Name, c.contact AS Contact, f.flight_id AS Flight_ID FROM cabincrew c JOIN flight f ON c.flight_id = f.flight_id WHERE c.first_name LIKE 'A%' AND f.flight_id LIKE '%1' ORDER BY c.cabincrew_id;"
+Q20 = "SELECT f.flight_id AS Flight_ID, COUNT(bp.passenger_id) AS Total_Passengers, SUM(bp.baggage) AS Total_Baggage FROM flight f JOIN boardingpass bp ON f.flight_id = bp.flight_id WHERE f.flight_to = 'Paris' AND f.arrival_date = '2024-02-11' GROUP BY f.flight_id ORDER BY f.flight_id;"
+Q23 = "SELECT DISTINCT p.first_name AS FIRST_NAME, p.contact AS CONTACT FROM passenger p JOIN boardingpass bp ON p.passenger_id = bp.passenger_id JOIN flight f ON bp.flight_id = f.flight_id WHERE f.flight_from = 'Hong Kong' AND bp.flight_id = '4' AND bp.meal = 'Vegetarian' ORDER BY p.first_name;"
+
+# =========================================================================
+# CLUSTER: E-commerce (Q21, Q24)
+# =========================================================================
+ECOM_SCHEMA = """
+CREATE TABLE category (category_id INTEGER PRIMARY KEY, code TEXT, name TEXT);
+CREATE TABLE product (product_id INTEGER PRIMARY KEY, code TEXT, name TEXT, unit_price REAL);
+CREATE TABLE product_category (product_category_id INTEGER PRIMARY KEY, product_id INTEGER, category_id INTEGER);
+CREATE TABLE order_delivery (order_delivery_id INTEGER PRIMARY KEY, order_id INTEGER, tracking_no TEXT, status TEXT);
+CREATE TABLE order_item (order_item_id INTEGER PRIMARY KEY, order_id INTEGER, order_delivery_id INTEGER, product_id INTEGER, quantity INTEGER);
+CREATE TABLE ecom_customer (customer_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, address TEXT, phone TEXT, email TEXT);
+CREATE TABLE payment (payment_id INTEGER PRIMARY KEY, order_id INTEGER, status TEXT, cctype TEXT, ccname TEXT, ccdate TEXT);
+"""
+
+ECOM_VIS = {
+    "category": [(1,'C-WOM','Women'),(2,'C-MEN','Men'),(3,'C-KID','Kids')],
+    "product": [(1,'P001','Floral Dress',49.99),(2,'P002','Denim Jacket',79.99),(3,'P003','Men Shirt',39.99),
+                (4,'P004','Kids Tee',15.99),(5,'P005','Women Handbag',89.99)],
+    "product_category": [(1,1,1),(2,2,1),(3,3,2),(4,4,3),(5,5,1)],
+    "order_delivery": [(1,101,'TRK1','In the transit hub'),(2,102,'TRK2','Delivered'),
+                        (3,103,'TRK3','In the transit hub'),(4,104,'TRK4','Processing')],
+    "order_item": [(1,101,1,1,2),(2,102,2,3,1),(3,103,3,2,1),(4,104,4,4,3),(5,103,3,5,2)],
+    "ecom_customer": [(1,'Nina','Patel','123 St','555-0001','nina@x.com'),(2,'Omar','Farouk','456 Ave','555-0002','omar@x.com')],
+    "payment": [(1,101,'Paid','Visa','Nina Patel','2025-01-01'),(2,102,'Paid','MC','Omar Farouk','2025-01-02')],
+}
+
+ECOM_HID = {
+    "category": [(1,'C-WOM','Women'),(2,'C-MEN','Men'),(3,'C-KID','Kids')],
+    "product": [(11,'P101','Summer Dress',44.99),(12,'P102','Men Jeans',59.99),(13,'P103','Women Scarf',19.99),
+                (14,'P104','Kids Shorts',12.99),(15,'P105','Men Jacket',99.99)],
+    "product_category": [(11,11,1),(12,12,2),(13,13,1),(14,14,3),(15,15,2)],
+    "order_delivery": [(11,201,'TRK11','In the transit hub'),(12,202,'TRK12','In the transit hub'),
+                        (13,203,'TRK13','Delivered'),(14,204,'TRK14','Cancelled')],
+    "order_item": [(11,201,11,11,1),(12,202,12,12,2),(13,203,13,13,1),(14,204,14,14,1),(15,201,11,15,1)],
+    "ecom_customer": [(11,'Peter','Diaz','1 Rd','555-0011','peter@x.com'),(12,'Queenie','Flores','2 Rd','555-0012','queenie@x.com')],
+    "payment": [(11,201,'Paid','Visa','Peter Diaz','2025-02-01'),(12,202,'Paid','MC','Queenie Flores','2025-02-02')],
+}
+
+Q21 = "SELECT COUNT(*) AS product_count FROM product p JOIN product_category pc ON p.product_id = pc.product_id JOIN category c ON pc.category_id = c.category_id WHERE c.name = 'Women';"
+Q24 = "SELECT DISTINCT p.product_id AS product_id, p.name AS name FROM product p JOIN order_item oi ON p.product_id = oi.product_id JOIN order_delivery od ON oi.order_delivery_id = od.order_delivery_id WHERE od.status = 'In the transit hub' ORDER BY p.product_id;"
+
+# =========================================================================
+# CLUSTER: Ride-hailing (Q27, Q28)
+# =========================================================================
+RIDE_SCHEMA = """
+CREATE TABLE driver (driver_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, license_number TEXT, rating REAL);
+CREATE TABLE vehicle (vehicle_id INTEGER PRIMARY KEY, driver_id INTEGER, plate_number TEXT, status TEXT);
+CREATE TABLE booking (booking_id INTEGER PRIMARY KEY, vehicle_id INTEGER, status TEXT);
+"""
+
+RIDE_VIS = {
+    "driver": [(1,'Raj','Kumar','LIC001',4.8),(2,'Simran','Kaur','LIC002',4.2),(3,'Tariq','Ali','LIC003',4.6),(4,'Uma','Devi','LIC004',3.9)],
+    "vehicle": [(1,1,'KA01AB1230','In Use'),(2,2,'KA02CD4560','Idle'),(3,3,'KA03EF7890','In Use'),(4,4,'KA04GH1111','In Use')],
+    "booking": [(1,1,'Completed'),(2,1,'Cancelled'),(3,2,'Completed'),(4,3,'Completed'),(5,4,'Cancelled'),(6,4,'Completed')],
+}
+
+RIDE_HID = {
+    "driver": [(11,'Vikram','Shetty','LIC011',4.9),(12,'Wanda','Fernandes','LIC012',4.0),(13,'Xena','Rodrigues','LIC013',4.5),(14,'Yusuf','Sheikh','LIC014',3.5)],
+    "vehicle": [(11,11,'MH12AB2340','In Use'),(12,12,'MH12CD5670','In Use'),(13,13,'MH12EF8900','Idle'),(14,14,'MH12GH1121','In Use')],
+    "booking": [(11,11,'Completed'),(12,11,'Completed'),(13,12,'Cancelled'),(14,13,'Completed'),(15,14,'Cancelled'),(16,14,'Completed')],
+}
+
+Q27 = "SELECT d.first_name || ' ' || d.last_name AS Name, d.license_number AS License_Number, v.plate_number AS Plate_Number FROM driver d JOIN vehicle v ON d.driver_id = v.driver_id WHERE v.status = 'In Use' AND v.plate_number LIKE '%0' ORDER BY d.driver_id;"
+Q28 = "SELECT d.license_number AS License_Number, v.vehicle_id AS Vehicle_ID, d.rating AS Rating, b.booking_id AS Booking_ID FROM driver d JOIN vehicle v ON d.driver_id = v.driver_id JOIN booking b ON v.vehicle_id = b.vehicle_id WHERE d.rating >= 4.5 AND b.status <> 'Cancelled' ORDER BY b.booking_id;"
+
+# =========================================================================
+# STANDALONE: Q6 books
+# =========================================================================
+BOOKS_SCHEMA = "CREATE TABLE books (book_id INTEGER PRIMARY KEY, title TEXT, price REAL, isbn TEXT, published_date TEXT, category TEXT);"
+BOOKS_VIS = {"books": [
+    (1,'Intro to Algorithms',65.00,'ISBN001','1945-06-01','C102'),
+    (2,'Ancient History',20.00,'ISBN002','1935-01-01','C102'),
+    (3,'Modern Physics',55.00,'ISBN003','1950-03-03','C101'),
+    (4,'Data Structures',45.00,'ISBN004','1999-09-09','C102'),
+    (5,'World War History',30.00,'ISBN005','1938-01-01','C102'),
+]}
+BOOKS_HID = {"books": [
+    (11,'Calculus Basics',40.00,'ISBN011','1960-01-01','C102'),
+    (12,'Old Legends',15.00,'ISBN012','1920-01-01','C102'),
+    (13,'Chemistry 101',35.00,'ISBN013','1970-01-01','C103'),
+    (14,'Statistics Handbook',50.00,'ISBN014','1985-05-05','C102'),
+]}
+Q6 = "SELECT title AS Title, price AS Price, isbn AS ISBN FROM books WHERE published_date > '1940-01-01' AND category = 'C102' ORDER BY book_id;"
+
+# =========================================================================
+# STANDALONE: Q7 channelscategory
+# =========================================================================
+CHAN_SCHEMA = "CREATE TABLE channelscategory (categoryid INTEGER PRIMARY KEY, categoryname TEXT);"
+CHAN_VIS = {"channelscategory": [(1,'Music'),(2,'Movies'),(3,'Sports'),(4,'Mystery'),(5,'News')]}
+CHAN_HID = {"channelscategory": [(11,'Mythology'),(12,'Nature'),(13,'Motoring'),(14,'Cartoons'),(15,'Weather')]}
+Q7 = "SELECT categoryid AS CATEGORYID, categoryname AS CATEGORYNAME FROM channelscategory WHERE categoryname LIKE 'M%' ORDER BY categoryid;"
+
+# =========================================================================
+# STANDALONE: Q14 staff
+# =========================================================================
+STAFF_SCHEMA = "CREATE TABLE staff (staff_id INTEGER PRIMARY KEY, firstname TEXT, position TEXT, salary REAL);"
+STAFF_VIS = {"staff": [(1,'Nora','Manager',65000),(2,'Owen','Clerk',32000),(3,'Priya','Supervisor',55000),(4,'Quinn','Clerk',30000),(5,'Ravi','Director',90000)]}
+STAFF_HID = {"staff": [(11,'Sara','Manager',48000),(12,'Tom','Director',85000),(13,'Uma','Supervisor',52000),(14,'Vik','Clerk',28000)]}
+Q14 = "SELECT firstname AS \"STAFF FIRST NAME\", position AS \"POSITION\", salary AS \"SALARY\" FROM staff WHERE salary > 50000 ORDER BY staff_id;"
+
+# =========================================================================
+# STANDALONE: Q15/16 hospital
+# =========================================================================
+HOSP_SCHEMA = """
+CREATE TABLE Patient (PatientID INTEGER PRIMARY KEY, FirstName TEXT, LastName TEXT, Email TEXT, AdmissionDate TEXT);
+CREATE TABLE Billing (BillingID INTEGER PRIMARY KEY, PatientID INTEGER, TotalAmount REAL, PaymentStatus TEXT);
+"""
+HOSP_VIS = {
+    "Patient": [(1,'John','Doe','john@x.com','2025-01-10'),(2,'Jane','Smith','jane@x.com','2025-02-15'),
+                (3,'Sam','Lee','sam@x.com','2025-03-20'),(4,'Amy','Wong','amy@x.com','2025-04-25')],
+    "Billing": [(1,1,1500.00,'Unpaid'),(2,2,2500.00,'Paid'),(3,3,3200.00,'Unpaid'),(4,4,900.00,'Unpaid')],
+}
+HOSP_HID = {
+    "Patient": [(11,'Mark','Twain','mark@x.com','2025-05-01'),(12,'Nora','Jones','nora@x.com','2025-05-15'),
+                (13,'Omar','Farid','omar@x.com','2025-06-01'),(14,'Pia','Kumar','pia@x.com','2025-06-20')],
+    "Billing": [(11,11,4200.00,'Unpaid'),(12,12,1100.00,'Paid'),(13,13,3300.00,'Unpaid'),(14,14,700.00,'Unpaid')],
+}
+Q15 = "SELECT p.FirstName || ' ' || p.LastName AS PatientName, p.Email AS PatientEmail, p.AdmissionDate AS AdmissionDate, b.TotalAmount AS TotalBilling FROM Patient p JOIN Billing b ON p.PatientID = b.PatientID WHERE b.PaymentStatus = 'Unpaid' ORDER BY b.TotalAmount DESC;"
+
+# =========================================================================
+# STANDALONE: Q25 artist
+# =========================================================================
+ARTIST_SCHEMA = "CREATE TABLE artist (artist_id INTEGER PRIMARY KEY, name TEXT);"
+ARTIST_VIS = {"artist": [(1,'Beethoven'),(2,'Blink182'),(3,'Adele'),(4,'U2'),(5,'Eminem')]}
+ARTIST_HID = {"artist": [(11,'Sum41'),(12,'Coldplay'),(13,'Maroon5'),(14,'Adele'),(15,'Drake')]}
+Q25 = "SELECT artist_id AS ARTIST_ID, name AS NAME FROM artist WHERE name LIKE '%0%' OR name LIKE '%1%' OR name LIKE '%2%' OR name LIKE '%3%' OR name LIKE '%4%' OR name LIKE '%5%' OR name LIKE '%6%' OR name LIKE '%7%' OR name LIKE '%8%' OR name LIKE '%9%' ORDER BY artist_id;"
+
+# =========================================================================
+# STANDALONE: Q26 message
+# =========================================================================
+MSG_SCHEMA = "CREATE TABLE message (message_id INTEGER PRIMARY KEY, content TEXT);"
+MSG_VIS = {"message": [(1,'Hello world'),(2,'Good morning'),(3,'Hello there'),(4,'See you later'),(5,'hello again')]}
+MSG_HID = {"message": [(11,'Hello team'),(12,'Meeting notes'),(13,'well hello there'),(14,'Random text'),(15,'HELLO ALL')]}
+Q26 = "SELECT message_id AS MESSAGE_ID, content AS CONTENT FROM message WHERE content LIKE '%Hello%' ORDER BY message_id;"
+
+# =========================================================================
+# STANDALONE: Q29 viewer
+# =========================================================================
+VIEWER_SCHEMA = "CREATE TABLE viewer (viewer_id INTEGER PRIMARY KEY, viewername TEXT);"
+VIEWER_VIS = {"viewer": [(1,'John'),(2,'Mary'),(3,'John'),(4,'Steve'),(5,'Mary'),(6,'Mary')]}
+VIEWER_HID = {"viewer": [(11,'Alice'),(12,'Bob'),(13,'Alice'),(14,'Carol'),(15,'Bob'),(16,'Alice'),(17,'Dave')]}
+Q29 = "SELECT viewername AS viewername, COUNT(*) AS name_count FROM viewer GROUP BY viewername ORDER BY viewername;"
+
+# =========================================================================
+# STANDALONE: Q30 users/contacts/jobs
+# =========================================================================
+USERS_SCHEMA = """
+CREATE TABLE users (user_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);
+CREATE TABLE contacts (user_id INTEGER, contact_id INTEGER);
+CREATE TABLE jobs (user_id INTEGER, job_title TEXT);
+"""
+USERS_VIS = {
+    "users": [(1,'John','Doe'),(2,'Jane','Engineer'),(3,'Sam','Lee'),(4,'Amy','Wong'),(5,'Bob','Marley'),(6,'Cara','Kim')],
+    "jobs": [(1,'Doctor'),(2,'Software Engineer'),(3,'Teacher'),(4,'Mechanical Engineer'),(5,'Artist'),(6,'Engineer')],
+    "contacts": [(1,2),(3,1),(5,4),(1,3),(6,5)],
+}
+USERS_HID = {
+    "users": [(11,'Tom','Hardy'),(12,'Uma','Patel'),(13,'Vik','Rao'),(14,'Wendy','Chu'),(15,'Xavier','Diaz'),(16,'Yara','Osei')],
+    "jobs": [(11,'Nurse'),(12,'Civil Engineer'),(13,'Chef'),(14,'Engineer'),(15,'Pilot'),(16,'Data Engineer')],
+    "contacts": [(11,12),(13,11),(15,14),(16,13)],
+}
+Q30 = "SELECT DISTINCT u.first_name || ' ' || u.last_name AS FULLNAME FROM users u JOIN contacts c ON u.user_id = c.user_id JOIN users cu ON c.contact_id = cu.user_id JOIN jobs j ON cu.user_id = j.user_id WHERE j.job_title LIKE '%Engineer%' ORDER BY FULLNAME;"
+
+
+
 ACCENTURE_CODING_PDF_PROBLEMS = [
 
     # 3001. Absolute Difference
@@ -2908,5 +3398,1907 @@ public class Solution {
             {"input": "thunder\n5\npukle thunder powder blender under", "expected": "under", "hidden": False},
         ],
         "samples": [0],
+    },
+
+    # ================================================================== #
+    # SQL problems 3068-3097, sourced from "Accenture SQL.pdf"
+    # ================================================================== #
+    # ------------------------------------------------------------------ #
+    # 3068. Debit Transactions in a Range (Banking cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3068,
+        "slug": "debit-transactions-in-range",
+        "title": "Debit Transactions in a Range",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: account_transaction</h3>
+<pre>+------------------+---------+
+| Column Name      | Type    |
++------------------+---------+
+| transaction_id   | int     |
+| account_id       | int     |
+| transaction_date | date    |
+| amount           | decimal |
+| transaction_type | varchar |
++------------------+---------+</pre>
+<p><code>transaction_id</code> is the unique identifier for this table. <code>transaction_type</code> is
+either <code>'Debit'</code> or <code>'Credit'</code>.</p>
+
+<h3>Problem:</h3>
+<p>Write a query to display the transaction id, amount and transaction type of all the transactions whose:</p>
+<ul>
+  <li>transaction type is <code>'Debit'</code>, and</li>
+  <li>transaction amount is greater than <code>10000</code> but less than <code>50000</code>.</li>
+</ul>
+<p>Name your output columns <code>TRANSACTION_ID</code>, <code>AMOUNT</code>, <code>TRANSACTION_TYPE</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+----------------+----------+-------------------+
+| TRANSACTION_ID | AMOUNT   | TRANSACTION_TYPE  |
++----------------+----------+-------------------+
+| 1001           | 15000.00 | Debit             |
+| 1005           | 12000.00 | Debit             |
+| 1007           | 49999.00 | Debit             |
+| 1009           | 30000.00 | Debit             |
++----------------+----------+-------------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>The bounds are strict: exactly <code>10000</code> or exactly <code>50000</code> do not qualify.</li>
+</ul>
+""",
+        "hint": "Filter on transaction_type = 'Debit' and amount > 10000 AND amount < 50000 — both bounds are strict inequalities.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, BANK_SCHEMA, BANK_VIS, Q1),
+            db_entry("Hidden database", True, BANK_SCHEMA, BANK_HID, Q1),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3069. Savings-Type Account Holders (Banking cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3069,
+        "slug": "savings-account-holders",
+        "title": "Savings-Type Account Holders",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: customer</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| customer_id   | int     |
+| first_name    | varchar |
+| last_name     | varchar |
+| contact       | varchar |
+| email         | varchar |
++---------------+---------+</pre>
+
+<h3>Table: account</h3>
+<pre>+------------------+---------+
+| Column Name      | Type    |
++------------------+---------+
+| account_id       | int     |
+| customer_id      | int     |
+| branch_id        | int     |
+| account_type_id  | int     |
+| balance          | decimal |
++------------------+---------+</pre>
+
+<h3>Table: account_type</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| account_type_id    | int     |
+| account_type_name  | varchar |
++--------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the first name, contact number and balance of all the customers whose
+account type <b>name starts with "Sa"</b> (e.g. "Savings", "Salary"). A customer can hold more than one
+qualifying account — return one row per matching account.</p>
+<p>Order the result by the customer's first name. Name your output columns
+<code>FIRST_NAME</code>, <code>CONTACT</code>, <code>BALANCE</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------+------------+----------+
+| FIRST_NAME | CONTACT    | BALANCE  |
++------------+------------+----------+
+| Alice      | 9990001111 | 75000.00 |
+| Carol      | 9990003333 | 60000.00 |
+| Emma       | 9990005555 | 30000.00 |
++------------+------------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Use <code>LIKE 'Sa%'</code> to match account type names starting with "Sa".</li>
+</ul>
+""",
+        "hint": "Join customer -> account -> account_type, filter account_type_name LIKE 'Sa%', and ORDER BY first_name.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN_ORDER},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, BANK_SCHEMA, BANK_VIS, Q2),
+            db_entry("Hidden database", True, BANK_SCHEMA, BANK_HID, Q2),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3070. Employees With High Basic Salary (HR cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3070,
+        "slug": "high-value-basic-salary-employees",
+        "title": "Employees With High Basic Salary",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: emp_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| empid              | int     |
+| empname            | varchar |
+| deptid             | int     |
+| joining_dt         | date    |
+| dob                | date    |
+| yrs_of_exp         | int     |
+| employee_category  | varchar |
++--------------------+---------+</pre>
+
+<h3>Table: salary_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| employee_category  | varchar |
+| basic              | decimal |
+| ... (allowances)   | decimal |
++--------------------+---------+</pre>
+<p><code>employee_category</code> is the unique identifier for this table, and every row in
+<code>emp_info</code> references one via its own <code>employee_category</code> column.</p>
+
+<h3>Table: emp_payroll</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| transno       | int     |
+| empid         | int     |
+| month         | varchar |
+| year          | int     |
+| totalearning  | decimal |
+| netpay        | decimal |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the employee ID, name, basic salary and net pay for employees whose
+<b>basic salary is greater than 5,000</b>.</p>
+<p>Name your output columns <code>EMPID</code>, <code>EMPNAME</code>, <code>BASIC</code>, <code>NETPAY</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------+-------------+----------+----------+
+| EMPID | EMPNAME     | BASIC    | NETPAY   |
++-------+-------------+----------+----------+
+| 1     | Alice Rao   | 12000.00 | 11500.00 |
+| 2     | Bob Nair    | 8000.00  | 8000.00  |
+| 3     | Carol Iyer  | 12000.00 | 12000.00 |
++-------+-------------+----------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Join emp_info to salary_info via employee_category, and to emp_payroll via empid.</li>
+</ul>
+""",
+        "hint": "Join emp_info to salary_info on employee_category and to emp_payroll on empid, then filter basic > 5000.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HR_SCHEMA, HR_VIS, Q3),
+            db_entry("Hidden database", True, HR_SCHEMA, HR_HID, Q3),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3071. Experienced Employees Who Joined After 2001 (HR cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3071,
+        "slug": "experienced-employees-after-2001",
+        "title": "Experienced Employees Who Joined After 2001",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: emp_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| empid              | int     |
+| empname            | varchar |
+| deptid             | int     |
+| joining_dt         | date    |
+| dob                | date    |
+| yrs_of_exp         | int     |
+| employee_category  | varchar |
++--------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the names of employees who:</p>
+<ul>
+  <li>have more than <code>5</code> years of experience, and</li>
+  <li>joined after <code>January 1, 2001</code>.</li>
+</ul>
+<p>Alias your output columns <code>"Employee ID"</code> and <code>"Employee Name"</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------+-----------------+
+| Employee ID | Employee Name   |
++-------------+-----------------+
+| 2           | Bob Nair        |
+| 3           | Carol Iyer      |
+| 5           | Emma Pillai     |
++-------------+-----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>. Dates are stored as <code>'YYYY-MM-DD'</code> text, so
+      lexicographic comparison with a literal date string works correctly.</li>
+</ul>
+""",
+        "hint": "Filter emp_info WHERE yrs_of_exp > 5 AND joining_dt > '2001-01-01'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HR_SCHEMA, HR_VIS, Q4),
+            db_entry("Hidden database", True, HR_SCHEMA, HR_HID, Q4),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3072. Wednesday Course Schedule (School cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3072,
+        "slug": "wednesday-course-schedule",
+        "title": "Wednesday Course Schedule",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: course</h3>
+<pre>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| course_id   | int     |
+| name        | varchar |
+| type        | varchar |
+| term        | varchar |
++-------------+---------+</pre>
+
+<h3>Table: section</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| section_id    | int     |
+| course_id     | int     |
+| schedule_id   | int     |
+| instructor_id | int     |
+| name          | varchar |
++---------------+---------+</pre>
+
+<h3>Table: schedule</h3>
+<pre>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| schedule_id | int     |
+| day         | varchar |
+| starttime   | varchar |
+| endtime     | varchar |
++-------------+---------+</pre>
+<p><code>day</code> stores a lowercase 3-letter abbreviation, e.g. <code>'wed'</code>, <code>'mon'</code>, <code>'fri'</code>.</p>
+
+<h3>Problem:</h3>
+<p>Write a query to display the course ID, course name, and schedule details (day and start time) of all
+courses that are taught on <code>'wed'</code> (Wednesday).</p>
+<p>Alias your output columns <code>"Course ID"</code>, <code>"Course Name"</code>, <code>"Day"</code>, <code>"Start Time"</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-----------+-------------------+-----+------------+
+| Course ID | Course Name       | Day | Start Time |
++-----------+-------------------+-----+------------+
+| 1         | Database Systems  | wed | 09:00      |
+| 3         | Data Structures   | wed | 14:00      |
++-----------+-------------------+-----+------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>A course can have several sections (e.g. one on Wednesday, another on Friday) — only the
+      sections actually scheduled on Wednesday should appear.</li>
+</ul>
+""",
+        "hint": "Join course -> section -> schedule, and filter schedule.day = 'wed'. A course with multiple sections may or may not have a Wednesday section.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, SCHOOL_SCHEMA, SCHOOL_VIS, Q5),
+            db_entry("Hidden database", True, SCHOOL_SCHEMA, SCHOOL_HID, Q5),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3073. Books Published After 1940 (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3073,
+        "slug": "books-published-after-1940",
+        "title": "Books Published After 1940 in a Category",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: books</h3>
+<pre>+------------------+---------+
+| Column Name      | Type    |
++------------------+---------+
+| book_id          | int     |
+| title            | varchar |
+| price            | decimal |
+| isbn             | varchar |
+| published_date   | date    |
+| category         | varchar |
++------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the title, price, and ISBN of books that:</p>
+<ul>
+  <li>were published after <code>January 1, 1940</code>, and</li>
+  <li>fall under the <code>"C102"</code> category.</li>
+</ul>
+<p>Name your output columns <code>Title</code>, <code>Price</code>, <code>ISBN</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-----------------------+-------+---------+
+| Title                 | Price | ISBN    |
++-----------------------+-------+---------+
+| Intro to Algorithms   | 65.00 | ISBN001 |
+| Data Structures       | 45.00 | ISBN004 |
++-----------------------+-------+---------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter books WHERE published_date > '1940-01-01' AND category = 'C102'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, BOOKS_SCHEMA, BOOKS_VIS, Q6),
+            db_entry("Hidden database", True, BOOKS_SCHEMA, BOOKS_HID, Q6),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3074. Channel Categories Starting With M (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3074,
+        "slug": "channel-categories-starting-m",
+        "title": "Channel Categories Starting With M",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: channelscategory</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| categoryid    | int     |
+| categoryname  | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the category id and category name of every category whose
+<b>name starts with 'M'</b>.</p>
+<p>Name your output columns <code>CATEGORYID</code>, <code>CATEGORYNAME</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------+--------------+
+| CATEGORYID | CATEGORYNAME |
++------------+--------------+
+| 1          | Music        |
+| 2          | Movies       |
+| 4          | Mystery      |
++------------+--------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter channelscategory WHERE categoryname LIKE 'M%'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, CHAN_SCHEMA, CHAN_VIS, Q7),
+            db_entry("Hidden database", True, CHAN_SCHEMA, CHAN_HID, Q7),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3075. Trains to Pune Starting With M (Trains cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3075,
+        "slug": "trains-to-pune-starting-m",
+        "title": "Trains to Pune Starting With M",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: train_details_tbl</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| train_id      | varchar |
+| train_name    | varchar |
+| train_type    | varchar |
+| train_time    | varchar |
+| train_from    | varchar |
+| train_to      | varchar |
+| train_speed   | int     |
++---------------+---------+</pre>
+<p><code>train_from</code> and <code>train_to</code> reference <code>train_stations_tbl.station_id</code>.</p>
+
+<h3>Table: train_stations_tbl</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| station_id    | varchar |
+| station_name  | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to find the train ID and name of all trains that:</p>
+<ul>
+  <li>have a name starting with the letter <code>'M'</code>, and</li>
+  <li>go to the station named <code>'PUNE'</code>.</li>
+</ul>
+<p>Return the output columns in this order: <code>train_id</code>, <code>train_name</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+----------+------------------+
+| train_id | train_name       |
++----------+------------------+
+| T001     | Mumbai Express   |
+| T005     | Mysore Express   |
++----------+------------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Join on <code>train_to = station_id</code>, then check the resolved station's name.</li>
+</ul>
+""",
+        "hint": "Join train_details_tbl to train_stations_tbl on train_to = station_id, filter train_name LIKE 'M%' AND station_name = 'PUNE'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, TRAIN_SCHEMA, TRAIN_VIS, Q8),
+            db_entry("Hidden database", True, TRAIN_SCHEMA, TRAIN_HID, Q8),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3076. Employees With Excess Casual/Medical Leave (HR cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3076,
+        "slug": "employees-with-excess-leaves",
+        "title": "Employees With Excess Casual/Medical Leave",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: emp_leave_info</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| leaveid       | int     |
+| empid         | int     |
+| from_date     | date    |
+| to_date       | date    |
+| total_leaves  | int     |
+| leave_type    | varchar |
++---------------+---------+</pre>
+<p><code>leave_type</code> is a short code, e.g. <code>'CL'</code> (Casual Leave), <code>'ML'</code>
+(Medical Leave), <code>'SL'</code> (Sick Leave).</p>
+
+<h3>Problem:</h3>
+<p>Write a query to display the employee ID, type of leave, and total number of leaves for employees who:</p>
+<ul>
+  <li>have taken <b>more than 10</b> leaves in a single record, and</li>
+  <li>the leave type is either <code>'CL'</code> or <code>'ML'</code>.</li>
+</ul>
+<p>Name your output columns <code>EMPID</code>, <code>LEAVE_TYPE</code>, <code>TOTAL_LEAVES</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------+-------------+---------------+
+| EMPID | LEAVE_TYPE  | TOTAL_LEAVES  |
++-------+-------------+---------------+
+| 2     | CL          | 12            |
+| 3     | ML          | 15            |
+| 5     | ML          | 20            |
++-------+-------------+---------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter emp_leave_info WHERE total_leaves > 10 AND leave_type IN ('CL', 'ML').",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HR_SCHEMA, HR_VIS, Q9),
+            db_entry("Hidden database", True, HR_SCHEMA, HR_HID, Q9),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3077. HR Department Employees (HR cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3077,
+        "slug": "hr-department-employees",
+        "title": "HR Department Employees",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: emp_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| empid              | int     |
+| empname            | varchar |
+| deptid             | int     |
+| employee_category  | varchar |
++--------------------+---------+</pre>
+
+<h3>Table: department_info</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| deptid        | int     |
+| deptname      | varchar |
+| location      | varchar |
++---------------+---------+</pre>
+
+<h3>Table: salary_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| employee_category  | varchar |
+| basic              | decimal |
++--------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the ID, name, department name, and base salary of employees working in
+the <code>'HR'</code> department.</p>
+<p>Name your output columns <code>EMPID</code>, <code>EMPNAME</code>, <code>DEPTNAME</code>, <code>BASIC</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------+------------+----------+----------+
+| EMPID | EMPNAME    | DEPTNAME | BASIC    |
++-------+------------+----------+----------+
+| 1     | Alice Rao  | HR       | 12000.00 |
+| 2     | Bob Nair   | HR       | 8000.00  |
+| 7     | Gita Shah  | HR       | 6000.00  |
++-------+------------+----------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Join emp_info to department_info on deptid, and to salary_info on employee_category, then filter deptname = 'HR'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HR_SCHEMA, HR_VIS, Q10),
+            db_entry("Hidden database", True, HR_SCHEMA, HR_HID, Q10),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3078. Employees in Bangalore or Cochin (HR cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3078,
+        "slug": "employees-in-bangalore-cochin",
+        "title": "Employees in Bangalore or Cochin",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: emp_info</h3>
+<pre>+--------------------+---------+
+| Column Name        | Type    |
++--------------------+---------+
+| empid              | int     |
+| empname            | varchar |
+| deptid             | int     |
+| employee_category  | varchar |
++--------------------+---------+</pre>
+
+<h3>Table: department_info</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| deptid        | int     |
+| deptname      | varchar |
+| location      | varchar |
++---------------+---------+</pre>
+
+<h3>Table: salary_info</h3>
+<pre>+-----------------------------+---------+
+| Column Name                 | Type    |
++-----------------------------+---------+
+| employee_category           | varchar |
+| house_rent_allowance        | decimal |
++-----------------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the employee ID, name, department name, and house rent allowance for
+employees who work in departments located in either <code>'BANGALORE'</code> or <code>'COCHIN'</code>.</p>
+<p>Name your output columns <code>EMPID</code>, <code>EMPNAME</code>, <code>DEPTNAME</code>,
+<code>HOUSE_RENT_ALLOWANCE</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------+---------------+-------------+-----------------------+
+| EMPID | EMPNAME       | DEPTNAME    | HOUSE_RENT_ALLOWANCE  |
++-------+---------------+-------------+-----------------------+
+| 1     | Alice Rao     | HR          | 3000.00               |
+| 2     | Bob Nair      | HR          | 2500.00                |
+| 4     | David Menon   | Engineering | 1800.00                |
++-------+---------------+-------------+-----------------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Join emp_info to department_info on deptid, and to salary_info on employee_category, filter location IN ('BANGALORE', 'COCHIN').",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HR_SCHEMA, HR_VIS, Q11),
+            db_entry("Hidden database", True, HR_SCHEMA, HR_HID, Q11),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3079. Average Balance by Account Type (Banking cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3079,
+        "slug": "average-balance-by-account-type",
+        "title": "Average Balance by Account Type",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: account</h3>
+<pre>+------------------+---------+
+| Column Name      | Type    |
++------------------+---------+
+| account_id       | int     |
+| customer_id      | int     |
+| branch_id        | int     |
+| account_type_id  | int     |
+| balance          | decimal |
++------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the account type id and average account balance for each account type,
+where the <b>average balance is greater than or equal to 50000</b>.</p>
+<p>Name your output columns <code>Account_Type_ID</code>, <code>Average</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-----------------+----------+
+| Account_Type_ID | Average  |
++-----------------+----------+
+| 1               | 52500.00 |
+| 2               | 60000.00 |
+| 4               | 90000.00 |
++-----------------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Group by account type, then filter the aggregated average with <code>HAVING</code> (not <code>WHERE</code>).</li>
+</ul>
+""",
+        "hint": "GROUP BY account_type_id, then HAVING AVG(balance) >= 50000.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_GBHO},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, BANK_SCHEMA, BANK_VIS, Q12),
+            db_entry("Hidden database", True, BANK_SCHEMA, BANK_HID, Q12),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3080. Customers With High Balance (Banking cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3080,
+        "slug": "customers-with-high-balance",
+        "title": "Customers With High Balance",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: customer</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| customer_id   | int     |
+| first_name    | varchar |
+| last_name     | varchar |
++---------------+---------+</pre>
+
+<h3>Table: account</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| account_id    | int     |
+| customer_id   | int     |
+| balance       | decimal |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the first name, last name and account id of customers who have a bank
+balance <b>greater than or equal to 50000</b>. A customer with multiple qualifying accounts should
+appear once per account.</p>
+<p>Order the result by the customer's first name. Name your output columns
+<code>FIRST_NAME</code>, <code>LAST_NAME</code>, <code>ACCOUNT_ID</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------+-----------+------------+
+| FIRST_NAME | LAST_NAME | ACCOUNT_ID |
++------------+-----------+------------+
+| Alice      | Smith     | 101        |
+| Alice      | Smith     | 106        |
+| Carol      | White     | 103        |
++------------+-----------+------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Join customer to account, filter balance >= 50000, ORDER BY first_name (add a secondary sort key such as account_id to keep ties stable).",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN_ORDER},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, BANK_SCHEMA, BANK_VIS, Q13),
+            db_entry("Hidden database", True, BANK_SCHEMA, BANK_HID, Q13),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3081. Staff With High Salary (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3081,
+        "slug": "staff-with-high-salary",
+        "title": "Staff With High Salary",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: staff</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| staff_id      | int     |
+| firstname     | varchar |
+| position      | varchar |
+| salary        | decimal |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the first name, position and salary of staff members whose
+<b>salary is greater than 50000</b>.</p>
+<p>Alias your output columns <code>"STAFF FIRST NAME"</code>, <code>"POSITION"</code>, <code>"SALARY"</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------------+-------------+----------+
+| STAFF FIRST NAME  | POSITION    | SALARY   |
++-------------------+-------------+----------+
+| Nora              | Manager     | 65000.00 |
+| Priya             | Supervisor  | 55000.00 |
+| Ravi              | Director    | 90000.00 |
++-------------------+-------------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter staff WHERE salary > 50000.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, STAFF_SCHEMA, STAFF_VIS, Q14),
+            db_entry("Hidden database", True, STAFF_SCHEMA, STAFF_HID, Q14),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3082. Unpaid Patient Bills (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3082,
+        "slug": "unpaid-patient-bills",
+        "title": "Unpaid Patient Bills",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: Patient</h3>
+<pre>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| PatientID      | int     |
+| FirstName      | varchar |
+| LastName       | varchar |
+| Email          | varchar |
+| AdmissionDate  | date    |
++----------------+---------+</pre>
+
+<h3>Table: Billing</h3>
+<pre>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| BillingID      | int     |
+| PatientID      | int     |
+| TotalAmount    | decimal |
+| PaymentStatus  | varchar |
++----------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display, for each patient with an <b>unpaid</b> bill:</p>
+<ul>
+  <li>the full name (first + last, separated by a space),</li>
+  <li>email,</li>
+  <li>admission date, and</li>
+  <li>total billing amount.</li>
+</ul>
+<p>Sort the result by total billing amount in <b>descending</b> order. Alias your output columns
+<code>PatientName</code>, <code>PatientEmail</code>, <code>AdmissionDate</code>, <code>TotalBilling</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+--------------+---------------+----------------+--------------+
+| PatientName  | PatientEmail  | AdmissionDate  | TotalBilling |
++--------------+---------------+----------------+--------------+
+| Sam Lee      | sam@x.com     | 2025-03-20     | 3200.00      |
+| John Doe     | john@x.com    | 2025-01-10     | 1500.00      |
+| Amy Wong     | amy@x.com     | 2025-04-25     | 900.00       |
++--------------+---------------+----------------+--------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b> — use <code>||</code> to concatenate strings, e.g.
+      <code>FirstName || ' ' || LastName</code>.</li>
+</ul>
+""",
+        "hint": "Join Patient to Billing on PatientID, filter PaymentStatus = 'Unpaid', concatenate names with ||, and ORDER BY TotalAmount DESC.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN_ORDER},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, HOSP_SCHEMA, HOSP_VIS, Q15),
+            db_entry("Hidden database", True, HOSP_SCHEMA, HOSP_HID, Q15),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3083. Singapore Airlines Flights (Simple-flights cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3083,
+        "slug": "singapore-airlines-flights",
+        "title": "Singapore Airlines Flights",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: Airline</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| airline_id    | int     |
+| name          | varchar |
+| country       | varchar |
++---------------+---------+</pre>
+
+<h3>Table: Airplane</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| airplane_id   | int     |
+| airline_id    | int     |
+| model         | varchar |
+| manufacturer  | varchar |
+| modelnumber   | varchar |
+| capacity      | int     |
++---------------+---------+</pre>
+
+<h3>Table: Flight</h3>
+<pre>+-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| flight_id       | int     |
+| airplane_id     | int     |
+| departure_date  | date    |
+| departure_time  | varchar |
+| origin          | varchar |
+| destination     | varchar |
++-----------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the list of flights operated by <code>'Singapore Airlines'</code>, including
+the flight ID, departure date and departure time.</p>
+<p>Name your output columns <code>Flight_ID</code>, <code>Departure_date</code>, <code>Departure_Time</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-----------+-----------------+-----------------+
+| Flight_ID | Departure_date  | Departure_Time  |
++-----------+-----------------+-----------------+
+| 1         | 2025-01-10      | 08:00           |
+| 2         | 2025-01-11      | 09:30           |
++-----------+-----------------+-----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>An airline can own several airplanes, and each airplane can have several flights — join through
+      Airplane to reach the airline name.</li>
+</ul>
+""",
+        "hint": "Join Flight -> Airplane -> Airline, filter Airline.name = 'Singapore Airlines'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, SFLIGHT_SCHEMA, SFLIGHT_VIS, Q16),
+            db_entry("Hidden database", True, SFLIGHT_SCHEMA, SFLIGHT_HID, Q16),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3084. Airbus Airplanes (Simple-flights cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3084,
+        "slug": "airbus-airplanes",
+        "title": "Airbus Airplanes",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: Airplane</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| airplane_id   | int     |
+| airline_id    | int     |
+| model         | varchar |
+| manufacturer  | varchar |
+| modelnumber   | varchar |
+| capacity      | int     |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the airplane ID and model number for airplanes manufactured by
+<code>'Airbus'</code>.</p>
+<p>Name your output columns <code>AIRPLANE_ID</code>, <code>MODELNUMBER</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+--------------+--------------+
+| AIRPLANE_ID  | MODELNUMBER  |
++--------------+--------------+
+| 1            | A350-900     |
+| 3            | A380-800     |
++--------------+--------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter Airplane WHERE manufacturer = 'Airbus'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, SFLIGHT_SCHEMA, SFLIGHT_VIS, Q17),
+            db_entry("Hidden database", True, SFLIGHT_SCHEMA, SFLIGHT_HID, Q17),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3085. Students Registered in 2012 (School cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3085,
+        "slug": "students-registered-2012",
+        "title": "Students Registered in 2012",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: student</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| student_id    | int     |
+| last_name     | varchar |
+| first_name    | varchar |
+| email         | varchar |
+| phone         | varchar |
++---------------+---------+</pre>
+
+<h3>Table: registration</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| reg_id        | int     |
+| reg_year      | int     |
+| reg_date      | date    |
+| student_id    | int     |
+| section_id    | int     |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the last names of the students who registered during the year
+<code>2012</code>.</p>
+<p>Name your output column <code>last_name</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------+
+| last_name   |
++-------------+
+| Kumar       |
+| Nair        |
++-------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>, which has no <code>EXTRACT()</code> function. Since
+      <code>reg_date</code> is stored as <code>'YYYY-MM-DD'</code> text, a prefix match
+      (<code>reg_date LIKE '2012%'</code>) is the simplest way to test the year — you could also use
+      <code>strftime('%Y', reg_date) = '2012'</code>.</li>
+</ul>
+""",
+        "hint": "Join student to registration on student_id, filter reg_date LIKE '2012%' (or strftime('%Y', reg_date) = '2012').",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, SCHOOL_SCHEMA, SCHOOL_VIS, Q18),
+            db_entry("Hidden database", True, SCHOOL_SCHEMA, SCHOOL_HID, Q18),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3086. Cabin Crew on Flights Ending in 1 (Flight-crew cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3086,
+        "slug": "cabin-crew-flight-ending-1",
+        "title": "Cabin Crew on Flights Ending in 1",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: cabincrew</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| cabincrew_id  | int     |
+| flight_id     | varchar |
+| first_name    | varchar |
+| last_name     | varchar |
+| contact       | varchar |
++---------------+---------+</pre>
+
+<h3>Table: flight</h3>
+<pre>+-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| flight_id       | varchar |
+| airplane_id     | varchar |
+| departure_date  | date    |
+| departure_time  | varchar |
+| arrival_date    | date    |
+| arrival_time    | varchar |
+| flight_from     | varchar |
+| flight_to       | varchar |
++-----------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the list of cabin crew members whose:</p>
+<ul>
+  <li>first name starts with the letter <code>'A'</code>, and</li>
+  <li>are assigned to a flight whose flight number <b>ends with the digit '1'</b>.</li>
+</ul>
+<p>Name your output columns <code>CabinCrew_ID</code>, <code>First_Name</code>, <code>Last_Name</code>,
+<code>Contact</code>, <code>Flight_ID</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+---------------+-------------+-------------+----------+------------+
+| CabinCrew_ID  | First_Name  | Last_Name   | Contact  | Flight_ID  |
++---------------+-------------+-------------+----------+------------+
+| 1             | Anna        | Lee         | 111      | 1          |
+| 3             | Alex        | Wong        | 333      | 1          |
+| 5             | Aiden       | Kim         | 555      | 11         |
++---------------+-------------+-------------+----------+------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>. <code>flight_id</code> is a text column here (e.g.
+      <code>'1'</code>, <code>'11'</code>), so <code>LIKE '%1'</code> checks its last character.</li>
+</ul>
+""",
+        "hint": "Join cabincrew to flight on flight_id, filter first_name LIKE 'A%' AND flight_id LIKE '%1'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, CREW_SCHEMA, CREW_VIS, Q19),
+            db_entry("Hidden database", True, CREW_SCHEMA, CREW_HID, Q19),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3087. Passengers and Baggage on Flights Arriving in Paris (Flight-crew cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3087,
+        "slug": "passengers-arriving-paris",
+        "title": "Passengers and Baggage on Flights Arriving in Paris",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: flight</h3>
+<pre>+-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| flight_id       | varchar |
+| arrival_date    | date    |
+| flight_from     | varchar |
+| flight_to       | varchar |
++-----------------+---------+</pre>
+
+<h3>Table: boardingpass</h3>
+<pre>+-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| boardingpass_id | int     |
+| flight_id       | varchar |
+| passenger_id    | int     |
+| gate            | varchar |
+| baggage         | int     |
+| meal            | varchar |
++-----------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display, for every flight arriving in <code>'Paris'</code> on
+<code>2024-02-11</code>, the total number of passengers and the total number of baggage items
+checked in for that flight.</p>
+<p>Name your output columns <code>Flight_ID</code>, <code>Total_Passengers</code>, <code>Total_Baggage</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------+--------------------+-----------------+
+| Flight_ID  | Total_Passengers   | Total_Baggage   |
++------------+--------------------+-----------------+
+| 1          | 2                  | 3               |
+| 2          | 1                  | 3               |
++------------+--------------------+-----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Use <code>COUNT()</code> for passengers and <code>SUM()</code> for baggage, grouped per flight.</li>
+</ul>
+""",
+        "hint": "Join flight to boardingpass on flight_id, filter flight_to='Paris' AND arrival_date='2024-02-11', GROUP BY flight_id, using COUNT(passenger_id) and SUM(baggage).",
+        "boilerplate": {"sql": SQL_BOILERPLATE_GBHO},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, CREW_SCHEMA, CREW_VIS, Q20),
+            db_entry("Hidden database", True, CREW_SCHEMA, CREW_HID, Q20),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3088. Count of Women's Products (E-commerce cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3088,
+        "slug": "womens-product-count",
+        "title": "Count of Women's Products",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: product</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| code          | varchar |
+| name          | varchar |
+| unit_price    | decimal |
++---------------+---------+</pre>
+
+<h3>Table: product_category</h3>
+<pre>+----------------------+---------+
+| Column Name          | Type    |
++----------------------+---------+
+| product_category_id  | int     |
+| product_id           | int     |
+| category_id          | int     |
++----------------------+---------+</pre>
+
+<h3>Table: category</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| category_id   | int     |
+| code          | varchar |
+| name          | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the number of products available in the <code>'Women'</code> category.</p>
+<p>Alias your output column <code>product_count</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+----------------+
+| product_count  |
++----------------+
+| 3              |
++----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Join product -> product_category -> category, filter category.name = 'Women', and COUNT(*).",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, ECOM_SCHEMA, ECOM_VIS, Q21),
+            db_entry("Hidden database", True, ECOM_SCHEMA, ECOM_HID, Q21),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3089. Slow Trains Under 50 (Trains cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3089,
+        "slug": "slow-trains-under-50",
+        "title": "Slow Trains Under 50",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: train_details_tbl</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| train_id      | varchar |
+| train_name    | varchar |
+| train_type    | varchar |
+| train_speed   | int     |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the train name and train type of trains whose <b>speed is less than
+50</b>.</p>
+<p>Name your output columns <code>TRAIN_NAME</code>, <code>TRAIN_TYPE</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------------+-------------+
+| TRAIN_NAME        | TRAIN_TYPE  |
++-------------------+-------------+
+| Chennai Mail      | PASS        |
+| Malwa Express     | EXP         |
+| Mysore Express    | SF          |
++-------------------+-------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+</ul>
+""",
+        "hint": "Filter train_details_tbl WHERE train_speed < 50.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, TRAIN_SCHEMA, TRAIN_VIS, Q22),
+            db_entry("Hidden database", True, TRAIN_SCHEMA, TRAIN_HID, Q22),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3090. Vegetarian Meal Passengers From Hong Kong (Flight-crew cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3090,
+        "slug": "vegetarian-meal-passengers-hongkong",
+        "title": "Vegetarian Meal Passengers From Hong Kong",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: passenger</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| passenger_id  | int     |
+| first_name    | varchar |
+| last_name     | varchar |
+| email         | varchar |
+| contact       | varchar |
++---------------+---------+</pre>
+
+<h3>Table: boardingpass</h3>
+<pre>+-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| boardingpass_id | int     |
+| flight_id       | varchar |
+| passenger_id    | int     |
+| meal            | varchar |
++-----------------+---------+</pre>
+
+<h3>Table: flight</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| flight_id     | varchar |
+| flight_from   | varchar |
+| flight_to     | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the distinct first names and contact numbers of passengers who:</p>
+<ul>
+  <li>are departing from <code>'Hong Kong'</code>,</li>
+  <li>are boarding the flight with flight ID <code>'4'</code>, and</li>
+  <li>have requested a <code>'Vegetarian'</code> meal.</li>
+</ul>
+<p>Name your output columns <code>FIRST_NAME</code>, <code>CONTACT</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------+----------+
+| FIRST_NAME  | CONTACT  |
++-------------+----------+
+| Ella        | 555      |
+| Hannah      | 888      |
++-------------+----------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>. <code>flight_id</code> is text — compare it against the
+      quoted string <code>'4'</code>.</li>
+</ul>
+""",
+        "hint": "Join passenger -> boardingpass -> flight, filter flight_from='Hong Kong' AND boardingpass.flight_id='4' AND meal='Vegetarian', use SELECT DISTINCT.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, CREW_SCHEMA, CREW_VIS, Q23),
+            db_entry("Hidden database", True, CREW_SCHEMA, CREW_HID, Q23),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3091. Products in the Transit Hub (E-commerce cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3091,
+        "slug": "products-in-transit-hub",
+        "title": "Products in the Transit Hub",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: product</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| code          | varchar |
+| name          | varchar |
+| unit_price    | decimal |
++---------------+---------+</pre>
+
+<h3>Table: order_item</h3>
+<pre>+---------------------+---------+
+| Column Name         | Type    |
++---------------------+---------+
+| order_item_id       | int     |
+| order_id            | int     |
+| order_delivery_id   | int     |
+| product_id          | int     |
+| quantity            | int     |
++---------------------+---------+</pre>
+
+<h3>Table: order_delivery</h3>
+<pre>+---------------------+---------+
+| Column Name         | Type    |
++---------------------+---------+
+| order_delivery_id   | int     |
+| order_id            | int     |
+| tracking_no         | varchar |
+| status              | varchar |
++---------------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the product id and product name of every product whose delivery status
+is <code>'In the transit hub'</code>.</p>
+<p>Name your output columns <code>product_id</code>, <code>name</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------+----------------+
+| product_id  | name           |
++-------------+----------------+
+| 1           | Floral Dress   |
+| 2           | Denim Jacket   |
+| 5           | Women Handbag  |
++-------------+----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>A product can appear in more than one order/delivery — use <code>SELECT DISTINCT</code> so it's
+      only listed once.</li>
+</ul>
+""",
+        "hint": "Join product -> order_item -> order_delivery, filter status = 'In the transit hub', use SELECT DISTINCT.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, ECOM_SCHEMA, ECOM_VIS, Q24),
+            db_entry("Hidden database", True, ECOM_SCHEMA, ECOM_HID, Q24),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3092. Artists With a Number in Their Name (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3092,
+        "slug": "artists-with-numbers-in-name",
+        "title": "Artists With a Number in Their Name",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: artist</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| artist_id     | int     |
+| name          | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the artist id and name for every artist whose name contains
+<b>at least one digit</b> (0-9).</p>
+<p>Name your output columns <code>ARTIST_ID</code>, <code>NAME</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------+------------+
+| ARTIST_ID  | NAME       |
++------------+------------+
+| 2          | Blink182   |
+| 4          | U2         |
++------------+------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>, which has no <code>REGEXP</code> operator registered by
+      default. Chain ten <code>LIKE '%0%' OR LIKE '%1%' OR ...</code> conditions (one per digit)
+      instead.</li>
+</ul>
+""",
+        "hint": "OR together ten LIKE conditions, one per digit '0' through '9', e.g. name LIKE '%0%' OR name LIKE '%1%' OR ...",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, ARTIST_SCHEMA, ARTIST_VIS, Q25),
+            db_entry("Hidden database", True, ARTIST_SCHEMA, ARTIST_HID, Q25),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3093. Messages Containing "Hello" (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3093,
+        "slug": "messages-containing-hello",
+        "title": "Messages Containing \"Hello\"",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: message</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| message_id    | int     |
+| content       | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the message id and content of every message that has <code>"Hello"</code>
+somewhere in it.</p>
+<p>Name your output columns <code>MESSAGE_ID</code>, <code>CONTENT</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+-------------+-----------------+
+| MESSAGE_ID  | CONTENT         |
++-------------+-----------------+
+| 1           | Hello world     |
+| 3           | Hello there     |
+| 5           | hello again     |
++-------------+-----------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>. Its <code>LIKE</code> operator is case-insensitive for
+      ASCII letters by default, so <code>content LIKE '%Hello%'</code> also matches lowercase
+      "hello".</li>
+</ul>
+""",
+        "hint": "Filter message WHERE content LIKE '%Hello%'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, MSG_SCHEMA, MSG_VIS, Q26),
+            db_entry("Hidden database", True, MSG_SCHEMA, MSG_HID, Q26),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3094. Drivers In Use With Plates Ending in 0 (Ride-hailing cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3094,
+        "slug": "drivers-in-use-plate-ending-zero",
+        "title": "Drivers In Use With Plates Ending in 0",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: driver</h3>
+<pre>+-------------------+---------+
+| Column Name       | Type    |
++-------------------+---------+
+| driver_id         | int     |
+| first_name        | varchar |
+| last_name         | varchar |
+| license_number    | varchar |
+| rating            | decimal |
++-------------------+---------+</pre>
+
+<h3>Table: vehicle</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| vehicle_id    | int     |
+| driver_id     | int     |
+| plate_number  | varchar |
+| status        | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the full name, license number, and plate number of all drivers whose
+vehicle:</p>
+<ul>
+  <li>has a status of <code>"In Use"</code>, and</li>
+  <li>has a number plate ending with <code>"0"</code>.</li>
+</ul>
+<p>Full name = first name + a space + last name. Name your output columns <code>Name</code>,
+<code>License_Number</code>, <code>Plate_Number</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+---------------+------------------+---------------+
+| Name          | License_Number   | Plate_Number  |
++---------------+------------------+---------------+
+| Raj Kumar     | LIC001           | KA01AB1230    |
+| Tariq Ali     | LIC003           | KA03EF7890    |
++---------------+------------------+---------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b> — use <code>||</code> to concatenate the names.</li>
+</ul>
+""",
+        "hint": "Join driver to vehicle on driver_id, filter status = 'In Use' AND plate_number LIKE '%0', concatenate first_name || ' ' || last_name.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, RIDE_SCHEMA, RIDE_VIS, Q27),
+            db_entry("Hidden database", True, RIDE_SCHEMA, RIDE_HID, Q27),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3095. Top-Rated Drivers With Active Bookings (Ride-hailing cluster)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3095,
+        "slug": "top-rated-drivers-active-bookings",
+        "title": "Top-Rated Drivers With Active Bookings",
+        "difficulty": "Medium",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: driver</h3>
+<pre>+-------------------+---------+
+| Column Name       | Type    |
++-------------------+---------+
+| driver_id         | int     |
+| license_number    | varchar |
+| rating            | decimal |
++-------------------+---------+</pre>
+
+<h3>Table: vehicle</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| vehicle_id    | int     |
+| driver_id     | int     |
++---------------+---------+</pre>
+
+<h3>Table: booking</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| booking_id    | int     |
+| vehicle_id    | int     |
+| status        | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the license number, vehicle id, rating, and booking id of all bookings
+made through drivers whose:</p>
+<ul>
+  <li>rating is <b>greater than or equal to 4.5</b>, and</li>
+  <li>booking status is <b>other than</b> <code>"Cancelled"</code>.</li>
+</ul>
+<p>Name your output columns <code>License_Number</code>, <code>Vehicle_ID</code>, <code>Rating</code>,
+<code>Booking_ID</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+------------------+-------------+---------+-------------+
+| License_Number   | Vehicle_ID  | Rating  | Booking_ID  |
++------------------+-------------+---------+-------------+
+| LIC001           | 1           | 4.80    | 1           |
+| LIC003           | 3           | 4.60    | 4           |
++------------------+-------------+---------+-------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>A single high-rated driver can have several non-cancelled bookings — each should appear as its
+      own row.</li>
+</ul>
+""",
+        "hint": "Join driver -> vehicle -> booking, filter rating >= 4.5 AND status <> 'Cancelled'.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, RIDE_SCHEMA, RIDE_VIS, Q28),
+            db_entry("Hidden database", True, RIDE_SCHEMA, RIDE_HID, Q28),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3096. Viewers With Duplicate Names (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3096,
+        "slug": "viewers-with-duplicate-names",
+        "title": "Viewers With Duplicate Names",
+        "difficulty": "Easy",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: viewer</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| viewer_id     | int     |
+| viewername    | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the number of viewers sharing the same name, for every distinct viewer
+name.</p>
+<p>Order the result by <code>viewername</code>. Name your output columns <code>viewername</code>,
+<code>name_count</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+--------------+---------------+
+| viewername   | name_count    |
++--------------+---------------+
+| John         | 2             |
+| Mary         | 3             |
+| Steve        | 1             |
++--------------+---------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b>.</li>
+  <li>Every name appears at least once, so names with a count of <code>1</code> should still be
+      included.</li>
+</ul>
+""",
+        "hint": "GROUP BY viewername and COUNT(*), then ORDER BY viewername for a deterministic order.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_GBHO},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, VIEWER_SCHEMA, VIEWER_VIS, Q29),
+            db_entry("Hidden database", True, VIEWER_SCHEMA, VIEWER_HID, Q29),
+        ],
+    },
+
+    # ------------------------------------------------------------------ #
+    # 3097. Users Who Have an Engineer as a Contact (Standalone)
+    # ------------------------------------------------------------------ #
+    {
+        "id": 3097,
+        "slug": "users-with-engineer-contacts",
+        "title": "Users Who Have an Engineer as a Contact",
+        "difficulty": "Hard",
+        "topics": [T, "SQL", "Database"],
+        "judge": "server",
+        "languages": ["sql"],
+        "description": """
+<h3>Table: users</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user_id       | int     |
+| first_name    | varchar |
+| last_name     | varchar |
++---------------+---------+</pre>
+
+<h3>Table: contacts</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user_id       | int     |
+| contact_id    | int     |
++---------------+---------+</pre>
+<p>Each row means "the user with id <code>user_id</code> has, among their contacts, the user with id
+<code>contact_id</code>". Both columns reference <code>users.user_id</code>.</p>
+
+<h3>Table: jobs</h3>
+<pre>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user_id       | int     |
+| job_title     | varchar |
++---------------+---------+</pre>
+
+<h3>Problem:</h3>
+<p>Write a query to display the full name of every user who has <b>at least one contact whose job
+title contains the word "Engineer"</b> (e.g. "Software Engineer", "Mechanical Engineer", "Engineer" —
+anyone with the keyword "Engineer" anywhere in their job title counts).</p>
+<p>Full name format: <code>'John Doe'</code> (first + space + last). Order the result by full name.
+Alias your output column <code>FULLNAME</code>.</p>
+
+<h3>Example Output:</h3>
+<pre>+---------------+
+| FULLNAME      |
++---------------+
+| Bob Marley    |
+| John Doe      |
++---------------+</pre>
+
+<h3>Notes:</h3>
+<ul>
+  <li>The database dialect is <b>SQLite</b> — use <code>||</code> to concatenate the names.</li>
+  <li>This asks for users whose <b>contact</b> is an engineer, not users who are themselves engineers —
+      join <code>users</code> to <code>contacts</code>, then join again to <code>users</code> (aliased)
+      via <code>contact_id</code> to find that contact's job.</li>
+</ul>
+""",
+        "hint": "Join users u to contacts c on u.user_id = c.user_id, join users again (aliased cu) on c.contact_id = cu.user_id, join jobs on cu.user_id, filter job_title LIKE '%Engineer%', SELECT DISTINCT.",
+        "boilerplate": {"sql": SQL_BOILERPLATE_JOIN_ORDER},
+        "tests": [],
+        "samples": [0],
+        "databases": [
+            db_entry("Sample database", False, USERS_SCHEMA, USERS_VIS, Q30),
+            db_entry("Hidden database", True, USERS_SCHEMA, USERS_HID, Q30),
+        ],
     },
 ]
