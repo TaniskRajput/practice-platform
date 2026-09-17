@@ -507,7 +507,7 @@ ACCENTURE_CODING_PDF_PROBLEMS = [
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer array <code>arr</code> and two integers <code>num</code> and <code>diff</code>,
 find the number of elements of <code>arr</code> whose absolute difference with <code>num</code> is
@@ -541,7 +541,7 @@ public class Solution {
 
         System.out.println(count > 0 ? count : -1);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\nnum = read_int()\ndiff = read_int()\n\n# TODO: count elements with |num - arr[i]| <= diff, return -1 if none\ncount = 0\n\nprint(count if count > 0 else -1)",
         },
         "tests": [
             {"input": "6\n12 3 14 56 77 13\n13\n2", "expected": "3", "hidden": False},
@@ -557,7 +557,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given two strings <code>s</code> and <code>t</code>, determine whether the characters of
 <code>s</code> can be rearranged to form <code>t</code>.</p>
@@ -584,7 +584,7 @@ public class Solution {
 
         System.out.println(isAnagram ? "True" : "False");
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\nt = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: check if s and t are anagrams (case-insensitive)\nis_anagram = False\n\nprint(\"True\" if is_anagram else \"False\")",
         },
         "tests": [
             {"input": "listen\nsilent", "expected": "True", "hidden": False},
@@ -600,7 +600,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings", "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>A number <code>N</code> (given as a digit string) is <b>autobiographical</b> if, for every position
 <code>i</code> (0-indexed), the digit at position <code>i</code> equals the count of how many times the
@@ -630,7 +630,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\nn = sys.stdin.readline().strip()\n\n# TODO: check if n is autobiographical, print distinct digit count or 0\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "1210", "expected": "3", "hidden": False},
@@ -646,7 +646,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>You are given a string made of binary digits ('0'/'1') separated by operator letters:
 <code>A</code> = AND, <code>B</code> = OR, <code>C</code> = XOR.</p>
@@ -673,7 +673,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().strip()\n\n# TODO: scan left to right applying A=AND, B=OR, C=XOR\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "1C0C1C1A0B1", "expected": "1", "hidden": False},
@@ -690,7 +690,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a number made up only of binary digits (e.g. <code>1010</code>), print its decimal value.</p>
 <h3>Input format:</h3>
@@ -713,7 +713,7 @@ public class Solution {
 
         System.out.println(decimal);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: convert binary-digit number n to its decimal value\ndecimal = 0\n\nprint(decimal)",
         },
         "tests": [
             {"input": "1010", "expected": "10", "hidden": False},
@@ -729,7 +729,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Greedy"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p><code>N</code> light bulbs are connected in a row. Pressing the switch of bulb <code>i</code> flips
 bulb <code>i</code> itself and every bulb to its right (0 becomes 1, 1 becomes 0).</p>
@@ -758,7 +758,7 @@ public class Solution {
 
         System.out.println(count);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: greedily press switches left to right whenever a bulb is off\ncount = 0\n\nprint(count)",
         },
         "tests": [
             {"input": "4\n0 1 0 1", "expected": "4", "hidden": False},
@@ -775,7 +775,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Sorting", "Greedy"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array of chocolate packet sizes and an integer <code>m</code> (number of students),
 distribute exactly <code>m</code> packets, one per student, so that the difference between the
@@ -805,7 +805,7 @@ public class Solution {
 
         System.out.println(minDiff);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\nm = read_int()\n\n# TODO: sort arr, slide a window of size m, find the minimum (max-min) in any window\nmin_diff = 0\n\nprint(min_diff)",
         },
         "tests": [
             {"input": "7\n7 3 2 4 9 12 56\n3", "expected": "2", "hidden": False},
@@ -821,7 +821,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given two non-negative integers, count how many carries occur when adding them digit by digit
 from right to left (elementary school addition).</p>
@@ -847,7 +847,7 @@ public class Solution {
 
         System.out.println(count);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nno1 = read_int()\nno2 = read_int()\n\n# TODO: count carries produced while adding no1 + no2 digit by digit\ncount = 0\n\nprint(count)",
         },
         "tests": [
             {"input": "451\n349", "expected": "2", "hidden": False},
@@ -864,7 +864,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a decimal integer <code>n</code>, print its binary representation (no leading zeros, and
 <code>0</code> for input <code>0</code>).</p>
@@ -888,7 +888,7 @@ public class Solution {
 
         System.out.println(binary);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: convert n to its binary representation (string of 0/1)\nbinary = \"0\"\n\nprint(binary)",
         },
         "tests": [
             {"input": "10", "expected": "1010", "hidden": False},
@@ -904,7 +904,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a lower bound and an upper bound (inclusive), print all palindrome numbers in that range,
 space-separated, in increasing order.</p>
@@ -930,7 +930,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nlower = read_int()\nupper = read_int()\n\n# TODO: print all palindrome numbers in [lower, upper], space separated\nresult = []\n\nprint(\" \".join(result))",
         },
         "tests": [
             {"input": "10\n80", "expected": "11 22 33 44 55 66 77", "hidden": False},
@@ -947,7 +947,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Geometry"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given three points <code>(x1,y1)</code>, <code>(x2,y2)</code>, <code>(x3,y3)</code>, compute the sum
 of the three pairwise Euclidean distances (P1-P2 + P2-P3 + P1-P3), rounded to 2 decimal places.</p>
@@ -973,7 +973,7 @@ public class Solution {
 
         System.out.printf("%.2f%n", sum);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nx1 = float(_data[_idx]); _idx += 1\ny1 = float(_data[_idx]); _idx += 1\nx2 = float(_data[_idx]); _idx += 1\ny2 = float(_data[_idx]); _idx += 1\nx3 = float(_data[_idx]); _idx += 1\ny3 = float(_data[_idx]); _idx += 1\n\n# TODO: sum the three pairwise distances between the points\ntotal = 0.0\n\nprint(\"%.2f\" % total)",
         },
         "tests": [
             {"input": "1 1 2 4 3 6", "expected": "10.78", "hidden": False},
@@ -989,7 +989,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, print the number of occurrences of each distinct value, one per line, in the
 format <code>value - count</code>, ordered by each value's first appearance in the array.</p>
@@ -1017,7 +1017,7 @@ public class Solution {
 
         System.out.print(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: print \"value - count\" per distinct value, in first-appearance order\nlines = []\n\nprint(\"\\n\".join(lines))",
         },
         "tests": [
             {"input": "6\n10 5 10 15 10 5", "expected": "10 - 3\n5 - 2\n15 - 1", "hidden": False},
@@ -1034,7 +1034,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Binary Search"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, find a "peak" value: an element that is strictly greater than both its neighbors
 (or greater than its only neighbor, at either edge). Print that peak's <b>value</b>.</p>
@@ -1061,7 +1061,7 @@ public class Solution {
 
         System.out.println(peak);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find a peak element (value strictly greater than its neighbors) and print its value\npeak = arr[0]\n\nprint(peak)",
         },
         "tests": [
             {"input": "7\n1 2 3 4 3 2 1", "expected": "4", "hidden": False},
@@ -1078,7 +1078,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer <code>N</code>, square each of its digits and concatenate the resulting decimal
 strings to form the encoded number. Print the encoded number.</p>
@@ -1103,7 +1103,7 @@ public class Solution {
 
         System.out.println(encoded);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: square each digit of n and concatenate the results\nencoded = 0\n\nprint(encoded)",
         },
         "tests": [
             {"input": "34", "expected": "916", "hidden": False},
@@ -1119,7 +1119,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer array, find the index where the sum of elements strictly to its left equals the
 sum of elements strictly to its right. Print that index, or <code>-1</code> if none exists.</p>
@@ -1147,7 +1147,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find the equilibrium index (left sum == right sum), else -1\nresult = -1\n\nprint(result)",
         },
         "tests": [
             {"input": "5\n3 4 3 1 6", "expected": "2", "hidden": False},
@@ -1163,7 +1163,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>An array contains <code>n</code> distinct integers taken from the range <code>1</code> to
 <code>n+1</code>, with exactly one number missing. Find and print the missing number.</p>
@@ -1190,7 +1190,7 @@ public class Solution {
 
         System.out.println(missing);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find the missing number from range 1..n+1\nmissing = 0\n\nprint(missing)",
         },
         "tests": [
             {"input": "5\n1 2 4 5 6", "expected": "3", "hidden": False},
@@ -1206,7 +1206,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a sentence and an integer <code>k</code>, print the first <code>k</code> words of the
 sentence, space-separated. If <code>k</code> is greater than or equal to the number of words, print
@@ -1231,7 +1231,7 @@ public class Solution {
         // TODO: print the first k words of line, space separated
         System.out.println(line.trim());
     }
-}""",
+}""", "python": "import sys\nline = sys.stdin.readline().rstrip(\"\\n\")\nk = int(sys.stdin.readline().strip())\n\n# TODO: print the first k words of line, space separated\nprint(line.strip())",
         },
         "tests": [
             {"input": "Hello I am a passionate developer\n4", "expected": "Hello I am a", "hidden": False},
@@ -1247,7 +1247,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Patterns"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Print Floyd's Triangle with <code>n</code> rows: row <code>i</code> (1-indexed) contains
 <code>i</code> numbers, continuing a running counter that starts at 1. Numbers in a row are
@@ -1273,7 +1273,7 @@ public class Solution {
         // TODO: print Floyd's triangle with n rows
         System.out.println();
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: print Floyd's triangle with n rows\nprint()",
         },
         "tests": [
             {"input": "4", "expected": "1\n2 3\n4 5 6\n7 8 9 10", "hidden": False},
@@ -1290,7 +1290,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>A number is called "googly prime" if the sum of its digits is a prime number. Given an integer,
 print <code>YES</code> if it is a googly prime, otherwise print <code>NO</code>.</p>
@@ -1313,7 +1313,7 @@ public class Solution {
         // TODO: sum digits of n, print YES if the sum is prime, else NO
         System.out.println("NO");
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: sum digits of n, print YES if the sum is prime, else NO\nprint(\"NO\")",
         },
         "tests": [
             {"input": "43", "expected": "YES", "hidden": False},
@@ -1330,7 +1330,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Two Pointers"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given two arrays that are already sorted in non-decreasing order, print their intersection
 (matching elements found via a two-pointer merge scan — duplicates are included exactly as many
@@ -1364,7 +1364,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn1 = read_int()\na1 = [read_int() for _ in range(n1)]\nn2 = read_int()\na2 = [read_int() for _ in range(n2)]\n\n# TODO: two-pointer intersection of the two sorted arrays\nresult = []\n\nprint(\" \".join(str(x) for x in result))",
         },
         "tests": [
             {"input": "5\n1 2 2 3 4\n4\n2 2 3 5", "expected": "2 2 3", "hidden": False},
@@ -1380,7 +1380,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array (with all unique elements), split it into the elements at even 0-indexed positions
 and the elements at odd 0-indexed positions. Print the sum of the <b>2nd-largest</b> element among the
@@ -1411,7 +1411,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: 2nd largest of even-index elements + 2nd smallest of odd-index elements\nresult = 0 if n <= 3 else 0\n\nprint(result)",
         },
         "tests": [
             {"input": "6\n3 2 1 7 5 4", "expected": "7", "hidden": False},
@@ -1428,7 +1428,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string possibly containing multiple/leading/trailing spaces, print the length of the
 <b>last</b> word.</p>
@@ -1451,7 +1451,7 @@ public class Solution {
 
         System.out.println(length);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: find the length of the last word in s\nlength = 0\n\nprint(length)",
         },
         "tests": [
             {"input": " I am  a passionate   Developer  ", "expected": "9", "hidden": False},
@@ -1467,7 +1467,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Linked List"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given <code>n</code> values used to build a singly linked list in order, print <code>true</code>
 if the list is a palindrome, otherwise print <code>false</code>.</p>
@@ -1501,7 +1501,7 @@ public class Solution {
 
         System.out.println(isPalindrome);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: check if the linked list represented by arr is a palindrome\nis_palindrome = False\n\nprint(str(is_palindrome).lower())",
         },
         "tests": [
             {"input": "4\n1 2 2 1", "expected": "true", "hidden": False},
@@ -1517,7 +1517,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings", "Sliding Window", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string <code>s</code>, find the length of the longest substring without repeating
 characters.</p>
@@ -1540,7 +1540,7 @@ public class Solution {
 
         System.out.println(maxLen);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: length of the longest substring of s without repeating characters\nmax_len = 0\n\nprint(max_len)",
         },
         "tests": [
             {"input": "abcabcbb", "expected": "3", "hidden": False},
@@ -1556,7 +1556,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a line of space-separated words, print the longest one in the exact format
 <code>The longest string is: &lt;word&gt;</code>.</p>
@@ -1579,7 +1579,7 @@ public class Solution {
 
         System.out.println("The longest string is: " + longest);
     }
-}""",
+}""", "python": "import sys\nline = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: find the longest word in line\nlongest = \"\"\n\nprint(\"The longest string is: \" + longest)",
         },
         "tests": [
             {"input": "yes no number", "expected": "The longest string is: number", "hidden": False},
@@ -1595,7 +1595,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>For a number, count how many even bits (i.e. 0-bits) appear in its binary representation. The
 number is "magical" if that count of 0-bits is odd. Given <code>N</code>, print the count of magical
@@ -1619,7 +1619,7 @@ public class Solution {
 
         System.out.println(count);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: count numbers in [1,n] whose binary form has an odd count of 0-bits\ncount = 0\n\nprint(count)",
         },
         "tests": [
             {"input": "5", "expected": "2", "hidden": False},
@@ -1635,7 +1635,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, split it into elements at even 0-indexed positions and elements at odd 0-indexed
 positions. Sort each group ascending, then print the sum of the <b>2nd-largest</b> element of each
@@ -1665,7 +1665,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: 2nd-largest of even-index elements + 2nd-largest of odd-index elements\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "5\n3 4 1 7 9", "expected": "7", "hidden": False},
@@ -1681,7 +1681,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a range <code>[a, b]</code> inclusive, find the number whose largest power-of-2 divisor has
 the greatest exponent (i.e. the number with the most trailing factors of 2). On a tie, print the
@@ -1706,7 +1706,7 @@ public class Solution {
 
         System.out.println(best);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\na = read_int()\nb = read_int()\n\n# TODO: find the number in [a,b] with the largest power-of-2 exponent dividing it\nbest = a\n\nprint(best)",
         },
         "tests": [
             {"input": "7 12", "expected": "8", "hidden": False},
@@ -1722,7 +1722,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings", "Sliding Window"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string <code>S</code> and integer <code>K</code>, find the maximum number of occurrences
 of the character <code>'a'</code> within any substring of <code>S</code> of length exactly
@@ -1749,7 +1749,7 @@ public class Solution {
 
         System.out.println(max);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\nk = int(sys.stdin.readline().strip())\n\n# TODO: max count of 'a' in any window of length k\nbest = 0\n\nprint(best)",
         },
         "tests": [
             {"input": "acdbaaca\n3", "expected": "2", "hidden": False},
@@ -1765,7 +1765,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, print its maximum value on one line, then its (0-indexed) index on the next
 line.</p>
@@ -1793,7 +1793,7 @@ public class Solution {
         System.out.println(maxVal);
         System.out.println(maxIdx);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find the max value and its index\nmax_val = 0\nmax_idx = 0\n\nprint(max_val)\nprint(max_idx)",
         },
         "tests": [
             {"input": "10\n23 45 82 27 66 12 78 13 71 86", "expected": "86\n9", "hidden": False},
@@ -1810,7 +1810,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, find its maximum value and index, and print them formatted exactly as
 <code>(max,index)</code> with no spaces.</p>
@@ -1837,7 +1837,7 @@ public class Solution {
 
         System.out.println("(" + maxVal + "," + maxIdx + ")");
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find the max value and its index, print as (max,index)\nmax_val = 0\nmax_idx = 0\n\nprint(\"(\" + str(max_val) + \",\" + str(max_idx) + \")\")",
         },
         "tests": [
             {"input": "5\n1 8 4 9 6", "expected": "(9,3)", "hidden": False},
@@ -1853,7 +1853,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Sorting", "Two Pointers"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given two arrays, each already sorted individually, print the merged sorted array, space
 separated.</p>
@@ -1886,7 +1886,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn1 = read_int()\na1 = [read_int() for _ in range(n1)]\nn2 = read_int()\na2 = [read_int() for _ in range(n2)]\n\n# TODO: merge a1 and a2 into one sorted array\nresult = []\n\nprint(\" \".join(str(x) for x in result))",
         },
         "tests": [
             {"input": "5\n1 2 3 4 5\n5\n2 4 6 8 10", "expected": "1 2 2 3 4 4 5 6 8 10", "hidden": False},
@@ -1902,7 +1902,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string, find the lowercase vowel (a, e, i, o, u) that occurs most frequently. You may
 assume a unique most-frequent vowel exists.</p>
@@ -1928,7 +1928,7 @@ public class Solution {
 
         System.out.println(best);
     }
-}""",
+}""", "python": "import sys\nsys.stdin.readline()\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: find the most frequent vowel in s\nbest = \"?\"\n\nprint(best)",
         },
         "tests": [
             {"input": "6\nxyuaab", "expected": "a", "hidden": False},
@@ -1944,7 +1944,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string containing letters and hyphens, move all hyphens to the front of the string,
 preserving the relative order of the remaining characters.</p>
@@ -1965,7 +1965,7 @@ public class Solution {
         // TODO: move all '-' characters to the front, preserving order of the rest
         System.out.println(s);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: move all '-' characters to the front, preserving order of the rest\nprint(s)",
         },
         "tests": [
             {"input": "Move-Hyphens-to-Front", "expected": "---MoveHyphenstoFront", "hidden": False},
@@ -1982,7 +1982,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array of daily closing stock prices, count the number of days where the price decreased
 from the previous day.</p>
@@ -2009,7 +2009,7 @@ public class Solution {
 
         System.out.println(count);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: count days where arr[i+1] < arr[i]\ncount = 0\n\nprint(count)",
         },
         "tests": [
             {"input": "6\n2 3 1 4 5 2", "expected": "2", "hidden": False},
@@ -2026,7 +2026,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given three integers <code>c</code>, <code>a</code>, <code>b</code>, compute a result based on
 <code>c</code>: if <code>c=1</code> print <code>a+b</code>, if <code>c=2</code> print
@@ -2056,7 +2056,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nc = read_int()\na = read_int()\nb = read_int()\n\n# TODO: apply the operation selected by c (1=+, 2=-, 3=*, 4=/)\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "1\n12\n16", "expected": "28", "hidden": False},
@@ -2073,7 +2073,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Two Pointers"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array and a target sum, find the pair of elements <code>(x, y)</code> with
 <code>x + y == target</code> that has the <b>maximum product</b>. Print the pair formatted as
@@ -2103,7 +2103,7 @@ public class Solution {
 
         System.out.println("[" + bestX + ", " + bestY + "]");
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\ntarget = read_int()\n\n# TODO: find the pair summing to target with the maximum product\nbest_x = 0\nbest_y = 0\n\nprint(\"[\" + str(best_x) + \", \" + str(best_y) + \"]\")",
         },
         "tests": [
             {"input": "8\n11 1 2 8 10 11 15 7\n18", "expected": "[10, 8]", "hidden": False},
@@ -2119,7 +2119,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a candidate password string, print <code>1</code> if it is valid, otherwise print
 <code>0</code>. A password is valid if:</p>
@@ -2150,7 +2150,7 @@ public class Solution {
 
         System.out.println(valid ? 1 : 0);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: validate the password per the stated rules\nvalid = False\n\nprint(1 if valid else 0)",
         },
         "tests": [
             {"input": "aA1_67", "expected": "1", "hidden": False},
@@ -2167,7 +2167,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, print <code>"odd"</code> or <code>"even"</code> for each element in order,
 space-separated.</p>
@@ -2194,7 +2194,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: label each element \"odd\" or \"even\", space separated\nlabels = []\n\nprint(\" \".join(labels))",
         },
         "tests": [
             {"input": "6\n1 2 3 4 5 6", "expected": "odd even odd even odd even", "hidden": False},
@@ -2210,7 +2210,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a target <code>sum</code> and an array, find the two smallest elements of the array. If
 their sum is <code>&lt;= sum</code>, print their product; otherwise print <code>0</code>. If the
@@ -2240,7 +2240,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\ntarget_sum = read_int()\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: product of the two smallest elements if their sum <= sum, else 0 (or -1 if n<2)\nresult = -1 if n < 2 else 0\n\nprint(result)",
         },
         "tests": [
             {"input": "9\n7\n5 2 4 3 9 7 1", "expected": "2", "hidden": False},
@@ -2257,7 +2257,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Greedy"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>There are <code>r</code> rats, each needing <code>unit</code> food. An array gives the food
 available at each house, in order. Find the minimum number of houses (starting from the first) whose
@@ -2290,7 +2290,7 @@ public class Solution {
 
         System.out.println(houses);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nr = read_int()\nunit = read_int()\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: min number of houses (from the start) whose cumulative food >= r*unit, else 0\nhouses = 0\n\nprint(houses)",
         },
         "tests": [
             {"input": "7\n2\n8\n2 8 3 5 7 4 1 2", "expected": "4", "hidden": False},
@@ -2306,7 +2306,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Bit Manipulation", "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a positive integer <code>N</code>, rearrange its binary bits so that all the set (1) bits
 are moved to the least-significant end, forming the smallest possible resulting decimal value. Print
@@ -2331,7 +2331,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: count set bits c, print (1<<c) - 1\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "10", "expected": "3", "hidden": False},
@@ -2348,7 +2348,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer <code>N</code> and a string <code>S</code>, print <code>S</code> repeated
 <code>N</code> times, concatenated with no separator.</p>
@@ -2374,7 +2374,7 @@ public class Solution {
 
         System.out.println(sb.toString());
     }
-}""",
+}""", "python": "import sys\nn = int(sys.stdin.readline().strip())\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: repeat s, n times, concatenated\nresult = \"\"\n\nprint(result)",
         },
         "tests": [
             {"input": "3\nabc", "expected": "abcabcabc", "hidden": False},
@@ -2390,7 +2390,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a lowercase string and two characters <code>ch1</code>, <code>ch2</code>, simultaneously
 swap every occurrence of <code>ch1</code> with <code>ch2</code> and every occurrence of
@@ -2417,7 +2417,7 @@ public class Solution {
         // TODO: simultaneously swap ch1 and ch2 throughout s
         System.out.println(s);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\nch1 = sys.stdin.readline().strip()[0]\nch2 = sys.stdin.readline().strip()[0]\n\n# TODO: simultaneously swap ch1 and ch2 throughout s\nprint(s)",
         },
         "tests": [
             {"input": "apples\na\np", "expected": "paales", "hidden": False},
@@ -2433,7 +2433,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string and a replacement character <code>c</code>, find the single most frequent
 character in the string and replace <b>all</b> its occurrences with <code>c</code>. Print the
@@ -2458,7 +2458,7 @@ public class Solution {
         // TODO: replace the most frequent character in s with repl
         System.out.println(s);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\nrepl = sys.stdin.readline().strip()[0]\n\n# TODO: replace the most frequent character in s with repl\nprint(s)",
         },
         "tests": [
             {"input": "bbadbbababb\nt", "expected": "ttadttatatt", "hidden": False},
@@ -2474,7 +2474,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string, print it reversed.</p>
 <h3>Input format:</h3>
@@ -2494,7 +2494,7 @@ public class Solution {
         // TODO: reverse s
         System.out.println(s);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: reverse s\nprint(s)",
         },
         "tests": [
             {"input": "hello", "expected": "olleh", "hidden": False},
@@ -2510,7 +2510,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a line of space-separated words, reverse the order of the words (not the letters within
 each word), and print the result space-separated.</p>
@@ -2531,7 +2531,7 @@ public class Solution {
         // TODO: reverse the order of the words in line
         System.out.println(line);
     }
-}""",
+}""", "python": "import sys\nline = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: reverse the order of the words in line\nprint(line)",
         },
         "tests": [
             {"input": "Hello World", "expected": "World Hello", "hidden": False},
@@ -2547,7 +2547,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given coefficients <code>a</code>, <code>b</code>, <code>c</code> of the quadratic equation
 <code>ax^2 + bx + c = 0</code> (assume the discriminant is non-negative), print its two real roots,
@@ -2573,7 +2573,7 @@ public class Solution {
 
         System.out.printf("%.2f %.2f%n", root1, root2);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\na = float(_data[_idx]); _idx += 1\nb = float(_data[_idx]); _idx += 1\nc = float(_data[_idx]); _idx += 1\n\n# TODO: compute the two roots using the quadratic formula\nroot1 = 0.0\nroot2 = 0.0\n\nprint(\"%.2f %.2f\" % (root1, root2))",
         },
         "tests": [
             {"input": "1 -3 2", "expected": "2.00 1.00", "hidden": False},
@@ -2589,7 +2589,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array and an integer <code>k</code>, rotate the array to the right by <code>k</code>
 steps and print the result, space-separated.</p>
@@ -2618,7 +2618,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\nk = read_int()\n\n# TODO: rotate arr to the right by k steps\nresult = []\n\nprint(\" \".join(str(x) for x in result))",
         },
         "tests": [
             {"input": "7\n1 2 3 4 5 6 7\n3", "expected": "5 6 7 1 2 3 4", "hidden": False},
@@ -2634,7 +2634,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, find the second-largest <b>distinct</b> value.</p>
 <h3>Input format:</h3>
@@ -2660,7 +2660,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: find the second-largest distinct value\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "7\n1 3 5 2 4 6 8", "expected": "6", "hidden": False},
@@ -2676,7 +2676,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Matrix", "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an <code>m x n</code> matrix, if any element is 0, set its entire row and column to 0
 (using the original positions of the zeroes). Print the resulting matrix, one row per line,
@@ -2717,7 +2717,7 @@ public class Solution {
         }
         System.out.print(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nrows = read_int()\ncols = read_int()\nm = [[read_int() for _ in range(cols)] for _ in range(rows)]\n\n# TODO: zero out entire row/column for every 0 found in the original matrix\n\nlines = []\nfor i in range(rows):\n    lines.append(\" \".join(str(m[i][j]) for j in range(cols)))\nprint(\"\\n\".join(lines))",
         },
         "tests": [
             {"input": "3\n3\n1 1 1\n1 0 1\n1 1 1", "expected": "1 0 1\n0 0 0\n1 0 1", "hidden": False},
@@ -2734,7 +2734,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array (all unique elements), split it into elements at even 0-indexed positions and
 elements at odd 0-indexed positions. Print the sum of the <b>2nd-largest</b> element of each group.
@@ -2762,7 +2762,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: 2nd-largest of even-index elements + 2nd-largest of odd-index elements\nresult = 0 if n <= 3 else 0\n\nprint(result)",
         },
         "tests": [
             {"input": "6\n3 2 1 7 5 4", "expected": "7", "hidden": False},
@@ -2779,7 +2779,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a list of integers, print their population standard deviation, rounded to 2 decimal
 places.</p>
@@ -2806,7 +2806,7 @@ public class Solution {
 
         System.out.printf("%.2f%n", sd);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [float(_data[_idx + i]) for i in range(n)]\n_idx += n\n\n# TODO: compute the population standard deviation\nsd = 0.0\n\nprint(\"%.2f\" % sd)",
         },
         "tests": [
             {"input": "8\n2 4 4 4 5 5 7 9", "expected": "2.00", "hidden": False},
@@ -2822,7 +2822,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a binary string (only '0's and '1's), each maximal run of consecutive '1's encodes one
 uppercase letter: the letter's position in the alphabet equals the length of that run (one '1' =
@@ -2848,7 +2848,7 @@ public class Solution {
 
         System.out.println(sb.toString());
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: decode s into an uppercase word per the run-length rule\nresult = \"\"\n\nprint(result)",
         },
         "tests": [
             {"input": "10110111", "expected": "ABC", "hidden": False},
@@ -2864,7 +2864,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given <code>m</code> and <code>n</code>, print the sum of all numbers in <code>[m, n]</code>
 inclusive that are divisible by both 3 and 5 (i.e. by 15).</p>
@@ -2890,7 +2890,7 @@ public class Solution {
 
         System.out.println(sum);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nm = read_int()\nn = read_int()\n\n# TODO: sum values in [m,n] divisible by both 3 and 5\ntotal = 0\n\nprint(total)",
         },
         "tests": [
             {"input": "12\n50", "expected": "90", "hidden": False},
@@ -2907,7 +2907,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer <code>n</code>, convert it to binary and print the sum of its binary digits
 (i.e. the count of set bits).</p>
@@ -2931,7 +2931,7 @@ public class Solution {
 
         System.out.println(count);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: count the number of 1-bits in n's binary representation\ncount = 0\n\nprint(count)",
         },
         "tests": [
             {"input": "15", "expected": "4", "hidden": False},
@@ -2947,7 +2947,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array, reverse it, then sum the elements at even (0-indexed) positions of the
 <b>reversed</b> array.</p>
@@ -2975,7 +2975,7 @@ public class Solution {
 
         System.out.println(sum);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: reverse arr, then sum elements at even indices of the reversed array\ntotal = 0\n\nprint(total)",
         },
         "tests": [
             {"input": "6\n10 20 30 40 50 60", "expected": "120", "hidden": False},
@@ -2991,7 +2991,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a positive integer <code>N</code>, print the sum of all its positive divisors (including 1
 and N itself).</p>
@@ -3015,7 +3015,7 @@ public class Solution {
 
         System.out.println(sum);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: sum all divisors of n from 1 to n\ntotal = 0\n\nprint(total)",
         },
         "tests": [
             {"input": "12", "expected": "28", "hidden": False},
@@ -3031,7 +3031,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer <code>N</code>, print the sum of all prime numbers strictly less than
 <code>N</code>.</p>
@@ -3055,7 +3055,7 @@ public class Solution {
 
         System.out.println(sum);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: sum all primes strictly less than n\ntotal = 0\n\nprint(total)",
         },
         "tests": [
             {"input": "10", "expected": "17", "hidden": False},
@@ -3071,7 +3071,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a number <code>n</code>, print its multiplication table from <code>n*1</code> through
 <code>n*10</code> (space-separated) on one line, then the sum of those 10 multiples on the next
@@ -3095,7 +3095,7 @@ public class Solution {
         System.out.println();
         System.out.println(0);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: print n*1..n*10 space separated, then the sum on the next line\nprint()\nprint(0)",
         },
         "tests": [
             {"input": "5", "expected": "5 10 15 20 25 30 35 40 45 50\n275", "hidden": False},
@@ -3113,7 +3113,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings", "Math"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string <code>S</code>, fix the positions of all vowels (A,E,I,O,U, either case) and count
 the number of permutations formed by permuting only the remaining (non-vowel) characters, i.e. the
@@ -3138,7 +3138,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: factorial of the count of non-vowel characters in s\nresult = 1\n\nprint(result)",
         },
         "tests": [
             {"input": "ABC", "expected": "2", "hidden": False},
@@ -3154,7 +3154,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Strings", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a string, find the lowercase vowel (a, e, i, o, u) that occurs most frequently. You may
 assume a unique most-frequent vowel exists.</p>
@@ -3180,7 +3180,7 @@ public class Solution {
 
         System.out.println(best);
     }
-}""",
+}""", "python": "import sys\nsys.stdin.readline()\ns = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: find the most frequent vowel in s\nbest = \"?\"\n\nprint(best)",
         },
         "tests": [
             {"input": "7\nxayuaba", "expected": "a", "hidden": False},
@@ -3196,7 +3196,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Patterns"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer <code>N</code>, print the first <code>N</code> terms of the Fibonacci series
 (starting <code>0, 1, 1, 2, ...</code>), space-separated.</p>
@@ -3219,7 +3219,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: print the first n Fibonacci numbers, space separated\nresult = []\n\nprint(\" \".join(str(x) for x in result))",
         },
         "tests": [
             {"input": "9", "expected": "0 1 1 2 3 5 8 13 21", "hidden": False},
@@ -3235,7 +3235,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an integer array, sort it, and print the maximum difference between two consecutive
 elements in the sorted array. If the array has fewer than 2 elements, print <code>0</code>.</p>
@@ -3262,7 +3262,7 @@ public class Solution {
 
         System.out.println(maxDiff);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: sort arr, find the max difference between consecutive elements\nmax_diff = 0\n\nprint(max_diff)",
         },
         "tests": [
             {"input": "4\n3 6 9 1", "expected": "3", "hidden": False},
@@ -3278,7 +3278,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Math", "Dynamic Programming"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given <code>n</code>, print the <code>n</code>-th Fibonacci number (0-indexed: fib(0)=0,
 fib(1)=1, fib(2)=1, ...).</p>
@@ -3301,7 +3301,7 @@ public class Solution {
 
         System.out.println(result);
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: compute the n-th Fibonacci number (fib(0)=0, fib(1)=1)\nresult = 0\n\nprint(result)",
         },
         "tests": [
             {"input": "9", "expected": "34", "hidden": False},
@@ -3317,7 +3317,7 @@ public class Solution {
         "difficulty": "Easy",
         "topics": [T, "Arrays", "Hash Table"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given an array of integers, remove duplicate values, keeping only the first occurrence of each
 value and preserving the original relative order. Print the result space-separated.</p>
@@ -3344,7 +3344,7 @@ public class Solution {
 
         System.out.println(sb.toString().trim());
     }
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: remove duplicates, preserving first-occurrence order\nresult = []\n\nprint(\" \".join(str(x) for x in result))",
         },
         "tests": [
             {"input": "7\n1 2 2 3 4 4 5", "expected": "1 2 3 4 5", "hidden": False},
@@ -3360,7 +3360,7 @@ public class Solution {
         "difficulty": "Medium",
         "topics": [T, "Strings"],
         "judge": "server",
-        "languages": ["java"],
+        "languages": ["java", "python"],
         "description": """
 <p>Given a target word <code>S</code> and a list of candidate words <code>D</code>, find the word in
 <code>D</code> (excluding <code>S</code> itself if present) whose <b>suffix</b> matches <code>S</code>'s
@@ -3392,7 +3392,7 @@ public class Solution {
 
         System.out.println(best);
     }
-}""",
+}""", "python": "import sys\ns = sys.stdin.readline().strip()\ncnt = int(sys.stdin.readline().strip())\nd = sys.stdin.readline().strip().split()\n\n# TODO: find the word in d (excluding s) with the longest matching suffix\nbest = \"No Word\"\n\nprint(best)",
         },
         "tests": [
             {"input": "thunder\n5\npukle thunder powder blender under", "expected": "under", "hidden": False},

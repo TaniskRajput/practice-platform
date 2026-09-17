@@ -33,7 +33,7 @@ PROBLEMS = [
         "difficulty": "Easy",
         "topics": ["Arrays", "Hash Table", "Matrix"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>An <code>n x n</code> matrix is <b>valid</b> if every row and every column contains all the integers
 from <code>1</code> to <code>n</code> (inclusive).</p>
@@ -100,7 +100,7 @@ int main() {
 
     cout << (valid ? "true" : "false") << endl;
     return 0;
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\nmatrix = [[read_int() for _ in range(n)] for _ in range(n)]\n\n# TODO: check every row and column contains 1..n exactly once\nvalid = True\n\nprint(str(valid).lower())",
         },
         "tests": [
             {"input": "3\n1 2 3\n3 1 2\n2 3 1", "expected": "true", "hidden": False},
@@ -482,7 +482,7 @@ PROBLEMS.append(
         "difficulty": "Easy",
         "topics": ["Arrays", "Math"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """<p class="text-muted">Accenture — 8th Sept Shift 1</p>
 <p>Given an array of integers <code>nums</code>, perform the following transformation on each
 element based on its <b>0-based index</b> <code>i</code>:</p>
@@ -533,7 +533,7 @@ int main() {
 
     // TODO: apply the transformation and print the total sum
     return 0;
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\nnums = [read_int() for _ in range(n)]\n\n# TODO: apply the transformation and print the total sum\nprint(0)",
         },
         "tests": [
             {"input": "5\n10 20 30 40 50", "expected": "120", "hidden": False},
@@ -556,7 +556,7 @@ PROBLEMS.append(
         "difficulty": "Medium",
         "topics": ["Math", "Binary Search", "Number Theory"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """<p class="text-muted">Accenture — 8th Sept Shift 2</p>
 <p>You are given a target positive integer <code>N</code>.</p>
 <p>For any integer <code>X</code>, define its <b>Equivalent Sum</b> <code>EqSum(X)</code> as the
@@ -619,7 +619,7 @@ int main() {
 
     // TODO: binary search the unique X with eqSum(X) == n, or print -1
     return 0;
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: binary search the unique X with eqSum(X) == n, or print -1\nprint(-1)",
         },
         "tests": [
             {"input": "124", "expected": "112", "hidden": False},

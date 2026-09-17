@@ -25,7 +25,7 @@ NEW_PROBLEMS = [
         "difficulty": "Easy",
         "topics": ["Math", "Number Theory", "Prime Sieve"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>Detective Reva is on a high-profile case. The secret hideouts of the suspects are numbered from
 <code>L</code> to <code>R</code>. According to a tip, only those at <b>prime-numbered</b> addresses are
@@ -74,7 +74,7 @@ int main() {
     // TODO: print every prime in [lo, hi], one per line,
     // or "No primes found" if there are none.
     return 0;
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nlo = read_int()\nhi = read_int()\n\n# TODO: print every prime in [lo, hi], one per line,\n# or \"No primes found\" if there are none.\nprint(\"No primes found\")",
         },
         "tests": [
             {"input": "1\n10", "expected": "2\n3\n5\n7", "hidden": False},
@@ -97,7 +97,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Math", "Number Theory"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>In the year 3025, astronauts aboard the spaceship Voyager Armstrong are scanning asteroid belts.
 Each asteroid has an identification number. Their onboard AI detects <b>Armstrong numbers</b> to mark
@@ -136,7 +136,7 @@ int main() {
 
     // TODO: print "Armstrong Number" or "Not an Armstrong Number"
     return 0;
-}""",
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\n\n# TODO: print \"Armstrong Number\" or \"Not an Armstrong Number\"\nprint(\"Not an Armstrong Number\")",
         },
         "tests": [
             {"input": "153", "expected": "Armstrong Number", "hidden": False},
@@ -160,7 +160,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Strings", "Counting"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>In a city-wide Spell Bee Championship, students are given words and are scored based on the number
 of vowels in their word. The teacher wants to automate scoring by writing a program that counts how
@@ -196,7 +196,7 @@ int main() {
 
     // TODO: print the number of vowels in the word
     return 0;
-}""",
+}""", "python": "import sys\nword = sys.stdin.read().split()[0]\n\n# TODO: print the number of vowels in the word\nprint(0)",
         },
         "tests": [
             {"input": "education", "expected": "5", "hidden": False},
@@ -219,7 +219,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Strings", "Stack"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>Given a string, repeatedly remove two adjacent identical characters until no such pair remains.
 Return the resulting string.</p>
@@ -253,7 +253,7 @@ int main() {
 
     // TODO: repeatedly remove pairs of adjacent equal characters, print result
     return 0;
-}""",
+}""", "python": "import sys\ns = sys.stdin.read().split()[0]\n\n# TODO: repeatedly remove pairs of adjacent equal characters, print result\nprint(s)",
         },
         "tests": [
             {"input": "abbaca", "expected": "ca", "hidden": False},
@@ -276,7 +276,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Math", "Combinatorics"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>Mr. Professor is a great scientist, but he is not able to find a solution to one problem.</p>
 <p>There are <code>N</code> straight lines that are not parallel, and no three lines go through the
@@ -314,7 +314,7 @@ int main() {
 
     // TODO: print the maximum number of regions
     return 0;
-}""",
+}""", "python": "import sys\nn = int(sys.stdin.read().split()[0])\n\n# TODO: print the maximum number of regions\nprint(1)",
         },
         "tests": [
             {"input": "3", "expected": "7", "hidden": False},
@@ -336,7 +336,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Dynamic Programming", "Math"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>You are climbing a staircase. It takes <code>n</code> steps to reach the top.</p>
 <p>Each time you can either climb <code>1</code> or <code>2</code> steps. In how many distinct ways
@@ -372,7 +372,7 @@ int main() {
 
     // TODO: print the number of distinct ways to climb n stairs
     return 0;
-}""",
+}""", "python": "import sys\nn = int(sys.stdin.read().split()[0])\n\n# TODO: print the number of distinct ways to climb n stairs\nprint(1)",
         },
         "tests": [
             {"input": "3", "expected": "3", "hidden": False},
@@ -394,7 +394,7 @@ int main() {
         "difficulty": "Easy",
         "topics": ["Math", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>You are given a number N. Convert the number to its binary form and print the <b>sum of its binary
 digits</b> (i.e. the number of <code>1</code> bits plus zero contributions from <code>0</code> bits —
@@ -426,7 +426,7 @@ int main() {
 
     // TODO: print the sum of digits of n in binary
     return 0;
-}""",
+}""", "python": "import sys\nn = int(sys.stdin.read().split()[0])\n\n# TODO: print the sum of digits of n in binary\nprint(0)",
         },
         "tests": [
             {"input": "15", "expected": "4", "hidden": False},
@@ -449,7 +449,7 @@ int main() {
         "difficulty": "Medium",
         "topics": ["Strings", "Hash Table", "Counting"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p>Given a string (may contain multiple spaces), find the <b>first+last character combination</b> of
 each word. Then return the combination(s) with the <b>highest frequency</b>, maintaining the original
@@ -492,7 +492,7 @@ int main() {
 
     // TODO: print the most frequent first+last combination(s), one per line
     return 0;
-}""",
+}""", "python": "import sys\nimport re\nline = sys.stdin.read().strip()\nwords = re.split(r\"\\s+\", line) if line else []\n\n# TODO: print the most frequent first+last combination(s), one per line\nprint(\"\")",
         },
         "tests": [
             {"input": "aaa human      achinh ae add  ad  admind ",

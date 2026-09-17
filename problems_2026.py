@@ -52,7 +52,7 @@ CODE_2026_PROBLEMS = [
         "difficulty": "Easy",
         "topics": ["Strings", "Loops"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">KN Academy — Coding Mock 16</p>
 <p>In a spell-bee contest a student's score is the number of <b>vowels</b> in the word they spelled.
@@ -71,7 +71,7 @@ Output:
         "hint": "Loop over every character, lowercase it, and check membership in {a, e, i, o, u}.",
         "boilerplate": {
             "java": _todo_java('read the word and print how many vowels (a e i o u, any case) it contains'),
-            "cpp": _todo_cpp('read the word and print how many vowels (a e i o u, any case) it contains'),
+            "cpp": _todo_cpp('read the word and print how many vowels (a e i o u, any case) it contains'), "python": "import sys\nword = sys.stdin.read().split()[0]\n\n# TODO: read the word and print how many vowels (a e i o u, any case) it contains\nprint(0)",
         },
         "tests": [
             {"input": "Accenture", "expected": "4", "hidden": False},
@@ -94,7 +94,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Strings", "Matrix"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">KN Academy — Accenture 8 Jan (actual paper)</p>
 <p>You are given a string <code>s</code> whose length is a <b>perfect square</b>. Fill an
@@ -116,7 +116,7 @@ and no column is, so the answer is 1.</p>
                 "double loop; a line is uniform when all its characters equal the first one.",
         "boilerplate": {
             "java": _todo_java('read the string s, build the n x n grid and print the number of uniform rows plus uniform columns'),
-            "cpp": _todo_cpp('read the string s, build the n x n grid and print the number of uniform rows plus uniform columns'),
+            "cpp": _todo_cpp('read the string s, build the n x n grid and print the number of uniform rows plus uniform columns'), "python": "import sys\ns = sys.stdin.read().split()[0]\n\n# TODO: read the string s, build the n x n grid and print the number of uniform rows plus uniform columns\nprint(0)",
         },
         "tests": [
             {"input": "aaaabbbcc", "expected": "1", "hidden": False},
@@ -139,7 +139,7 @@ and no column is, so the answer is 1.</p>
         "difficulty": "Easy",
         "topics": ["Arrays", "Prefix Sum"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p><code>r</code> rats enter a street of houses. Each rat eats <code>unit</code> units of food, so the
@@ -174,7 +174,7 @@ Output:
                 "r*unit. If the loop ends first, print -1.",
         "boilerplate": {
             "java": _todo_java('read r unit, n and the array; print the 1-indexed house where the rats finish or -1'),
-            "cpp": _todo_cpp('read r unit, n and the array; print the 1-indexed house where the rats finish or -1'),
+            "cpp": _todo_cpp('read r unit, n and the array; print the 1-indexed house where the rats finish or -1'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nr = read_int()\nunit = read_int()\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: read r unit, n and the array; print the 1-indexed house where the rats finish or -1\nprint(-1)",
         },
         "tests": [
             {"input": "7 2\n9\n2 8 3 5 7 4 1 2 50", "expected": "4", "hidden": False},
@@ -197,7 +197,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Strings", "Bit Manipulation"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>You get a string like <code>1C0A1</code>: it starts with a binary digit, then alternates an
@@ -221,7 +221,7 @@ Output:
                 "answer as an int and apply AND/OR/XOR with the digit value.",
         "boilerplate": {
             "java": _todo_java('read the expression string and print the computed 0/1 result (A=AND, B=OR, C=XOR)'),
-            "cpp": _todo_cpp('read the expression string and print the computed 0/1 result (A=AND, B=OR, C=XOR)'),
+            "cpp": _todo_cpp('read the expression string and print the computed 0/1 result (A=AND, B=OR, C=XOR)'), "python": "import sys\ns = sys.stdin.read().split()[0]\n\n# TODO: read the expression string and print the computed 0/1 result (A=AND, B=OR, C=XOR)\nprint(0)",
         },
         "tests": [
             {"input": "1C0A1", "expected": "1", "hidden": False},
@@ -245,7 +245,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Strings", "Validation"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>A password is <b>valid</b> when all four rules hold:</p>
@@ -274,7 +274,7 @@ Invalid</pre>
                 "uppercase flag, then combine them into the final verdict.",
         "boilerplate": {
             "java": _todo_java('read the password line and print Valid or Invalid per the four rules'),
-            "cpp": _todo_cpp('read the password line and print Valid or Invalid per the four rules'),
+            "cpp": _todo_cpp('read the password line and print Valid or Invalid per the four rules'), "python": "import sys\npassword = sys.stdin.readline().rstrip(\"\\n\")\n\n# TODO: read the password line and print Valid or Invalid per the four rules\nprint(\"Invalid\")",
         },
         "tests": [
             {"input": "1aA99", "expected": "Valid", "hidden": False},
@@ -298,7 +298,7 @@ Invalid</pre>
         "difficulty": "Easy",
         "topics": ["Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Given an array of <code>n</code> integers and an integer <code>sum</code>: take the <b>two smallest</b>
@@ -319,7 +319,7 @@ Output:
                 "smaller sum.",
         "boilerplate": {
             "java": _todo_java('read n sum, the array; print the product of the two smallest values if their sum <= sum, else -1'),
-            "cpp": _todo_cpp('read n sum, the array; print the product of the two smallest values if their sum <= sum, else -1'),
+            "cpp": _todo_cpp('read n sum, the array; print the product of the two smallest values if their sum <= sum, else -1'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\ntarget = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: read n sum, the array; print the product of the two smallest values if their sum <= sum, else -1\nprint(-1)",
         },
         "tests": [
             {"input": "7 9\n5 2 4 3 9 7 1", "expected": "2", "hidden": False},
@@ -342,7 +342,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Math", "Number Bases"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Convert a decimal number to base <code>n</code> (2 &le; n &le; 36). Digits above 9 use the capital
@@ -362,7 +362,7 @@ Output:
                 "are the answer. Don't forget 0 converts to \"0\".",
         "boilerplate": {
             "java": _todo_java('read the decimal number and the base, print the n-base representation with A-Z digits'),
-            "cpp": _todo_cpp('read the decimal number and the base, print the n-base representation with A-Z digits'),
+            "cpp": _todo_cpp('read the decimal number and the base, print the n-base representation with A-Z digits'), "python": "import sys\n_data = sys.stdin.read().split()\nnum = int(_data[0])\nbase = int(_data[1])\n\n# TODO: read the decimal number and the base, print the n-base representation with A-Z digits\nprint(\"0\")",
         },
         "tests": [
             {"input": "718\n12", "expected": "4BA", "hidden": False},
@@ -386,7 +386,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Math", "Digit Manipulation"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Add two numbers the way you do on paper and count how many <b>carries</b> happen in total.</p>
@@ -406,7 +406,7 @@ Output:
                 "counting every time it fires.",
         "boilerplate": {
             "java": _todo_java('read two integers and print how many carries their addition produces'),
-            "cpp": _todo_cpp('read two integers and print how many carries their addition produces'),
+            "cpp": _todo_cpp('read two integers and print how many carries their addition produces'), "python": "import sys\n_data = sys.stdin.read().split()\na = int(_data[0])\nb = int(_data[1])\n\n# TODO: read two integers and print how many carries their addition produces\nprint(0)",
         },
         "tests": [
             {"input": "451 349", "expected": "2", "hidden": False},
@@ -430,7 +430,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Math", "Loops"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Given <code>n</code> and <code>m</code>, compute the absolute difference between the sum of the
@@ -452,7 +452,7 @@ Output:
                 "and divisible sum = m*k(k+1)/2 with k = n/m.",
         "boilerplate": {
             "java": _todo_java('read n and m, print |sum of 1..n not divisible by m - sum of those divisible by m|'),
-            "cpp": _todo_cpp('read n and m, print |sum of 1..n not divisible by m - sum of those divisible by m|'),
+            "cpp": _todo_cpp('read n and m, print |sum of 1..n not divisible by m - sum of those divisible by m|'), "python": "import sys\n_data = sys.stdin.read().split()\nn = int(_data[0])\nm = int(_data[1])\n\n# TODO: read n and m, print |sum of 1..n not divisible by m - sum of those divisible by m|\nprint(0)",
         },
         "tests": [
             {"input": "10 3", "expected": "19", "hidden": False},
@@ -475,7 +475,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Strings"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Given a string containing letters and hyphens, move <b>every hyphen to the front</b> and keep the
@@ -490,7 +490,7 @@ Output:
         "hint": "Count the hyphens, then output that many '-' followed by the string without hyphens.",
         "boilerplate": {
             "java": _todo_java('read the string and print it with all hyphens moved to the front'),
-            "cpp": _todo_cpp('read the string and print it with all hyphens moved to the front'),
+            "cpp": _todo_cpp('read the string and print it with all hyphens moved to the front'), "python": "import sys\ns = sys.stdin.read().split()[0]\n\n# TODO: read the string and print it with all hyphens moved to the front\nprint(s)",
         },
         "tests": [
             {"input": "String-Compare-Move-Hyphen", "expected": "---StringCompareMoveHyphen", "hidden": False},
@@ -513,7 +513,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Math", "Loops"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">PrepInsta — recent Accenture drive</p>
 <p>Given <code>a</code> and <code>b</code>, find the number <code>x</code> in <code>[a, b]</code> whose
@@ -535,7 +535,7 @@ Output:
                 "and update the answer only on strictly greater counts so ties keep the smaller x.",
         "boilerplate": {
             "java": _todo_java('read a and b, print the smallest x in [a,b] with the maximum power of 2 dividing it'),
-            "cpp": _todo_cpp('read a and b, print the smallest x in [a,b] with the maximum power of 2 dividing it'),
+            "cpp": _todo_cpp('read a and b, print the smallest x in [a,b] with the maximum power of 2 dividing it'), "python": "import sys\n_data = sys.stdin.read().split()\na = int(_data[0])\nb = int(_data[1])\n\n# TODO: read a and b, print the smallest x in [a,b] with the maximum power of 2 dividing it\nprint(a)",
         },
         "tests": [
             {"input": "7 12", "expected": "8", "hidden": False},
@@ -559,7 +559,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Arrays", "Sorting"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">GeeksforGeeks — Accenture On-Campus 2024</p>
 <p>Given an array, print its <b>second smallest distinct</b> element. Duplicates count once — for
@@ -581,7 +581,7 @@ Output:
                 "second-smallest distinct values.",
         "boilerplate": {
             "java": _todo_java('read n and the array, print the second smallest distinct element'),
-            "cpp": _todo_cpp('read n and the array, print the second smallest distinct element'),
+            "cpp": _todo_cpp('read n and the array, print the second smallest distinct element'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: read n and the array, print the second smallest distinct element\nprint(0)",
         },
         "tests": [
             {"input": "6\n5 6 1 2 6 1", "expected": "2", "hidden": False},
@@ -604,7 +604,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Strings", "Hash Table"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">GeeksforGeeks — Accenture On-Campus 2024</p>
 <p>You are given the name of the winning team for each of <code>n</code> matches. Print the team that
@@ -623,7 +623,7 @@ TeamA</pre>
         "hint": "Count wins per team in a hash map, then scan for the key with the maximum count.",
         "boilerplate": {
             "java": _todo_java('read n and n team names, print the team with the most wins'),
-            "cpp": _todo_cpp('read n and n team names, print the team with the most wins'),
+            "cpp": _todo_cpp('read n and n team names, print the team with the most wins'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\ndef read_str():\n    global _idx\n    val = _data[_idx]; _idx += 1\n    return val\n\nn = read_int()\nteams = [read_str() for _ in range(n)]\n\n# TODO: read n and n team names, print the team with the most wins\nprint(teams[0] if teams else \"\")",
         },
         "tests": [
             {"input": "4\nTeamA TeamB TeamA TeamA", "expected": "TeamA", "hidden": False},
@@ -645,7 +645,7 @@ TeamA</pre>
         "difficulty": "Easy",
         "topics": ["Arrays", "Loops"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">GeeksforGeeks — Accenture AAEA Campus Visit 2024</p>
 <p>Given an array, count how many elements sit at an <b>odd index</b> <i>and</i> hold an
@@ -665,7 +665,7 @@ Output:
         "hint": "Loop i = 1, 3, 5, … and count whenever a[i] % 2 == 1.",
         "boilerplate": {
             "java": _todo_java('read n and the array, print how many elements at odd indexes have odd values'),
-            "cpp": _todo_cpp('read n and the array, print how many elements at odd indexes have odd values'),
+            "cpp": _todo_cpp('read n and the array, print how many elements at odd indexes have odd values'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: read n and the array, print how many elements at odd indexes have odd values\nprint(0)",
         },
         "tests": [
             {"input": "6\n1 2 3 3 5 7", "expected": "2", "hidden": False},
@@ -687,7 +687,7 @@ Output:
         "difficulty": "Easy",
         "topics": ["Arrays", "Loops"],
         "judge": "server",
-        "languages": ["java", "cpp"],
+        "languages": ["java", "cpp", "python"],
         "description": """
 <p class="text-muted">GeeksforGeeks — Accenture AAEA Campus Visit 2024</p>
 <p>Given an array, count how many elements sit at an <b>even index</b> (0, 2, 4, &hellip;) <i>and</i>
@@ -706,7 +706,7 @@ Output:
         "hint": "Loop i = 0, 2, 4, … and count whenever a[i] % 2 == 0.",
         "boilerplate": {
             "java": _todo_java('read n and the array, print how many elements at even indexes have even values'),
-            "cpp": _todo_cpp('read n and the array, print how many elements at even indexes have even values'),
+            "cpp": _todo_cpp('read n and the array, print how many elements at even indexes have even values'), "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\narr = [read_int() for _ in range(n)]\n\n# TODO: read n and the array, print how many elements at even indexes have even values\nprint(0)",
         },
         "tests": [
             {"input": "6\n2 1 4 3 6 5", "expected": "3", "hidden": False},
