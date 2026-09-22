@@ -14,6 +14,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from problems import PROBLEMS
+from quiz_explanations import explanation_for, topic_for
 
 app = Flask(__name__)
 # Serve freshly-rendered templates on every request so edits to index.html
@@ -138,6 +139,20 @@ class CodeDraft(db.Model):
     __table_args__ = (db.UniqueConstraint("user_id", "problem_id", "language", name="unique_draft"),)
 
 
+class PracticeAttempt(db.Model):
+    """One full attempt at a Practice Set quiz — stores every picked answer
+    (not just pass/fail) so a past attempt can be reopened and reviewed in
+    full later, same as the moment it was submitted."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    problem_id = db.Column(db.Integer, nullable=False)
+    answers_json = db.Column(db.Text, nullable=False)  # JSON list of picked option indexes (or null)
+    correct = db.Column(db.Integer, nullable=False)
+    total = db.Column(db.Integer, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -166,6 +181,10 @@ def problem_section(p):
     """Group problems for the list view: SQL / Coding / Web / Pseudocode / General."""
     topics = set(p["topics"])
     judge = p["judge"]
+    if "Practice Set" in topics:
+        return "Practice Sets"
+    if "JS DOM Practice" in topics:
+        return "JS DOM Practice"
     if "Accenture PDF Set" in topics:
         return "Accenture Coding (Important)"
     if "SQL" in topics or "Database" in topics:
@@ -216,6 +235,10 @@ def serialize_problem_full(p):
             {"n": i + 1, "q": q["q"], "options": q["options"]}
             for i, q in enumerate(p["questions"])
         ]
+        # Only the pseudocode Practice Sets are timed — tracing code under a
+        # clock is the actual exam skill being drilled there.
+        if "Practice Set" in p["topics"] and "Pseudocode" in p["topics"]:
+            data["timerMin"] = 25
     if p["languages"] == ["sql"]:
         data["databases"] = [
             {"name": db["name"], "hidden": db["hidden"], "schema": db["schema"], "seed": db["seed"]}
@@ -672,6 +695,56 @@ def api_submit():
     return do_judge(request.get_json(force=True), submit=True)
 
 
+def grade_quiz(problem, answers):
+    """Grade a quiz submission against the current question bank. Shared by
+    the original quiz banks and the newer Practice Sets, and also used to
+    re-render a past practice attempt (graded fresh against today's
+    explanations, not whatever was stored at submit time)."""
+    pid = problem["id"]
+    questions = problem["questions"]
+    results = []
+    correct = 0
+    # {topic: [wrong, total]} — drives the "areas to focus on" summary
+    topic_tally = {}
+    for i, q in enumerate(questions):
+        picked = answers[i] if i < len(answers) else None
+        ok = picked == q["answer"]
+        if ok:
+            correct += 1
+        topic = q.get("topic") or topic_for(pid, i + 1)
+        if topic:
+            tally = topic_tally.setdefault(topic, [0, 0])
+            tally[1] += 1
+            if not ok:
+                tally[0] += 1
+        results.append({
+            "n": i + 1,
+            "picked": picked,
+            "answer": q["answer"],
+            "passed": ok,
+            "topic": topic,
+            "explanation": q.get("explanation") or explanation_for(pid, i + 1),
+        })
+    score = round(correct * 100.0 / len(questions)) if questions else 0
+    focus_areas = sorted(
+        (
+            {"topic": t, "wrong": w, "total": n}
+            for t, (w, n) in topic_tally.items()
+            if w
+        ),
+        key=lambda a: (-a["wrong"], a["topic"]),
+    )
+    return {
+        "judge": "quiz",
+        "passed": correct == len(questions),
+        "correct": correct,
+        "total": len(questions),
+        "score": score,
+        "results": results,
+        "focusAreas": focus_areas,
+    }
+
+
 @app.route("/api/quiz/submit", methods=["POST"])
 def api_quiz_submit():
     payload = request.get_json(force=True)
@@ -683,30 +756,85 @@ def api_quiz_submit():
         return jsonify({"error": "Problem not found"}), 404
     if problem["judge"] != "quiz":
         return jsonify({"error": "Not a quiz problem"}), 400
+    return jsonify(grade_quiz(problem, answers))
 
-    questions = problem["questions"]
-    results = []
-    correct = 0
-    for i, q in enumerate(questions):
-        picked = answers[i] if i < len(answers) else None
-        ok = picked == q["answer"]
-        if ok:
-            correct += 1
-        results.append({
-            "n": i + 1,
-            "picked": picked,
-            "answer": q["answer"],
-            "passed": ok,
-        })
-    score = round(correct * 100.0 / len(questions)) if questions else 0
+
+@app.route("/api/practice/submit", methods=["POST"])
+def api_practice_submit():
+    """Grade a Practice Set attempt and, for logged-in users, persist every
+    picked answer so the attempt can be reopened later from its own history
+    page. Guests grade the same way but keep their history in the browser."""
+    payload = request.get_json(force=True)
+    pid = payload.get("problem_id")
+    answers = payload.get("answers", [])
+    try:
+        problem = get_problem(pid)
+    except KeyError:
+        return jsonify({"error": "Problem not found"}), 404
+    if problem["judge"] != "quiz":
+        return jsonify({"error": "Not a quiz problem"}), 400
+
+    result = grade_quiz(problem, answers)
+    attempt_id = None
+    if current_user.is_authenticated:
+        attempt = PracticeAttempt(
+            user_id=current_user.id,
+            problem_id=pid,
+            answers_json=json.dumps(answers),
+            correct=result["correct"],
+            total=result["total"],
+            score=result["score"],
+        )
+        db.session.add(attempt)
+        db.session.commit()
+        attempt_id = attempt.id
+    result["attemptId"] = attempt_id
+    return jsonify(result)
+
+
+@app.route("/api/practice/attempts/<int:pid>")
+@login_required
+def api_practice_attempts(pid):
+    """List this user's past attempts at a Practice Set, oldest first so
+    attempt numbering ('Attempt 1', 'Attempt 2', ...) stays stable."""
+    attempts = (
+        PracticeAttempt.query
+        .filter_by(user_id=current_user.id, problem_id=pid)
+        .order_by(PracticeAttempt.created_at.asc())
+        .all()
+    )
     return jsonify({
-        "judge": "quiz",
-        "passed": correct == len(questions),
-        "correct": correct,
-        "total": len(questions),
-        "score": score,
-        "results": results,
+        "attempts": [
+            {
+                "id": a.id,
+                "n": i + 1,
+                "correct": a.correct,
+                "total": a.total,
+                "score": a.score,
+                "createdAt": a.created_at.isoformat(),
+            }
+            for i, a in enumerate(attempts)
+        ]
     })
+
+
+@app.route("/api/practice/attempt/<int:attempt_id>")
+@login_required
+def api_practice_attempt_detail(attempt_id):
+    """Full detail for one past attempt — re-graded against the current
+    question bank so explanations/topics reflect today's content."""
+    attempt = PracticeAttempt.query.get_or_404(attempt_id)
+    if attempt.user_id != current_user.id:
+        return jsonify({"error": "Not found"}), 404
+    try:
+        problem = get_problem(attempt.problem_id)
+    except KeyError:
+        return jsonify({"error": "Problem not found"}), 404
+    answers = json.loads(attempt.answers_json)
+    result = grade_quiz(problem, answers)
+    result["attemptId"] = attempt.id
+    result["createdAt"] = attempt.created_at.isoformat()
+    return jsonify(result)
 
 
 def do_judge(payload, submit):

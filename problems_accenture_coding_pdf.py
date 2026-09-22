@@ -5301,4 +5301,65 @@ Alias your output column <code>FULLNAME</code>.</p>
             db_entry("Hidden database", True, USERS_SCHEMA, USERS_HID, Q30),
         ],
     },
+
+    # 3098. Smallest Sub-number Greater Than K
+    {
+        "id": 3098,
+        "slug": "smallest-sub-number-greater-than-k",
+        "title": "Smallest Sub-number Greater Than K",
+        "difficulty": "Easy",
+        "topics": [T, "Strings", "Math"],
+        "judge": "server",
+        "languages": ["java", "python"],
+        "description": """
+<p>A <b>sub-number</b> of a given number <code>N</code> is a value that can be derived from
+<code>N</code> by deleting some digits, while keeping the relative order of the remaining digits
+unchanged. You cannot delete all digits or delete no digits — the empty result and <code>N</code>
+itself are never valid sub-numbers.</p>
+<p>Given two non-negative integers <code>N</code> and <code>K</code>, print the smallest sub-number
+of <code>N</code> that is greater than <code>K</code>. If no such sub-number exists, print
+<code>-1</code>.</p>
+<h3>Input format:</h3>
+<p>Line 1: <code>N</code>. Line 2: <code>K</code>.</p>
+<h3>Example:</h3>
+<pre>Input:      Output:
+123         23
+14</pre>
+<p>Explanation: The sub-numbers of 123 are 1, 2, 3, 12, 13 and 23 (123 itself is excluded since that
+deletes no digits). The only one greater than 14 is 23, so it is also the smallest one greater than 14.</p>
+<h3>Constraints:</h3>
+<ul>
+  <li><code>0 &lt;= N, K &lt; 10^15</code></li>
+</ul>
+""",
+        "hint": "N has at most 15 digits, so there are at most 2^15 proper, non-empty subsequences of "
+                 "its digits — try every one. Skip the subsequence that uses every digit (that equals N "
+                 "itself) and the case where you'd use none. Parse each remaining subsequence as an "
+                 "integer (leading zeros just collapse, e.g. \"05\" is 5) and keep the smallest one that "
+                 "beats K.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String n = sc.next();
+        long k = sc.nextLong();
+
+        // TODO: try every proper, non-empty subsequence of n's digits (i.e. delete at least
+        // one digit but not all of them), parse it as a number, and find the smallest one
+        // that is greater than k. Print -1 if none exists.
+        long answer = -1;
+
+        System.out.println(answer);
+    }
+}""",
+            "python": "import sys\n_data = sys.stdin.read().split()\nn = _data[0]\nk = int(_data[1])\n\n# TODO: try every proper, non-empty subsequence of n's digits (i.e. delete at least one\n# digit but not all of them), parse it as a number, and find the smallest one that is\n# greater than k. Print -1 if none exists.\nanswer = -1\n\nprint(answer)",
+        },
+        "tests": [
+            {"input": "123\n14", "expected": "23", "hidden": False},
+            {"input": "99\n100", "expected": "-1", "hidden": False},
+        ],
+        "samples": [0, 1],
+    },
 ]

@@ -23,6 +23,10 @@ let currentLang = null;
 let previewTimer = null;
 let judgePending = null; // {resolve} for browser judge
 let currentUser = null; // {id, username, email} or null
+let lastQuizResult = null; // {pid, data} — backs the submission review page
+let reviewContext = null; // {mode:"quiz"|"practice", pid, attemptNo, createdAt}
+let quizTimerHandle = null;
+let quizTimerPid = null;
 let userSolved = {}; // {problem_id: true}
 let userSubmissions = []; // all submissions for current user
 
@@ -197,6 +201,23 @@ const store = {
     return Object.keys(this.getSolved()).length;
   },
 
+  /* Best practice-set score seen in this browser, used for the card badge.
+     Server-side history is authoritative but this keeps the list instant. */
+  bestPractice(pid) {
+    try {
+      const raw = localStorage.getItem(`pc_best_${pid}`);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  },
+
+  setBestPractice(pid, score) {
+    const prev = this.bestPractice(pid);
+    if (prev && prev.score >= score) return;
+    localStorage.setItem(`pc_best_${pid}`, JSON.stringify({ score }));
+  },
+
   async getCode(pid, lang) {
     if (currentUser) {
       const res = await fetch(`/api/user/code/${pid}/${lang}`);
@@ -325,6 +346,12 @@ async function openProblem(pid) {
 
   $("list-view").classList.add("hidden");
   $("problem-view").classList.remove("hidden");
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
   $("ph-number").textContent = current.id + ".";
   $("ph-title").textContent = current.title;
   $("ph-difficulty").textContent = current.difficulty;
@@ -336,6 +363,9 @@ async function openProblem(pid) {
     renderQuiz();
     return;
   }
+  // a quiz opened earlier swaps these panels, so restore them here
+  $("editor-panel-quiz").classList.add("hidden");
+  $("editor-panel").classList.remove("hidden");
 
   // language selector
   const sel = $("lang-select");
@@ -860,6 +890,14 @@ function recordSubmission(passed, detail, submit) {
   store.addSub(current.id, sub);
   renderList();
 
+  // If a mock test is running and this Submit was for one of its parts,
+  // record the result so the floating bar and final summary reflect it.
+  if (mockSession && mockSession.parts.some((p) => p.pid === current.id)) {
+    mockSession.results[current.id] = { passed, detail };
+    saveMockSession();
+    renderMockBar();
+  }
+
   // Also send to server if logged in
   if (currentUser) {
     fetch("/api/record-submission", {
@@ -868,7 +906,7 @@ function recordSubmission(passed, detail, submit) {
       body: JSON.stringify({
         problem_id: current.id,
         language: currentLang,
-        code: editor.getValue(),
+        code: editor ? editor.getValue() : "",
         passed: passed,
         verdict: detail,
       }),
@@ -1047,6 +1085,46 @@ function counterPreviewDoc(userCode, tests) {
             parts.push(e.css.selector + ' ' + e.css.property + ' = ' + cssVal +
               ' (expected ' + e.css.value + ')');
           }
+          if (e.html !== undefined) {
+            var htmlEl = document.getElementById(e.html.id);
+            var hv = htmlEl ? htmlEl.innerHTML.trim() : '(missing)';
+            ok = ok && (hv === e.html.value);
+            parts.push('#' + e.html.id + ' innerHTML = "' + hv + '" (expected "' + e.html.value + '")');
+          }
+          if (e.attr !== undefined) {
+            var attrEl = document.querySelector(e.attr.selector);
+            var av = attrEl ? attrEl.getAttribute(e.attr.name) : null;
+            av = av === null ? 'null' : av;
+            ok = ok && (av === e.attr.value);
+            parts.push(e.attr.selector + ' [' + e.attr.name + '] = ' + av +
+              ' (expected ' + e.attr.value + ')');
+          }
+          if (e.elemCount !== undefined) {
+            var ecCount = document.querySelectorAll(e.elemCount.selector).length;
+            ok = ok && (ecCount === e.elemCount.value);
+            parts.push('count of ' + e.elemCount.selector + ' = ' + ecCount +
+              ' (expected ' + e.elemCount.value + ')');
+          }
+          if (e.hasClass !== undefined) {
+            var hcEl = document.querySelector(e.hasClass.selector);
+            var hasIt = hcEl ? hcEl.classList.contains(e.hasClass.class) : false;
+            ok = ok && (hasIt === e.hasClass.value);
+            parts.push(e.hasClass.selector + ' has class "' + e.hasClass.class + '" = ' + hasIt +
+              ' (expected ' + e.hasClass.value + ')');
+          }
+          if (e.visibleList !== undefined) {
+            var vlVis = [];
+            var vlHid = [];
+            document.querySelectorAll(e.visibleList.selector).forEach(function (el) {
+              (getComputedStyle(el).display === 'none' ? vlHid : vlVis).push(el.textContent.trim());
+            });
+            var vlSame = vlVis.length === e.visibleList.visible.length &&
+              e.visibleList.visible.every(function (x) { return vlVis.indexOf(x) !== -1; }) &&
+              vlHid.length === e.visibleList.hidden.length &&
+              e.visibleList.hidden.every(function (x) { return vlHid.indexOf(x) !== -1; });
+            ok = ok && vlSame;
+            parts.push('visible = [' + vlVis.join(', ') + '] (expected [' + e.visibleList.visible.join(', ') + '])');
+          }
           return { ok: ok, actual: parts.join('; ') };
         }
 
@@ -1070,6 +1148,11 @@ function counterPreviewDoc(userCode, tests) {
             if (t.expect.starColor !== undefined) expectedParts.push('star ' + t.expect.starColor.index + ' color = ' + t.expect.starColor.value);
             if (t.expect.exists !== undefined) expectedParts.push('exists ' + t.expect.exists.selector + ' = ' + t.expect.exists.value + (t.expect.exists.text !== undefined ? ' text = "' + t.expect.exists.text + '"' : ''));
             if (t.expect.css !== undefined) expectedParts.push(t.expect.css.selector + ' ' + t.expect.css.property + ' = ' + t.expect.css.value);
+            if (t.expect.html !== undefined) expectedParts.push('#' + t.expect.html.id + ' innerHTML = "' + t.expect.html.value + '"');
+            if (t.expect.attr !== undefined) expectedParts.push(t.expect.attr.selector + ' [' + t.expect.attr.name + '] = ' + t.expect.attr.value);
+            if (t.expect.elemCount !== undefined) expectedParts.push('count of ' + t.expect.elemCount.selector + ' = ' + t.expect.elemCount.value);
+            if (t.expect.hasClass !== undefined) expectedParts.push(t.expect.hasClass.selector + ' has class "' + t.expect.hasClass.class + '" = ' + t.expect.hasClass.value);
+            if (t.expect.visibleList !== undefined) expectedParts.push('visible = [' + t.expect.visibleList.visible.join(', ') + ']');
             results.push({ name: t.name, hidden: t.hidden, pass: r.ok,
               expected: expectedParts.join('; '),
               actual: r.actual });
@@ -1168,13 +1251,71 @@ function renderBrowserResults(results, submit) {
 /* ---------------- MCQ Quiz mode ---------------- */
 function quizSelections() {
   try {
-    return JSON.parse(localStorage.getItem(`pc_quiz_${current.id}`) || "[]");
+    return JSON.parse(localStorage.getItem(`pc_quiz3_${current.id}`) || "[]");
   } catch {
     return [];
   }
 }
 function saveQuizSelections(sel) {
-  localStorage.setItem(`pc_quiz_${current.id}`, JSON.stringify(sel));
+  localStorage.setItem(`pc_quiz3_${current.id}`, JSON.stringify(sel));
+}
+
+/* Practice Set exam timer — 20 min for most sets, 25 min for pseudocode sets
+   (server decides the minutes via `timerMin`; missing/0 means untimed). The
+   start time is persisted in localStorage so refreshing the page doesn't
+   grant extra time; "Clear Answers" is the only thing that resets it. */
+function quizTimerKey(pid) {
+  return `pc_quiz_timer_${pid}`;
+}
+
+function stopQuizTimer() {
+  if (quizTimerHandle) {
+    clearInterval(quizTimerHandle);
+    quizTimerHandle = null;
+  }
+  quizTimerPid = null;
+}
+
+function startQuizTimer(p) {
+  stopQuizTimer();
+  const timerEl = $("quiz-timer");
+  if (!p.timerMin) {
+    timerEl.classList.add("hidden");
+    return;
+  }
+  const key = quizTimerKey(p.id);
+  let startedAt = +localStorage.getItem(key);
+  if (!startedAt) {
+    startedAt = Date.now();
+    localStorage.setItem(key, String(startedAt));
+  }
+  const durationMs = p.timerMin * 60000;
+  timerEl.classList.remove("hidden");
+  quizTimerPid = p.id;
+  const tick = () => {
+    // the user navigated to a different problem/view — stop ticking a timer
+    // for a quiz that isn't the one on screen anymore
+    if (!current || current.id !== p.id || quizTimerPid !== p.id) {
+      stopQuizTimer();
+      return;
+    }
+    const remaining = startedAt + durationMs - Date.now();
+    renderQuizTimer(remaining);
+    if (remaining <= 0) {
+      stopQuizTimer();
+      doSubmitQuiz(true);
+    }
+  };
+  quizTimerHandle = setInterval(tick, 1000);
+  tick();
+}
+
+function renderQuizTimer(remaining) {
+  const mins = Math.max(0, Math.floor(remaining / 60000));
+  const secs = Math.max(0, Math.floor((remaining % 60000) / 1000));
+  const timerEl = $("quiz-timer");
+  timerEl.textContent = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  timerEl.classList.toggle("low", remaining < 5 * 60000);
 }
 
 function renderQuiz() {
@@ -1188,10 +1329,20 @@ function renderQuiz() {
   $("ph-difficulty").textContent = current.difficulty;
   $("ph-difficulty").className = "diff " + current.difficulty.toLowerCase();
   $("ph-topics").textContent = current.topics.join(" · ");
-  $("results").innerHTML = "";
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  $("quiz-results").innerHTML = "";
+  // the review button only means something once this quiz has been graded
+  $("quiz-review").classList.toggle(
+    "hidden",
+    !lastQuizResult || lastQuizResult.pid !== current.id,
+  );
 
   const saved = quizSelections();
-  const LETTERS = ["A", "B", "C", "D", "E", "F"];
   $("quiz-questions").innerHTML = current.questions
     .map((q) => {
       const picked = saved[q.n - 1];
@@ -1237,6 +1388,7 @@ function renderQuiz() {
     `<h3>Hint</h3><div class="hint-box">${current.hint}</div>`;
   buildTabs();
   switchTab("desc");
+  startQuizTimer(current);
 }
 
 function updateQuizProgress() {
@@ -1260,15 +1412,23 @@ function updateQuizProgress() {
 function clearQuiz() {
   if (!confirm("Clear all selected answers for this quiz?")) return;
   saveQuizSelections([]);
+  // "Clear Answers" is the explicit restart action, so the exam clock
+  // restarts too rather than keeping whatever time had already elapsed.
+  localStorage.removeItem(quizTimerKey(current.id));
   renderQuiz();
 }
 
 async function submitQuiz() {
+  await doSubmitQuiz(false);
+}
+
+async function doSubmitQuiz(force) {
   const sel = quizSelections();
   const unanswered = current.questions.filter(
     (q) => sel[q.n - 1] === undefined || sel[q.n - 1] === null,
   ).length;
   if (
+    !force &&
     unanswered > 0 &&
     !confirm(
       `${unanswered} question${unanswered === 1 ? "" : "s"} unanswered. Submit anyway?`,
@@ -1276,60 +1436,286 @@ async function submitQuiz() {
   ) {
     return;
   }
+  stopQuizTimer();
   setButtonsBusy(true);
-  $("results").innerHTML =
+  $("quiz-results").innerHTML =
     `<div class="results-header"><span class="verdict pending">Grading…</span></div>`;
   try {
-    const res = await fetch("/api/quiz/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ problem_id: current.id, answers: sel }),
-    });
-    const data = await res.json();
+    const practice = isPracticeSet(current);
+    const data = practice
+      ? await submitPracticeAttempt(current.id, sel)
+      : await gradeQuiz(current.id, sel);
     renderQuizResults(data);
   } catch (e) {
-    $("results").innerHTML =
+    $("quiz-results").innerHTML =
       `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(String(e))}</pre>`;
   } finally {
     setButtonsBusy(false);
   }
 }
 
+async function gradeQuiz(pid, answers) {
+  const res = await fetch("/api/quiz/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ problem_id: pid, answers }),
+  });
+  return res.json();
+}
+
+/* Practice sets persist every attempt — server-side when logged in, in the
+   browser otherwise — so the attempt history page can reopen any of them. */
+async function submitPracticeAttempt(pid, answers) {
+  const res = await fetch("/api/practice/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ problem_id: pid, answers }),
+  });
+  const data = await res.json();
+  if (!data.error) {
+    if (!data.attemptId) saveLocalAttempt(pid, answers, data);
+    store.setBestPractice(pid, data.score);
+  }
+  return data;
+}
+
 function renderQuizResults(data) {
   if (data.error) {
-    $("results").innerHTML =
+    $("quiz-results").innerHTML =
       `<div class="results-header"><span class="verdict wa">Error</span></div><pre class="error-pre">${escapeHtml(data.error)}</pre>`;
     return;
   }
-  const box = $("results");
-  const summary = `<div class="results-header">
-      <span class="verdict ${data.passed ? "ac" : "wa"}">${data.correct === data.total ? "Perfect Score" : "Quiz Graded"}</span>
-      <span style="color:var(--text-dim);font-weight:400">${data.correct}/${data.total} correct (${data.score}%)</span>
-    </div>`;
-  const rows = data.results
-    .filter((r) => !r.passed)
-    .map((r) => {
-      const q = current.questions[r.n - 1];
-      const picked =
-        r.picked === null || r.picked === undefined
-          ? "— (no answer)"
-          : `${"ABCDEF"[r.picked]}. ${q.options[r.picked]}`;
-      const right = `${"ABCDEF"[r.answer]}. ${q.options[r.answer]}`;
-      return `<div class="test-case">
-        <div class="test-head"><span class="tc-badge fail">WRONG</span> Q${r.n}</div>
-        <div class="quiz-review">
-          <div class="quiz-review-row"><span class="io-label">Your answer</span><span class="quiz-review-text wrong">${escapeHtml(picked)}</span></div>
-          <div class="quiz-review-row"><span class="io-label">Correct answer</span><span class="quiz-review-text">${escapeHtml(right)}</span></div>
-        </div>
-      </div>`;
-    })
-    .join("");
-  box.innerHTML =
-    summary +
-    (rows ||
-      `<p style="color:var(--text-dim)">All answers correct — nothing to review.</p>`);
+  lastQuizResult = { pid: current.id, data };
+  const box = renderQuizScorecard(data);
   recordSubmission(data.passed, `${data.correct}/${data.total} correct`, true);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function renderQuizScorecard(data) {
+  const practice = isPracticeSet(current);
+  $("quiz-review").classList.toggle("hidden", practice);
+  const wrong = data.results.filter((r) => !r.passed && r.picked != null).length;
+  const skipped = data.results.filter((r) => r.picked == null).length;
+  const box = $("quiz-results");
+  // Practice sets route through their own attempt history; the original quiz
+  // banks jump straight into the review page as before.
+  const cta = practice
+    ? `<button class="btn btn-review" id="quiz-results-review">View Result</button>`
+    : `<button class="btn btn-review" id="quiz-results-review">
+         View Submission — answers &amp; explanations
+       </button>`;
+  box.innerHTML = `<div class="results-header">
+      <span class="verdict ${data.passed ? "ac" : "wa"}">${data.correct === data.total ? "Perfect Score" : practice ? "Submitted" : "Quiz Graded"}</span>
+      <span style="color:var(--text-dim);font-weight:400">${data.correct}/${data.total} correct (${data.score}%)</span>
+    </div>
+    <div class="quiz-scorecard">
+      <div class="score-tiles">
+        <div class="score-tile ok"><b>${data.correct}</b><span>Correct</span></div>
+        <div class="score-tile bad"><b>${wrong}</b><span>Wrong</span></div>
+        <div class="score-tile skip"><b>${skipped}</b><span>Skipped</span></div>
+        <div class="score-tile"><b>${data.score}%</b><span>Score</span></div>
+      </div>
+      ${cta}
+    </div>`;
+  $("quiz-results-review").addEventListener(
+    "click",
+    practice ? () => openAttempts(current.id) : showQuizReview,
+  );
+  return box;
+}
+
+/* ---------------- Quiz submission review page ---------------- */
+const LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+function reviewState(r) {
+  if (r.passed) return "ok";
+  return r.picked == null ? "skip" : "bad";
+}
+
+async function showQuizReview() {
+  if (!current || !lastQuizResult || lastQuizResult.pid !== current.id) return;
+  reviewContext = null;
+  setRoute(`#review=${current.id}`);
+  renderQuizReview();
+}
+
+// Entry point for a cold #review=<id> load (refresh, bookmark, back button):
+// the saved selections in localStorage are re-graded so the page still works.
+async function openQuizReview(pid) {
+  if (!current || current.id !== pid) {
+    const res = await fetch(`/api/problems/${pid}`);
+    current = await res.json();
+    if (current.judge !== "quiz") return showList();
+    renderQuiz();
+  }
+  if (!lastQuizResult || lastQuizResult.pid !== pid) {
+    const data = await gradeQuiz(pid, quizSelections());
+    if (data.error) return showList();
+    lastQuizResult = { pid, data };
+    $("quiz-review").classList.remove("hidden");
+  }
+  setRoute(`#review=${pid}`);
+  renderQuizReview();
+}
+
+function renderQuizReview() {
+  const { data } = lastQuizResult;
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  $("review-view").classList.remove("hidden");
+
+  const practice = reviewContext && reviewContext.mode === "practice";
+  $("review-title").textContent = practice
+    ? `${current.title} — Attempt ${reviewContext.attemptNo}`
+    : current.title;
+  $("review-back").textContent = practice
+    ? "← All attempts"
+    : "← Back to quiz";
+  const wrong = data.results.filter((r) => reviewState(r) === "bad").length;
+  const skipped = data.results.filter((r) => reviewState(r) === "skip").length;
+  const when =
+    practice && reviewContext.createdAt
+      ? ` · ${new Date(reviewContext.createdAt).toLocaleString()}`
+      : "";
+  $("review-score").innerHTML = `
+    <span class="verdict ${data.passed ? "ac" : "wa"}">${data.score}%</span>
+    <span class="review-score-line">${data.correct}/${data.total} correct
+      · ${wrong} wrong · ${skipped} skipped${escapeHtml(when)}</span>`;
+
+  $("review-grid").innerHTML = data.results
+    .map(
+      (r) =>
+        `<button class="rnum ${reviewState(r)}" data-n="${r.n}" title="Question ${r.n}">${r.n}</button>`,
+    )
+    .join("");
+
+  const focus = data.focusAreas || [];
+  $("review-focus").innerHTML = focus.length
+    ? `<div class="review-side-title">Areas to focus on</div>` +
+      focus
+        .map(
+          (f) =>
+            `<div class="focus-row"><span>${escapeHtml(f.topic)}</span>
+               <b>${f.wrong}/${f.total} wrong</b></div>`,
+        )
+        .join("")
+    : "";
+
+  $("review-list").innerHTML = data.results
+    .map((r) => {
+      const q = current.questions[r.n - 1];
+      const state = reviewState(r);
+      const opts = q.options
+        .map((o, oi) => {
+          const isRight = oi === r.answer;
+          const isPicked = oi === r.picked;
+          const cls = isRight ? "right" : isPicked ? "wrong" : "";
+          const tag = isRight
+            ? '<span class="opt-tag right">Correct answer</span>'
+            : isPicked
+              ? '<span class="opt-tag wrong">Your answer</span>'
+              : "";
+          return `<div class="ropt ${cls}">
+              <span class="quiz-letter">${LETTERS[oi]}</span>
+              <span class="ropt-text">${escapeHtml(o)}</span>${tag}
+            </div>`;
+        })
+        .join("");
+      const why = r.explanation
+        ? `<div class="why"><span class="why-label">Why</span>
+             <div class="why-text">${escapeHtml(r.explanation)}</div></div>`
+        : `<div class="why muted"><span class="why-label">Why</span>
+             <div class="why-text">Explanation coming soon for this question.</div></div>`;
+      const topic = r.topic
+        ? `<span class="rq-topic">${escapeHtml(r.topic)}</span>`
+        : "";
+      const label =
+        state === "ok" ? "Correct" : state === "skip" ? "Skipped" : "Wrong";
+      return `<article class="rq collapsed" id="rq-${r.n}" data-state="${state}">
+          <button class="rq-head" data-n="${r.n}">
+            <span class="rnum ${state}">${r.n}</span>
+            <span class="rq-q">${q.q}</span>
+            ${topic}
+            <span class="rq-flag ${state}">${label}</span>
+          </button>
+          <div class="rq-body">${opts}${why}</div>
+        </article>`;
+    })
+    .join("");
+
+  $("review-grid")
+    .querySelectorAll(".rnum")
+    .forEach((b) =>
+      b.addEventListener("click", () => openReviewQuestion(+b.dataset.n)),
+    );
+  $("review-list")
+    .querySelectorAll(".rq-head")
+    .forEach((h) =>
+      h.addEventListener("click", () =>
+        h.parentElement.classList.toggle("collapsed"),
+      ),
+    );
+  setReviewFilter("all");
+  window.scrollTo({ top: 0 });
+}
+
+function openReviewQuestion(n) {
+  const card = $(`rq-${n}`);
+  if (!card) return;
+  // a filter can have the target hidden — clicking a number always wins
+  if (card.classList.contains("filtered")) setReviewFilter("all");
+  card.classList.remove("collapsed");
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+  card.classList.add("flash");
+  setTimeout(() => card.classList.remove("flash"), 1200);
+}
+
+function setReviewFilter(filter) {
+  document
+    .querySelectorAll(".review-filters .chip")
+    .forEach((c) => c.classList.toggle("active", c.dataset.filter === filter));
+  $("review-list")
+    .querySelectorAll(".rq")
+    .forEach((card) => {
+      const state = card.dataset.state;
+      const show =
+        filter === "all" ||
+        (filter === "wrong" && state === "bad") ||
+        (filter === "skipped" && state === "skip");
+      card.classList.toggle("filtered", !show);
+    });
+}
+
+function setAllReviewCards(collapsed) {
+  $("review-list")
+    .querySelectorAll(".rq")
+    .forEach((c) => c.classList.toggle("collapsed", collapsed));
+}
+
+function backToQuiz() {
+  // From a practice attempt, "back" belongs to the attempt history, not the quiz
+  if (reviewContext && reviewContext.mode === "practice") {
+    const pid = reviewContext.pid;
+    reviewContext = null;
+    return openAttempts(pid);
+  }
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  setRoute(`#p=${current.id}`);
+  renderQuiz();
+  if (lastQuizResult && lastQuizResult.pid === current.id) {
+    renderQuizScorecard(lastQuizResult.data).scrollIntoView({ block: "nearest" });
+  }
 }
 
 /* ---------------- Live preview ---------------- */
@@ -1439,6 +1825,37 @@ async function applyRoute() {
     if (!current || current.id !== pid) await openProblem(pid);
     return;
   }
+  const rev = hash.match(/^#review=(\d+)$/);
+  if (rev) {
+    reviewContext = null;
+    await openQuizReview(+rev[1]);
+    return;
+  }
+  if (hash === "#practice") {
+    showPractice();
+    return;
+  }
+  if (hash === "#domjs") {
+    showDomPractice();
+    return;
+  }
+  if (hash === "#mock") {
+    showMock();
+    return;
+  }
+  const att = hash.match(/^#attempts=(\d+)$/);
+  if (att) {
+    await openAttempts(+att[1]);
+    return;
+  }
+  const one = hash.match(/^#attempt=(\d+):(.+)$/);
+  if (one) {
+    const pid = +one[1];
+    const attempts = await fetchAttempts(pid);
+    const found = attempts.find((a) => String(a.id) === one[2]);
+    await openAttemptDetail(pid, one[2], found ? found.n : 1);
+    return;
+  }
   if (hash === "#pseudo") {
     showPseudocode();
     return;
@@ -1484,11 +1901,18 @@ function showList() {
   $("pdf-view").classList.add("hidden");
   $("list-view").classList.remove("hidden");
   $("editor-panel-quiz").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
   $("editor-panel").classList.remove("hidden");
   document.querySelector("#list-view .page-title").textContent = "Problems";
   $("nav-problems").classList.add("active");
   $("nav-pseudo").classList.remove("active");
   $("nav-pdfs").classList.remove("active");
+  $("nav-domjs").classList.remove("active");
   current = null;
   renderList();
 }
@@ -1500,11 +1924,18 @@ function showPseudocode() {
   $("pdf-view").classList.add("hidden");
   $("list-view").classList.remove("hidden");
   $("editor-panel-quiz").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
   $("editor-panel").classList.remove("hidden");
   document.querySelector("#list-view .page-title").textContent = "Pseudocode";
   $("nav-problems").classList.remove("active");
   $("nav-pseudo").classList.add("active");
   $("nav-pdfs").classList.remove("active");
+  $("nav-domjs").classList.remove("active");
   current = null;
   renderList();
 }
@@ -1515,14 +1946,603 @@ function showPdfs() {
   $("problem-view").classList.add("hidden");
   $("list-view").classList.add("hidden");
   $("editor-panel-quiz").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
   $("editor-panel").classList.add("hidden");
   $("pdf-view").classList.remove("hidden");
   $("nav-problems").classList.remove("active");
   $("nav-pseudo").classList.remove("active");
   $("nav-pdfs").classList.add("active");
+  $("nav-domjs").classList.remove("active");
   current = null;
   loadPdfs();
 }
+
+/* ---------------- Practice Sets ---------------- */
+function isPracticeSet(p) {
+  return !!p && (p.section === "Practice Sets" ||
+    (p.topics || []).includes("Practice Set"));
+}
+
+function showPractice() {
+  setRoute("#practice");
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("editor-panel-quiz").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("practice-view").classList.remove("hidden");
+  $("nav-problems").classList.remove("active");
+  $("nav-pseudo").classList.remove("active");
+  $("nav-pdfs").classList.remove("active");
+  $("nav-practice").classList.add("active");
+  $("nav-domjs").classList.remove("active");
+  current = null;
+  renderPracticeSets();
+}
+
+function renderPracticeSets() {
+  const sets = problems.filter(isPracticeSet);
+  if (!sets.length) {
+    $("practice-groups").innerHTML =
+      `<p style="color:var(--text-dim)">No practice sets available yet.</p>`;
+    return;
+  }
+  // group by the second topic tag, which names the practice topic
+  const byTopic = {};
+  sets.forEach((p) => {
+    const topic = (p.topics || []).filter((t) => t !== "Practice Set")[0] || "Other";
+    (byTopic[topic] = byTopic[topic] || []).push(p);
+  });
+  const solved = store.getSolved();
+  $("practice-groups").innerHTML = Object.keys(byTopic)
+    .map((topic) => {
+      const cards = byTopic[topic]
+        .map((p) => {
+          const best = store.bestPractice(p.id);
+          const badge = best
+            ? `<span class="pset-best">Best ${best.score}%</span>`
+            : `<span class="pset-new">Not attempted</span>`;
+          return `<div class="pset-card" data-id="${p.id}">
+            <div class="pset-card-top">
+              <span class="pset-count">20 questions</span>${badge}
+            </div>
+            <div class="pset-title">${escapeHtml(p.title)}</div>
+            <div class="pset-meta">${escapeHtml(p.difficulty)} · situational</div>
+          </div>`;
+        })
+        .join("");
+      return `<div class="pset-group">
+          <div class="pset-group-title">${escapeHtml(topic)}</div>
+          <div class="pset-grid">${cards}</div>
+        </div>`;
+    })
+    .join("");
+  document.querySelectorAll("#practice-groups .pset-card").forEach((el) => {
+    el.addEventListener("click", () => openProblem(+el.dataset.id));
+  });
+}
+
+/* ---------------- JS DOM Practice ---------------- */
+// Curriculum order — deliberately NOT alphabetical, each chunk builds on the last.
+const DOM_CHUNK_ORDER = [
+  "Selecting & Reading Elements",
+  "Changing Text & Attributes",
+  "Styling with Classes",
+  "Handling Events",
+  "Creating & Removing Elements",
+  "DOM Traversal",
+  "Working with Forms",
+  "Mini Projects",
+];
+
+function isDomPractice(p) {
+  return !!p && (p.section === "JS DOM Practice" ||
+    (p.topics || []).includes("JS DOM Practice"));
+}
+
+function showDomPractice() {
+  setRoute("#domjs");
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("editor-panel-quiz").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  $("dom-practice-view").classList.remove("hidden");
+  $("nav-problems").classList.remove("active");
+  $("nav-pseudo").classList.remove("active");
+  $("nav-pdfs").classList.remove("active");
+  $("nav-practice").classList.remove("active");
+  $("nav-domjs").classList.add("active");
+  current = null;
+  renderDomPracticeGroups();
+}
+
+function renderDomPracticeGroups() {
+  const exercises = problems.filter(isDomPractice);
+  if (!exercises.length) {
+    $("dom-practice-groups").innerHTML =
+      `<p style="color:var(--text-dim)">No DOM practice exercises available yet.</p>`;
+    return;
+  }
+  // group by the chunk tag (the topic after "JS DOM Practice"), in curriculum order
+  const byChunk = {};
+  exercises.forEach((p) => {
+    const chunk = (p.topics || []).find((t) =>
+      t !== "JavaScript" && t !== "DOM Manipulation" && t !== "JS DOM Practice",
+    ) || "Other";
+    (byChunk[chunk] = byChunk[chunk] || []).push(p);
+  });
+  const chunkNames = [
+    ...DOM_CHUNK_ORDER.filter((c) => byChunk[c]),
+    ...Object.keys(byChunk).filter((c) => !DOM_CHUNK_ORDER.includes(c)),
+  ];
+  const solved = store.getSolved();
+  $("dom-practice-groups").innerHTML = chunkNames
+    .map((chunk, i) => {
+      const cards = byChunk[chunk]
+        .map((p) => {
+          const isSolved = !!solved[p.id];
+          const badge = isSolved
+            ? `<span class="pset-best">Solved &#10003;</span>`
+            : `<span class="pset-new">Not attempted</span>`;
+          return `<div class="pset-card" data-id="${p.id}">
+            <div class="pset-card-top">
+              <span class="pset-count">${escapeHtml(p.difficulty)}</span>${badge}
+            </div>
+            <div class="pset-title">${escapeHtml(p.title)}</div>
+            <div class="pset-meta">JavaScript &middot; DOM</div>
+          </div>`;
+        })
+        .join("");
+      return `<div class="pset-group">
+          <div class="pset-group-title">Chunk ${i + 1}: ${escapeHtml(chunk)}</div>
+          <div class="pset-grid">${cards}</div>
+        </div>`;
+    })
+    .join("");
+  document.querySelectorAll("#dom-practice-groups .pset-card").forEach((el) => {
+    el.addEventListener("click", () => openProblem(+el.dataset.id));
+  });
+}
+
+/* Guest attempt history lives in the browser; logged-in history lives in the
+   DB so it follows the account across devices. */
+function localAttempts(pid) {
+  try {
+    return JSON.parse(localStorage.getItem(`pc_attempts_${pid}`) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalAttempt(pid, answers, data) {
+  const list = localAttempts(pid);
+  list.push({
+    id: `local-${Date.now()}`,
+    answers,
+    correct: data.correct,
+    total: data.total,
+    score: data.score,
+    createdAt: new Date().toISOString(),
+  });
+  localStorage.setItem(`pc_attempts_${pid}`, JSON.stringify(list));
+  return list.length;
+}
+
+async function fetchAttempts(pid) {
+  if (currentUser) {
+    const res = await fetch(`/api/practice/attempts/${pid}`);
+    if (res.ok) return (await res.json()).attempts;
+  }
+  return localAttempts(pid).map((a, i) => ({ ...a, n: i + 1 }));
+}
+
+async function openAttempts(pid) {
+  const p = problems.find((x) => x.id === pid);
+  if (!current || current.id !== pid) {
+    const res = await fetch(`/api/problems/${pid}`);
+    current = await res.json();
+  }
+  setRoute(`#attempts=${pid}`);
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("attempts-view").classList.remove("hidden");
+
+  $("attempts-title").textContent = (p && p.title) || current.title;
+  const attempts = await fetchAttempts(pid);
+  $("attempts-intro").textContent = attempts.length
+    ? `${attempts.length} attempt${attempts.length === 1 ? "" : "s"} — click one to see its marks, answers and explanations.`
+    : "No attempts yet. Take the set and submit it to build your history here.";
+  if (!currentUser) {
+    $("attempts-intro").textContent +=
+      " (Not logged in — this history is saved in this browser only.)";
+  }
+
+  $("attempts-list").innerHTML = attempts
+    .slice()
+    .reverse()
+    .map((a) => {
+      const when = new Date(a.createdAt).toLocaleString();
+      const cls = a.score >= 70 ? "good" : a.score >= 50 ? "mid" : "low";
+      return `<div class="attempt-row" data-id="${a.id}" data-n="${a.n}">
+          <div class="attempt-n">Attempt ${a.n}</div>
+          <div class="attempt-when">${escapeHtml(when)}</div>
+          <div class="attempt-score ${cls}">${a.correct}/${a.total} · ${a.score}%</div>
+          <div class="attempt-go">View →</div>
+        </div>`;
+    })
+    .join("");
+
+  document.querySelectorAll("#attempts-list .attempt-row").forEach((row) => {
+    row.addEventListener("click", () =>
+      openAttemptDetail(pid, row.dataset.id, +row.dataset.n),
+    );
+  });
+}
+
+async function openAttemptDetail(pid, attemptId, attemptNo) {
+  if (!current || current.id !== pid) {
+    const res = await fetch(`/api/problems/${pid}`);
+    current = await res.json();
+  }
+  let data;
+  if (String(attemptId).startsWith("local-")) {
+    const stored = localAttempts(pid).find((a) => a.id === attemptId);
+    if (!stored) return;
+    data = await gradeQuiz(pid, stored.answers);
+    data.createdAt = stored.createdAt;
+  } else {
+    const res = await fetch(`/api/practice/attempt/${attemptId}`);
+    if (!res.ok) return;
+    data = await res.json();
+  }
+  lastQuizResult = { pid, data };
+  reviewContext = {
+    mode: "practice",
+    pid,
+    attemptNo,
+    createdAt: data.createdAt,
+  };
+  setRoute(`#attempt=${pid}:${attemptId}`);
+  renderQuizReview();
+}
+
+/* ================================================================== */
+/* MOCK TEST — timed, 3-part coding round (Coding + SQL + Web Dev)     */
+/* ================================================================== */
+
+const MOCK_TESTS = [
+  {
+    id: "mock-1",
+    title: "Coding Round Mock #1 — 60 Minutes",
+    desc: "One coding problem, one SQL join, one JavaScript/DOM task — the same 3-part shape "
+      + "as the real Accenture coding round, built entirely from real reported exam questions. "
+      + "Work through all three under one 60-minute clock, then submit each with the normal "
+      + "Submit button before time runs out.",
+    durationMin: 60,
+    parts: [
+      { pid: 27, label: "Coding" },
+      { pid: 4018, label: "SQL" },
+      { pid: 4016, label: "Web Dev" },
+    ],
+  },
+  {
+    id: "mock-2",
+    title: "Coding Round Mock #2 — 60 Minutes",
+    desc: "Coding: 8th Sept Shift 2 reported question (binary-search on a digit-sum prefix "
+      + "series). SQL: a 3-table join with a location filter, the same 'join + WHERE' shape as "
+      + "the reported SQL question. Web Dev: a dark/light theme toggle with persisted state.",
+    durationMin: 60,
+    parts: [
+      { pid: 28, label: "Coding" },
+      { pid: 3078, label: "SQL" },
+      { pid: 50, label: "Web Dev" },
+    ],
+  },
+  {
+    id: "mock-3",
+    title: "Coding Round Mock #3 — 60 Minutes",
+    desc: "Coding: the 20th Sept reported question (count squares ending in a given digit) — "
+      + "a plain loop, on the easier end of the coding round. SQL: a salary-threshold join "
+      + "across 3 tables. Web Dev: real-time password strength and confirm-match validation.",
+    durationMin: 60,
+    parts: [
+      { pid: 3099, label: "Coding" },
+      { pid: 3070, label: "SQL" },
+      { pid: 14, label: "Web Dev" },
+    ],
+  },
+  {
+    id: "mock-4",
+    title: "Coding Round Mock #4 — 60 Minutes",
+    desc: "Coding: 18th Sept Slot 3 reported question (even/odd digit-length rules on an "
+      + "array) — the one with the visible optimal solution in the source. SQL: a join filtered "
+      + "on a name pattern and a numeric flight-code pattern. Web Dev: a live search/filter list.",
+    durationMin: 60,
+    parts: [
+      { pid: 3102, label: "Coding" },
+      { pid: 3086, label: "SQL" },
+      { pid: 15, label: "Web Dev" },
+    ],
+  },
+  {
+    id: "mock-5",
+    title: "Coding Round Mock #5 — 60 Minutes",
+    desc: "Coding: 18th Sept Slot 1 reported question (max bitonic subarray sum) — the hardest "
+      + "of the five mocks, O(N) two-pass DP. SQL: a join filtered on status plus a plate-number "
+      + "pattern. Web Dev: a bounded counter with clamped limits and a status message.",
+    durationMin: 60,
+    parts: [
+      { pid: 3100, label: "Coding" },
+      { pid: 3094, label: "SQL" },
+      { pid: 3, label: "Web Dev" },
+    ],
+  },
+];
+
+let mockSession = null; // {mockId, parts, startedAt, durationMs, results:{pid:{passed,detail}}}
+let mockTickHandle = null;
+
+function loadMockSession() {
+  try {
+    return JSON.parse(localStorage.getItem("pc_mock_session") || "null");
+  } catch {
+    return null;
+  }
+}
+function saveMockSession() {
+  if (mockSession) localStorage.setItem("pc_mock_session", JSON.stringify(mockSession));
+  else localStorage.removeItem("pc_mock_session");
+}
+function mockHistory() {
+  try {
+    return JSON.parse(localStorage.getItem("pc_mock_history") || "[]");
+  } catch {
+    return [];
+  }
+}
+function saveMockHistory(list) {
+  localStorage.setItem("pc_mock_history", JSON.stringify(list));
+}
+
+function showMock() {
+  setRoute("#mock");
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-summary-view").classList.add("hidden");
+  $("mock-view").classList.remove("hidden");
+  $("nav-problems").classList.remove("active");
+  $("nav-pseudo").classList.remove("active");
+  $("nav-pdfs").classList.remove("active");
+  $("nav-practice").classList.remove("active");
+  $("nav-domjs").classList.remove("active");
+  $("nav-mock").classList.add("active");
+  current = null;
+  renderMockList();
+}
+
+function renderMockList() {
+  $("mock-list").innerHTML = MOCK_TESTS.map((m) => {
+    const inProgress = mockSession && mockSession.mockId === m.id;
+    const btnLabel = inProgress ? "Resume" : "Start Mock";
+    return `<div class="mock-card">
+        <div class="mock-card-title">${escapeHtml(m.title)}</div>
+        <div class="mock-card-desc">${escapeHtml(m.desc)}</div>
+        <div class="mock-card-parts">
+          ${m.parts.map((p, i) => `<span class="mock-part-chip">Part ${i + 1} · ${escapeHtml(p.label)}</span>`).join("")}
+        </div>
+        <button class="btn btn-submit" data-mock="${m.id}">${btnLabel}</button>
+      </div>`;
+  }).join("");
+  document.querySelectorAll("#mock-list [data-mock]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const m = MOCK_TESTS.find((x) => x.id === btn.dataset.mock);
+      if (mockSession && mockSession.mockId === m.id) resumeMock();
+      else startMock(m);
+    });
+  });
+
+  const hist = mockHistory().slice().reverse();
+  $("mock-history").innerHTML = hist.length
+    ? hist.map((h, i) => {
+        const m = MOCK_TESTS.find((x) => x.id === h.mockId);
+        const passed = Object.values(h.results).filter((r) => r && r.passed).length;
+        const total = m ? m.parts.length : Object.keys(h.results).length;
+        const mins = Math.round(h.elapsedMs / 60000);
+        return `<div class="mock-history-row" data-idx="${hist.length - 1 - i}">
+            <div>
+              <div>${escapeHtml((m && m.title) || h.mockId)}</div>
+              <div class="mock-history-when">${new Date(h.finishedAt).toLocaleString()} · ${mins} min used</div>
+            </div>
+            <div class="mock-history-score">${passed}/${total} passed</div>
+            <div class="mock-history-when">View →</div>
+          </div>`;
+      }).join("")
+    : `<p style="color:var(--text-dim);font-size:13px">No mock attempts yet.</p>`;
+  document.querySelectorAll("#mock-history [data-idx]").forEach((row) => {
+    row.addEventListener("click", () => renderMockSummary(mockHistory()[+row.dataset.idx]));
+  });
+}
+
+function startMock(m) {
+  mockSession = {
+    mockId: m.id,
+    parts: m.parts,
+    startedAt: Date.now(),
+    durationMs: m.durationMin * 60000,
+    current: 0,
+    results: {},
+  };
+  saveMockSession();
+  resumeMock();
+}
+
+function resumeMock() {
+  if (!mockSession) return;
+  startMockTicker();
+  mockGoToPart(mockSession.current || 0);
+}
+
+async function mockGoToPart(index) {
+  if (!mockSession) return;
+  mockSession.current = index;
+  saveMockSession();
+  const part = mockSession.parts[index];
+  await openProblem(part.pid);
+  renderMockBar();
+}
+
+function startMockTicker() {
+  $("mock-bar").classList.remove("hidden");
+  if (mockTickHandle) clearInterval(mockTickHandle);
+  mockTickHandle = setInterval(tickMockTimer, 1000);
+  tickMockTimer();
+}
+
+function tickMockTimer() {
+  if (!mockSession) return;
+  const remaining = mockSession.startedAt + mockSession.durationMs - Date.now();
+  if (remaining <= 0) {
+    finishMock();
+    return;
+  }
+  renderMockBar(remaining);
+}
+
+function renderMockBar(remainingOverride) {
+  if (!mockSession) return;
+  const m = MOCK_TESTS.find((x) => x.id === mockSession.mockId);
+  const remaining = remainingOverride != null
+    ? remainingOverride
+    : mockSession.startedAt + mockSession.durationMs - Date.now();
+  const mins = Math.max(0, Math.floor(remaining / 60000));
+  const secs = Math.max(0, Math.floor((remaining % 60000) / 1000));
+  const timerEl = $("mock-bar-timer");
+  timerEl.textContent = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  timerEl.classList.toggle("low", remaining < 5 * 60000);
+  $("mock-bar-label").textContent = (m && m.title) || "Mock Test";
+  $("mock-bar-parts").innerHTML = mockSession.parts
+    .map((p, i) => {
+      const r = mockSession.results[p.pid];
+      // "active" (which part is open) and "done-pass"/"done-fail" (whether it's been
+      // submitted successfully) are independent — a part can be both at once, so the
+      // status is encoded in the icon rather than relying on a single mutually
+      // exclusive CSS class to convey both facts.
+      const activeClass = i === mockSession.current ? "active" : "";
+      const doneClass = r ? (r.passed ? "done-pass" : "done-fail") : "";
+      const icon = r ? (r.passed ? " ✓" : " ✗") : "";
+      return `<button class="mock-part-btn ${activeClass} ${doneClass}" data-i="${i}">${i + 1}. ${escapeHtml(p.label)}${icon}</button>`;
+    })
+    .join("");
+  $("mock-bar-parts").querySelectorAll("[data-i]").forEach((btn) => {
+    btn.addEventListener("click", () => mockGoToPart(+btn.dataset.i));
+  });
+}
+
+function finishMock() {
+  if (!mockSession) return;
+  if (mockTickHandle) clearInterval(mockTickHandle);
+  mockTickHandle = null;
+  $("mock-bar").classList.add("hidden");
+
+  const record = {
+    mockId: mockSession.mockId,
+    startedAt: mockSession.startedAt,
+    finishedAt: Date.now(),
+    elapsedMs: Date.now() - mockSession.startedAt,
+    results: mockSession.results,
+  };
+  const hist = mockHistory();
+  hist.push(record);
+  saveMockHistory(hist);
+
+  mockSession = null;
+  saveMockSession();
+  setRoute("#mock");
+  renderMockSummary(record);
+}
+
+function renderMockSummary(record) {
+  $("problem-view").classList.add("hidden");
+  $("list-view").classList.add("hidden");
+  $("pdf-view").classList.add("hidden");
+  $("practice-view").classList.add("hidden");
+  $("dom-practice-view").classList.add("hidden");
+  $("review-view").classList.add("hidden");
+  $("attempts-view").classList.add("hidden");
+  $("mock-view").classList.add("hidden");
+  $("mock-summary-view").classList.remove("hidden");
+
+  const m = MOCK_TESTS.find((x) => x.id === record.mockId);
+  $("mock-summary-title").textContent = (m && m.title) || "Mock Test Result";
+  const mins = Math.round(record.elapsedMs / 60000);
+  const parts = (m && m.parts) || Object.keys(record.results).map((pid) => ({ pid: +pid, label: "Part" }));
+  const passedCount = parts.filter((p) => record.results[p.pid] && record.results[p.pid].passed).length;
+
+  $("mock-summary-body").innerHTML = `
+    <p style="color:var(--text-dim);margin-bottom:18px">
+      Finished ${new Date(record.finishedAt).toLocaleString()} · ${mins} minute${mins === 1 ? "" : "s"} used ·
+      <b style="color:var(--text)">${passedCount}/${parts.length} parts passed</b>
+    </p>
+    <div class="mock-summary-tiles">
+      ${parts.map((p, i) => {
+        const r = record.results[p.pid];
+        const status = !r ? "skip" : r.passed ? "pass" : "fail";
+        const statusText = !r ? "Not attempted" : r.passed ? "Passed" : `Failed — ${escapeHtml(r.detail || "")}`;
+        return `<div class="mock-summary-tile ${status}">
+            <div class="mock-summary-part-label">Part ${i + 1}</div>
+            <div class="mock-summary-part-title">${escapeHtml(p.label)}</div>
+            <div class="mock-summary-part-status ${status}">${statusText}</div>
+            <button class="btn btn-ghost btn-small" style="margin-top:10px" data-reopen="${p.pid}">Reopen</button>
+          </div>`;
+      }).join("")}
+    </div>
+    <button class="btn btn-submit" id="mock-retake">Start a fresh attempt</button>
+  `;
+  $("mock-summary-body").querySelectorAll("[data-reopen]").forEach((btn) => {
+    btn.addEventListener("click", () => openProblem(+btn.dataset.reopen));
+  });
+  const retakeBtn = $("mock-retake");
+  if (retakeBtn && m) {
+    retakeBtn.addEventListener("click", () => startMock(m));
+  }
+}
+
+$("mock-bar-finish").addEventListener("click", () => {
+  if (confirm("Finish the mock now? You won't be able to submit further answers for it afterward.")) {
+    finishMock();
+  }
+});
+$("mock-summary-back").addEventListener("click", (e) => {
+  e.preventDefault();
+  showMock();
+});
+$("nav-mock").addEventListener("click", (e) => {
+  e.preventDefault();
+  showMock();
+});
 
 $("lang-select").addEventListener("change", (e) => {
   currentLang = e.target.value;
@@ -1539,6 +2559,28 @@ $("btn-format").addEventListener("click", formatCode);
 $("preview-reload").addEventListener("click", renderPreview);
 $("quiz-submit").addEventListener("click", submitQuiz);
 $("quiz-clear").addEventListener("click", clearQuiz);
+$("quiz-review").addEventListener("click", showQuizReview);
+$("review-back").addEventListener("click", (e) => {
+  e.preventDefault();
+  backToQuiz();
+});
+$("nav-practice").addEventListener("click", (e) => {
+  e.preventDefault();
+  showPractice();
+});
+$("nav-domjs").addEventListener("click", (e) => {
+  e.preventDefault();
+  showDomPractice();
+});
+$("attempts-back").addEventListener("click", (e) => {
+  e.preventDefault();
+  showPractice();
+});
+$("review-expand").addEventListener("click", () => setAllReviewCards(false));
+$("review-collapse").addEventListener("click", () => setAllReviewCards(true));
+document.querySelectorAll(".review-filters .chip").forEach((chip) =>
+  chip.addEventListener("click", () => setReviewFilter(chip.dataset.filter)),
+);
 
 /* ================================================================== */
 /* AUTH UI WIRING */
@@ -1608,5 +2650,20 @@ $("auth-modal").addEventListener("click", (e) => {
     await loadUserProgress();
   }
   await loadProblems();
+
+  // Resume an in-progress mock test if the browser was closed/refreshed
+  // mid-session, as long as its 60-minute window hasn't already expired.
+  const savedMock = loadMockSession();
+  if (savedMock) {
+    const remaining = savedMock.startedAt + savedMock.durationMs - Date.now();
+    if (remaining > 0) {
+      mockSession = savedMock;
+      startMockTicker();
+    } else {
+      mockSession = savedMock;
+      finishMock();
+    }
+  }
+
   await applyRoute();
 })();

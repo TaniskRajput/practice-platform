@@ -48,6 +48,9 @@
       </div>
       <nav class="topnav">
         <a href="#" id="nav-problems" class="active">Problems</a>
+        <a href="#" id="nav-practice">Practice Sets</a>
+        <a href="#" id="nav-domjs">JS DOM Practice</a>
+        <a href="#" id="nav-mock">Mock Test</a>
         <a href="#" id="nav-pseudo">Pseudocode</a>
         <a href="#" id="nav-pdfs">PDF Resources</a>
       </nav>
@@ -87,6 +90,68 @@
           </thead>
           <tbody id="problem-rows"></tbody>
         </table>
+      </div>
+    </main>
+
+    <!-- Practice Sets -->
+    <main id="practice-view" class="hidden">
+      <div class="list-container">
+        <h1 class="page-title">Practice Sets</h1>
+        <p class="pdf-intro">
+          Curated 20-question sets of <b>situational</b> questions — each poses a
+          real scenario rather than asking for a definition, and no concept is
+          repeated within a set. Submit a set, then open
+          <b>View Result</b> to review any past attempt in full.
+        </p>
+        <div id="practice-groups"></div>
+      </div>
+    </main>
+
+    <!-- JS DOM Practice -->
+    <main id="dom-practice-view" class="hidden">
+      <div class="list-container">
+        <h1 class="page-title">JS DOM Practice</h1>
+        <p class="pdf-intro">
+          Learn JavaScript DOM manipulation in small, ordered chunks — 8 chunks of 5 exercises
+          each, from selecting elements all the way to combined mini projects. Each exercise is
+          real code against a live preview, graded by simulating clicks/typing in your browser.
+          Work through a chunk in order before moving to the next.
+        </p>
+        <div id="dom-practice-groups"></div>
+      </div>
+    </main>
+
+    <!-- Mock Test list -->
+    <main id="mock-view" class="hidden">
+      <div class="list-container">
+        <h1 class="page-title">Mock Test</h1>
+        <p class="pdf-intro">
+          5 timed, 3-part coding rounds — Coding, SQL and Web Dev back to back under one clock,
+          the way the real assessment runs it. Each mock's coding problem is a real reported
+          exam question; SQL and Web Dev are matched to the same shape and difficulty.
+        </p>
+        <div id="mock-list"></div>
+        <h2 class="page-title" style="font-size:18px;margin-top:32px">Past attempts</h2>
+        <div id="mock-history"></div>
+      </div>
+    </main>
+
+    <!-- Mock Test summary -->
+    <main id="mock-summary-view" class="hidden">
+      <div class="list-container">
+        <a href="#" id="mock-summary-back" class="back-link">&larr; Mock Test</a>
+        <h1 class="page-title" id="mock-summary-title"></h1>
+        <div id="mock-summary-body"></div>
+      </div>
+    </main>
+
+    <!-- Practice attempt history -->
+    <main id="attempts-view" class="hidden">
+      <div class="list-container">
+        <a href="#" id="attempts-back" class="back-link">&larr; Practice Sets</a>
+        <h1 class="page-title" id="attempts-title"></h1>
+        <p class="pdf-intro" id="attempts-intro"></p>
+        <div id="attempts-list"></div>
       </div>
     </main>
 
@@ -151,15 +216,64 @@
         <section class="editor-panel quiz-panel hidden" id="editor-panel-quiz">
           <div class="editor-toolbar">
             <span class="quiz-progress" id="quiz-progress"></span>
+            <span class="quiz-timer hidden" id="quiz-timer"></span>
             <span class="toolbar-spacer"></span>
             <button id="quiz-clear" class="btn btn-ghost">Clear Answers</button>
+            <button id="quiz-review" class="btn btn-review hidden">
+              View Submission
+            </button>
             <button id="quiz-submit" class="btn btn-submit">Submit Quiz</button>
           </div>
           <div class="quiz-scroll" id="quiz-questions"></div>
-          <div id="results"></div>
+          <div id="quiz-results"></div>
         </section>
       </div>
     </main>
+
+    <!-- Quiz submission review -->
+    <main id="review-view" class="hidden">
+      <div class="review-head">
+        <a href="#" id="review-back" class="back-link">&larr; Back to quiz</a>
+        <h2 id="review-title"></h2>
+        <div class="review-score" id="review-score"></div>
+      </div>
+      <div class="review-body">
+        <aside class="review-side">
+          <div class="review-side-title">Question map</div>
+          <div class="review-grid" id="review-grid"></div>
+          <div class="review-legend">
+            <span><i class="dot ok"></i> Correct</span>
+            <span><i class="dot bad"></i> Wrong</span>
+            <span><i class="dot skip"></i> Skipped</span>
+          </div>
+          <div class="review-focus" id="review-focus"></div>
+        </aside>
+        <section class="review-main">
+          <div class="review-filters">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="wrong">Wrong only</button>
+            <button class="chip" data-filter="skipped">Skipped</button>
+            <span class="toolbar-spacer"></span>
+            <button class="btn btn-ghost btn-small" id="review-expand">
+              Expand all
+            </button>
+            <button class="btn btn-ghost btn-small" id="review-collapse">
+              Collapse all
+            </button>
+          </div>
+          <div id="review-list"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Persistent mock-test timer bar — lives outside the switched views so
+         it survives navigating between the mock's 3 parts -->
+    <div id="mock-bar" class="mock-bar hidden">
+      <span class="mock-bar-label" id="mock-bar-label"></span>
+      <div class="mock-bar-parts" id="mock-bar-parts"></div>
+      <span class="mock-bar-timer" id="mock-bar-timer"></span>
+      <button class="btn btn-ghost btn-small" id="mock-bar-finish">Finish Mock</button>
+    </div>
 
     <iframe id="judge-frame" style="display: none"></iframe>
 

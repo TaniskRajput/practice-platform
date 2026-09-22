@@ -511,9 +511,23 @@ PSEUDOCODE_QUESTIONS = [
 ]
 
 
+from html import escape
+
+from pseudocode_listings import LISTINGS
+
+
+def _stem_with_code(n, stem):
+    """The code blocks live as images in the source PDF, so they were
+    transcribed separately and are spliced back in here."""
+    code = LISTINGS.get(n)
+    if not code:
+        return f"<b>{n}.</b> {stem}"
+    return f"<b>{n}.</b> {stem}<pre>{escape(code)}</pre>"
+
+
 PSEUDOCODE_QUIZ_QUESTIONS = [
     {
-        "q": f"<b>{i + 1}.</b> {stem}",
+        "q": _stem_with_code(i + 1, stem),
         "options": options,
         "answer": answer,
     }

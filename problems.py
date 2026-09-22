@@ -11,6 +11,10 @@ from problems_extra_pdfbanks import PDF_BANK_QUIZ_PROBLEMS
 from problems_pseudocode import PSEUDOCODE_QUIZ
 from problems_2026 import CODE_2026_PROBLEMS, WEB_2026_PROBLEMS, QUIZ_WEB_MCQ_2026, QUIZ_SQL_2026
 from problems_accenture_coding_pdf import ACCENTURE_CODING_PDF_PROBLEMS
+from practice_sets import PRACTICE_SETS
+from problems_webdev_exam import WEBDEV_EXAM_PROBLEMS
+from problems_sql_exam import SQL_EXAM_PROBLEMS
+from problems_dom_practice import DOM_PRACTICE_PROBLEMS
 
 def _db(name, hidden, schema, seed, reference_query):
     return {
@@ -636,6 +640,377 @@ int main() {
     }
 )
 
+PROBLEMS.append(
+    {
+        "id": 3099,
+        "slug": "count-squares-ending-in-digit",
+        "title": "Count Numbers Whose Square Ends in a Given Digit (20th Sept Exam)",
+        "difficulty": "Easy",
+        "topics": ["Math", "Loops"],
+        "judge": "server",
+        "languages": ["java", "cpp", "python"],
+        "description": """<p class="text-muted">Accenture — 20th Sept Exam</p>
+<p>You are given two integers <code>N</code> and <code>D</code>. For every integer <code>i</code>
+from <code>1</code> to <code>N</code>, compute <code>i&sup2;</code> and check whether its
+<b>last digit</b> equals <code>D</code>. Print how many values of <code>i</code> satisfy this.</p>
+<h3>Example</h3>
+<pre>N = 5, D = 9
+
+i     i&sup2;     last digit
+1     1     1
+2     4     4
+3     9     9   &larr; matches D = 9
+4     16    6
+5     25    5
+
+Count = 1</pre>
+<h3>Input Format</h3>
+<p>Line 1: two space-separated integers <code>N</code> and <code>D</code>.</p>
+<h3>Output Format</h3>
+<p>Print a single integer &mdash; the count of values in <code>[1, N]</code> whose square ends in
+digit <code>D</code>.</p>
+<h3>Constraints</h3>
+<ul>
+  <li><code>1 &lt;= N &lt;= 10^6</code></li>
+  <li><code>0 &lt;= D &lt;= 9</code></li>
+</ul>
+""",
+        "hint": "Loop i from 1 to N, compute i*i % 10, and increment a counter whenever it equals D. "
+                 "(The last digit of i^2 only depends on the last digit of i, repeating every 10 values, "
+                 "so you could also solve it in O(1) per block of 10 — but a direct loop is simple and "
+                 "fast enough here.)",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int d = sc.nextInt();
+
+        // TODO: count how many i in [1, n] have (i*i) % 10 == d
+        int count = 0;
+
+        System.out.println(count);
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    long long n, d;
+    cin >> n >> d;
+
+    // TODO: count how many i in [1, n] have (i*i) % 10 == d
+    long long count = 0;
+
+    cout << count << endl;
+    return 0;
+}""", "python": "import sys\n_data = sys.stdin.read().split()\nn = int(_data[0])\nd = int(_data[1])\n\n# TODO: count how many i in [1, n] have (i*i) % 10 == d\ncount = 0\n\nprint(count)",
+        },
+        "tests": [
+            {"input": "5 9", "expected": "1", "hidden": False},
+            {"input": "10 6", "expected": "2", "hidden": False},
+            {"input": "1 1", "expected": "1", "hidden": True},
+            {"input": "1 0", "expected": "0", "hidden": True},
+            {"input": "20 4", "expected": "4", "hidden": True},
+            {"input": "100 6", "expected": "20", "hidden": True},
+            {"input": "50 0", "expected": "5", "hidden": True},
+            {"input": "1000 5", "expected": "100", "hidden": True},
+        ],
+        "samples": [0, 1],
+    }
+)
+
+PROBLEMS.append(
+    {
+        "id": 3100,
+        "slug": "mountain-trail-elevation",
+        "title": "Mountain Trail Elevation (Max Bitonic Subarray Sum) (18th Sept Exam · Slot 1)",
+        "difficulty": "Medium",
+        "topics": ["Arrays", "Dynamic Programming"],
+        "judge": "server",
+        "languages": ["java", "cpp", "python"],
+        "description": """<p class="text-muted">Accenture &mdash; 17 &amp; 18 Sept Exam, Slot 1</p>
+<p>A person is travelling along a mountain trail and records the elevation at each checkpoint in an
+array <code>A</code> of size <code>N</code>.</p>
+<p>A valid <b>mountain route</b> must follow these strict rules:</p>
+<ul>
+  <li>Must be a <b>contiguous subarray</b> of checkpoints.</li>
+  <li>Elevation must <b>strictly increase</b> while moving toward the peak.</li>
+  <li>At one checkpoint, the person reaches the peak.</li>
+  <li>After the peak, elevation must <b>strictly decrease</b>.</li>
+  <li>Must contain at least <b>3 checkpoints</b> (at least 1 step up and 1 step down).</li>
+</ul>
+<p>Find the <b>maximum possible sum</b> of elevations in any valid mountain route. If no valid route
+exists, print <code>0</code>.</p>
+<h3>Example</h3>
+<pre>Input:
+N = 9
+A = [2, 4, 6, 9, 7, 5, 3, 1, 4]
+
+Output:
+37</pre>
+<p class="text-muted">Explanation: the route <code>[2, 4, 6, 9, 7, 5, 3, 1]</code> strictly increases
+to the peak <code>9</code> and then strictly decreases to <code>1</code>. Its sum is
+<code>2+4+6+9+7+5+3+1 = 37</code>. The final <code>4</code> breaks the decreasing run, so it cannot
+extend this route.</p>
+<h3>Input Format</h3>
+<p>Line 1: <code>N</code>. Line 2: <code>N</code> space-separated integers <code>A[0] .. A[N-1]</code>.</p>
+<h3>Output Format</h3>
+<p>Print a single integer &mdash; the maximum mountain-route sum, or <code>0</code> if none exists.</p>
+<h3>Constraints</h3>
+<ul>
+  <li><code>1 &lt;= N &lt;= 10^5</code></li>
+  <li><code>-10^9 &lt;= A[i] &lt;= 10^9</code></li>
+</ul>
+""",
+        "hint": "For each index i, compute leftSum[i]/leftLen[i]: the sum and length of the strictly "
+                 "increasing run of A ending at i. Compute rightSum[i]/rightLen[i] the same way for the "
+                 "strictly decreasing run starting at i. Index i can be a peak only if leftLen[i] >= 2 "
+                 "and rightLen[i] >= 2 (a real step up AND a real step down); its route sum is then "
+                 "leftSum[i] + rightSum[i] - A[i] (A[i] is counted in both halves). Take the max over "
+                 "all valid peaks, or 0 if none exist. This runs in O(N) with two passes.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        long[] a = new long[n];
+        for (int i = 0; i < n; i++) a[i] = sc.nextLong();
+
+        // TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing
+        // contiguous subarrays with at least 3 elements; print 0 if none exists
+        long best = 0;
+
+        System.out.println(best);
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<long long> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    // TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing
+    // contiguous subarrays with at least 3 elements; print 0 if none exists
+    long long best = 0;
+
+    cout << best << endl;
+    return 0;
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\na = [read_int() for _ in range(n)]\n\n# TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing\n# contiguous subarrays with at least 3 elements; print 0 if none exists\nbest = 0\n\nprint(best)",
+        },
+        "tests": [
+            {"input": "9\n2 4 6 9 7 5 3 1 4", "expected": "37", "hidden": False},
+            {"input": "3\n1 5 2", "expected": "8", "hidden": False},
+            {"input": "5\n1 2 3 4 5", "expected": "0", "hidden": True},
+            {"input": "5\n5 4 3 2 1", "expected": "0", "hidden": True},
+            {"input": "8\n1 3 5 4 2 6 8 7", "expected": "23", "hidden": True},
+            {"input": "6\n10 20 30 25 15 5", "expected": "105", "hidden": True},
+            {"input": "1\n5", "expected": "0", "hidden": True},
+            {"input": "3\n1 2 2", "expected": "0", "hidden": True},
+        ],
+        "samples": [0, 1],
+    }
+)
+
+PROBLEMS.append(
+    {
+        "id": 3101,
+        "slug": "robot-energy-peak-route",
+        "title": "Robot Energy Peak Route (18th Sept Exam · Slot 2)",
+        "difficulty": "Medium",
+        "topics": ["Arrays", "Dynamic Programming"],
+        "judge": "server",
+        "languages": ["java", "cpp", "python"],
+        "description": """<p class="text-muted">Accenture &mdash; 17 &amp; 18 Sept Exam, Slot 2</p>
+<p>A robot travels through a series of checkpoints where each checkpoint has an associated
+<b>energy value</b>, given in an array <code>A</code> of size <code>N</code>.</p>
+<p>A valid <b>energy route</b> must follow these rules:</p>
+<ul>
+  <li>The route consists of <b>consecutive checkpoints</b> (a contiguous subarray).</li>
+  <li>Energy values <b>strictly increase</b> while moving toward a peak checkpoint.</li>
+  <li>After reaching the highest energy value (the peak), energy values <b>strictly decrease</b>.</li>
+  <li>The route must contain at least <b>3 checkpoints</b>.</li>
+</ul>
+<p>Output the <b>maximum sum</b> of energy values along any valid bitonic energy route. If no valid
+route exists, print <code>0</code>.</p>
+<p class="text-muted">This is the same shape of problem as the "Mountain Trail Elevation" question
+from the same exam, reused here for the second slot with the checkpoints reframed as a robot's
+energy readings instead of a hiker's elevations.</p>
+<h3>Example</h3>
+<pre>Input:
+N = 8
+A = [1, 3, 5, 4, 2, 6, 8, 7]
+
+Output:
+23</pre>
+<p class="text-muted">Explanation: the route <code>[1, 3, 5, 4, 2]</code> is valid (peak 5) and sums to 15, but the
+route <code>[2, 6, 8, 7]</code> is also valid (peak 8, strictly up from 2 then strictly down to 7)
+and sums to <code>2+6+8+7 = 23</code>, which is larger. The two candidate mountains can't be joined
+into one longer route because <code>4 &gt; 2</code> breaks the strictly-decreasing run right before
+the second climb starts, so 23 is the maximum.</p>
+<h3>Input Format</h3>
+<p>Line 1: <code>N</code>. Line 2: <code>N</code> space-separated integers <code>A[0] .. A[N-1]</code>.</p>
+<h3>Output Format</h3>
+<p>Print a single integer &mdash; the maximum energy-route sum, or <code>0</code> if none exists.</p>
+<h3>Constraints</h3>
+<ul>
+  <li><code>1 &lt;= N &lt;= 10^5</code></li>
+  <li><code>-10^9 &lt;= A[i] &lt;= 10^9</code></li>
+</ul>
+""",
+        "hint": "For each index i, compute leftSum[i]/leftLen[i]: the sum and length of the strictly "
+                 "increasing run of A ending at i. Compute rightSum[i]/rightLen[i] the same way for the "
+                 "strictly decreasing run starting at i. Index i can be a peak only if leftLen[i] >= 2 "
+                 "and rightLen[i] >= 2; its route sum is then leftSum[i] + rightSum[i] - A[i]. Take the "
+                 "max over all valid peaks, or 0 if none exist. O(N) with two passes.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        long[] a = new long[n];
+        for (int i = 0; i < n; i++) a[i] = sc.nextLong();
+
+        // TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing
+        // contiguous subarrays with at least 3 elements; print 0 if none exists
+        long best = 0;
+
+        System.out.println(best);
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<long long> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    // TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing
+    // contiguous subarrays with at least 3 elements; print 0 if none exists
+    long long best = 0;
+
+    cout << best << endl;
+    return 0;
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\na = [read_int() for _ in range(n)]\n\n# TODO: find the maximum sum over all strictly-increasing-then-strictly-decreasing\n# contiguous subarrays with at least 3 elements; print 0 if none exists\nbest = 0\n\nprint(best)",
+        },
+        "tests": [
+            {"input": "8\n1 3 5 4 2 6 8 7", "expected": "23", "hidden": False},
+            {"input": "3\n2 9 4", "expected": "15", "hidden": False},
+            {"input": "5\n1 2 3 4 5", "expected": "0", "hidden": True},
+            {"input": "6\n10 20 30 25 15 5", "expected": "105", "hidden": True},
+            {"input": "1\n7", "expected": "0", "hidden": True},
+            {"input": "9\n2 4 6 9 7 5 3 1 4", "expected": "37", "hidden": True},
+            {"input": "4\n3 3 3 3", "expected": "0", "hidden": True},
+            {"input": "7\n5 10 15 20 18 12 6", "expected": "86", "hidden": True},
+        ],
+        "samples": [0, 1],
+    }
+)
+
+PROBLEMS.append(
+    {
+        "id": 3102,
+        "slug": "array-digital-length-operations",
+        "title": "Array Digital Length & Digit Operations (18th Sept Exam · Slot 3)",
+        "difficulty": "Easy",
+        "topics": ["Math", "Strings"],
+        "judge": "server",
+        "languages": ["java", "cpp", "python"],
+        "description": """<p class="text-muted">Accenture &mdash; 17 &amp; 18 Sept Exam, Slot 3</p>
+<p>Given an array of integers <code>A</code> of length <code>N</code>, inspect the number of digits
+(the <b>digital length</b>) of each element and compute the total described below.</p>
+<p>For every element:</p>
+<ul>
+  <li>If its digital length is <b>even</b>, add the <b>square of the digital length</b> to the
+  total.</li>
+  <li>If its digital length is <b>odd</b>, add the <b>sum of the individual digits</b> of that
+  number to the total.</li>
+</ul>
+<p>The sign of a number does not count as a digit &mdash; use its absolute value.</p>
+<h3>Example</h3>
+<pre>Input:
+N = 4
+A = [12, 345, 7, 8888]
+
+12   -&gt; length 2 (even) -&gt; 2^2        = 4
+345  -&gt; length 3 (odd)  -&gt; 3+4+5      = 12
+7    -&gt; length 1 (odd)  -&gt; 7          = 7
+8888 -&gt; length 4 (even) -&gt; 4^2        = 16
+
+Output:
+39</pre>
+<h3>Input Format</h3>
+<p>Line 1: <code>N</code>. Line 2: <code>N</code> space-separated integers <code>A[0] .. A[N-1]</code>
+(may be negative).</p>
+<h3>Output Format</h3>
+<p>Print a single integer &mdash; the total described above.</p>
+<h3>Constraints</h3>
+<ul>
+  <li><code>1 &lt;= N &lt;= 10^5</code></li>
+  <li><code>-10^9 &lt;= A[i] &lt;= 10^9</code></li>
+</ul>
+""",
+        "hint": "For each value, take its absolute value and convert to a string (or repeatedly divide "
+                 "by 10) to get its digit count. If that count is even, add count*count. If it's odd, "
+                 "add the sum of its individual digits (peel them off with % 10 and / 10, or sum the "
+                 "string's characters). Accumulate across the whole array.",
+        "boilerplate": {
+            "java": """import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        long[] a = new long[n];
+        for (int i = 0; i < n; i++) a[i] = sc.nextLong();
+
+        // TODO: for each element, if its digit count is even add (digitCount)^2 to the total,
+        // otherwise add the sum of its individual digits. Use Math.abs for negative numbers.
+        long total = 0;
+
+        System.out.println(total);
+    }
+}""",
+            "cpp": """#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<long long> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    // TODO: for each element, if its digit count is even add (digitCount)^2 to the total,
+    // otherwise add the sum of its individual digits. Use abs() for negative numbers.
+    long long total = 0;
+
+    cout << total << endl;
+    return 0;
+}""", "python": "import sys\n_data = sys.stdin.read().split()\n_idx = 0\ndef read_int():\n    global _idx\n    val = int(_data[_idx]); _idx += 1\n    return val\n\nn = read_int()\na = [read_int() for _ in range(n)]\n\n# TODO: for each element, if its digit count is even add (digitCount)**2 to the total,\n# otherwise add the sum of its individual digits. Use abs() for negative numbers.\ntotal = 0\n\nprint(total)",
+        },
+        "tests": [
+            {"input": "4\n12 345 7 8888", "expected": "39", "hidden": False},
+            {"input": "3\n9 10 100", "expected": "14", "hidden": False},
+            {"input": "1\n0", "expected": "0", "hidden": True},
+            {"input": "2\n-45 100000", "expected": "40", "hidden": True},
+            {"input": "5\n1 22 333 4444 55555", "expected": "55", "hidden": True},
+            {"input": "1\n999999999", "expected": "81", "hidden": True},
+        ],
+        "samples": [0, 1],
+    }
+)
+
 PROBLEMS.extend(NEW_PROBLEMS)
 PROBLEMS.extend(QUIZ_PROBLEMS)
 PROBLEMS.extend(PDF_QUIZ_PROBLEMS)
@@ -646,6 +1021,10 @@ PROBLEMS.extend(WEB_2026_PROBLEMS)
 PROBLEMS.append(QUIZ_WEB_MCQ_2026)
 PROBLEMS.append(QUIZ_SQL_2026)
 PROBLEMS.extend(ACCENTURE_CODING_PDF_PROBLEMS)
+PROBLEMS.extend(PRACTICE_SETS)
+PROBLEMS.extend(WEBDEV_EXAM_PROBLEMS)
+PROBLEMS.extend(SQL_EXAM_PROBLEMS)
+PROBLEMS.extend(DOM_PRACTICE_PROBLEMS)
 # ------------------------------------------------------------------ #
 # Custom: add two SQL problems from user attachments (movie rating/watch queries)
 # ------------------------------------------------------------------ #
@@ -866,5 +1245,11 @@ ORDER BY total_minutes DESC
     },
 ])
 PROBLEMS.sort(key=lambda p: p["id"])
+
+# Several MCQ banks were transcribed with the answer nearly always in
+# position A, so the options get a deterministic reshuffle at load time.
+from quiz_shuffle import shuffle_quiz_options  # noqa: E402
+
+shuffle_quiz_options(PROBLEMS)
 
 
